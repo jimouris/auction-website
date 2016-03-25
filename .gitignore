@@ -1,5 +1,8 @@
 *.class
 
+# The build files of project
+build/
+
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 
