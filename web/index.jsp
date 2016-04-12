@@ -66,7 +66,7 @@
       <section class="login u-full-width">
         <h1>Login</h1>
         <form action="executeLogin" method="POST" id="loginForm">
-          <label for="loginEmail">email</label>
+          <label>email</label>
           <input class="u-full-width" type="email" id="loginUsername" name="loginUsername" required autofocus>
           <label for="loginPassword">password</label>
           <input class="u-full-width" type="password" id="loginPassword" name="loginPassword" required>
