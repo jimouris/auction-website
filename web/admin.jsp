@@ -3,27 +3,6 @@
     Created on : May 10, 2015, 2:09:49 PM
     Author     : hostAdmin
 --%>
-
-<%@page import="java.sql.ResultSet"%>
-<%@include file="connect_db.jsp"%>
-
-<%ResultSet resultset = null;%>
-
-<%
-    if ((session.getAttribute("isAdmin") == null) || (session.getAttribute("isAdmin") == "")) {
-        response.sendRedirect("./index.jsp");
-    }
-    else{ // the user is admin
-        try {
-            // Open a connection
-            System.out.println("Connecting to a selected database...");
-            conn = DriverManager.getConnection(DB_URL, USER, PASS);
-            System.out.println("Connected database successfully...");
-            stmt = conn.createStatement();
-
-            resultset = stmt.executeQuery("select firstname, lastname, id, approved,email from account order by approved ASC"); %>
-
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!-- <!DOCTYPE html> -->
 <html>
@@ -32,8 +11,6 @@
     <title>Administrator login page</title>
 
     <link href="./css/skeleton.css" rel="stylesheet">
-    <script src="./js/jquery.js"></script>
-    <script src="./js/validate.js"></script>
 </head>
 <body>
 <div class="container">
@@ -53,7 +30,7 @@
         <div class="offset-by-nine one column">
             <ul class="nav u-full-width row">
                 <li class="u-full-width column">
-                    <a href="./logout.jsp?type=admin">
+                    <a href="">
                         <span class="delete">Logout</span></li>
                 </a>
             </ul>
@@ -73,7 +50,6 @@
                 <th>profile</th>
             </tr>
             </thead>
-            <% while (resultset.next()) {%>
             <tr>
                 <td></td>
                 <td></td>
