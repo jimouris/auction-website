@@ -16,7 +16,6 @@ hs_err_pid*
 
 # User-specific stuff:
 .idea/workspace.xml
-.idea/*
 .idea/tasks.xml
 .idea/dictionaries
 .idea/vcs.xml
@@ -24,12 +23,8 @@ hs_err_pid*
 
 # Sensitive or high-churn files:
 .idea/dataSources.ids
-/src/auction-webite.iml
 .idea/dataSources.xml
 .idea/dataSources.local.xml
 .idea/sqlDataSources.xml
 .idea/dynamic.xml
 .idea/uiDesigner.xml
-
-# dont use the settings of intelij
-*.iml
