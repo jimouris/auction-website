@@ -31,4 +31,5 @@ hs_err_pid*
 .idea/dynamic.xml
 .idea/uiDesigner.xml
 
-*.?ml
+# dont use the settings of intelij
+*.iml

@@ -1,0 +1,42 @@
+/* message element */
+.message{
+  box-sizing: border-box;
+  text-align: left;
+  padding: 0.5rem;
+}
+
+
+.message__title{
+  font-size: 1.3em;
+  font-weight: bold;
+  line-height: 1.4;
+  margin: 0;
+}
+
+.message__name,
+.message__time{
+  margin: 0;
+  line-height: 1.2;
+}
+
+.message__time{
+  font-size: 0.8em;
+  color: rgba(0,0,0,0.8);
+  margin-top: 15px;
+}
+
+.message__text{
+  background: rgba(0,0,0,0.05);
+  border-radius: 2px;
+  box-sizing: border-box;
+  padding: 1rem;
+}
+
+
+span.arrow {
+    position: absolute;
+    left: -30px;
+    top: -26px;
+    font-size: 43px;
+    font-weight: bold;
+}
