@@ -3,4 +3,25 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
          version="3.1">
+
+        <context-param>
+            <param-name>db url</param-name>
+            <param-value>jdbc:oracle:thin@admin:1234</param-value>
+        </context-param>
+
+        <context-param>
+            <param-name>db name</param-name>
+            <param-value>auction</param-value>
+        </context-param>
+
+        <context-param>
+            <param-name>db user</param-name>
+            <param-value>system</param-value>
+        </context-param>
+
+        <context-param>
+            <param-name>db pass</param-name>
+            <param-value>123456</param-value>
+        </context-param>
+    
 </web-app>
