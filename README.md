@@ -11,10 +11,10 @@ An awesome auction website template.
 + ...
 
 #### Setup & Running:
-+ ##### From an IDE:
++ From an IDE:
     - Eclipse: http://crunchify.com/step-by-step-guide-to-setup-and-install-apache-tomcat-server-in-eclipse-development-environment-ide/
     - Intellij: https://www.jetbrains.com/help/idea/2016.1/enabling-application-server-integration-plugins.html?origin=old_help
-+ ##### Command Line:
++ Command Line:
     - To create the war file: ```jar -cvf mywebapp.war *``` (not sure yet)
     - ```java .....```
 
