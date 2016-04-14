@@ -3,14 +3,20 @@
 ## auction-webite
 An awesome auction website template. 
 
-##### Dependencies:
-+ Apache Tomcat 7
-+ Java 7
+#### Dependencies:
++ Java 7+
++ Apache Tomcat 8 
+    - Download: https://tomcat.apache.org/download-80.cgi
+    - Setup: https://tomcat.apache.org/tomcat-7.0-doc/setup.html
 + ...
 
-##### Running:
-+ ```java .....```
-+ ```java .....```
+#### Setup & Running:
++ ##### From an IDE:
+    - Eclipse: http://crunchify.com/step-by-step-guide-to-setup-and-install-apache-tomcat-server-in-eclipse-development-environment-ide/
+    - Intellij: https://www.jetbrains.com/help/idea/2016.1/enabling-application-server-integration-plugins.html?origin=old_help
++ ##### Command Line:
+    - To create the war file: ```jar -cvf mywebapp.war *``` (not sure yet)
+    - ```java .....```
 
 ##### Authors:
 + [Giannis Pellelis](https://github.com/gpelelis)
