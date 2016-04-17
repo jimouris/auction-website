@@ -24,4 +24,15 @@
             <param-value>123456</param-value>
         </context-param>
     
+    
+    
+        <servlet>
+            <servlet-name>test databaase</servlet-name>
+            <servlet-class>javauction.testdb</servlet-class>
+        </servlet>
+    
+        <servlet-mapping>
+            <servlet-name>test databaase</servlet-name>
+            <url-pattern>/test</url-pattern>
+        </servlet-mapping>
 </web-app>
