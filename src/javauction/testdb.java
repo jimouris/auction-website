@@ -1,6 +1,5 @@
 package javauction;
 
-import java.sql.*;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -8,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Connection;
 
 /**
  * Created by gpelelis on 17/4/2016.
@@ -22,33 +22,18 @@ public class testdb extends HttpServlet {
         response.setContentType("text/html");
         PrintWriter out = response.getWriter();
 
-        // JDBC driver name and database URL
-        final String JDBC_DRIVER="com.mysql.jdbc.Driver";
-        final String DB_URL="jdbc:mysql://127.0.0.1/test";
+        User mpla = new User("mitsos", "ds", "ds", "dsad", "dsad", "dsad", "ds", "dsad", "dsds", "dsada");
 
-        //  Database credentials
-        final String USER = "root";
-        final String PASS = "root";
+        ConntectionDB dbc = new ConntectionDB();
 
-        try{
-            // Register JDBC driver
-            Class.forName("com.mysql.jdbc.Driver");
-
-            // Open a connection
-            Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
-
-            // Clean-up environment
-            conn.close();
-
-            out.println("hello world");
-        }catch(SQLException se){
-            //Handle errors for JDBC
-            se.printStackTrace();
-        }catch(Exception e){
-            //Handle errors for Class.forName
+        try {
+            Connection con = dbc.initializeConnection();
+            dbc.insertUser(mpla);
+            dbc.printUser(mpla);
+        } catch (Exception e) {
             e.printStackTrace();
-        }finally{
+        }
 
-        } //end try
+
     }
 }
