@@ -6,33 +6,47 @@
 
         <context-param>
             <param-name>db url</param-name>
-            <param-value>jdbc:oracle:thin@admin:1234</param-value>
+            <param-value>jdbc:mysql://localhost:3306/Auction-Website</param-value>
         </context-param>
 
         <context-param>
-            <param-name>db name</param-name>
-            <param-value>auction</param-value>
+            <param-name>db driver</param-name>
+            <param-value>com.mysql.jdbc.Driver</param-value>
         </context-param>
 
         <context-param>
             <param-name>db user</param-name>
-            <param-value>system</param-value>
+            <param-value>root</param-value>
         </context-param>
 
         <context-param>
             <param-name>db pass</param-name>
-            <param-value>123456</param-value>
+            <param-value>root</param-value>
         </context-param>
-    
-    
+
+
+    <listener>
+        <listener-class>javauction.model.appInit</listener-class>
+    </listener>
+
+
+        <servlet>
+            <servlet-name>register new user</servlet-name>
+            <servlet-class>javauction.register</servlet-class>
+        </servlet>
+
+        <servlet-mapping>
+            <servlet-name>register new user</servlet-name>
+            <url-pattern>/register.do</url-pattern>
+        </servlet-mapping>
     
         <servlet>
-            <servlet-name>test databaase</servlet-name>
-            <servlet-class>javauction.testdb</servlet-class>
+            <servlet-name>getAUser</servlet-name>
+            <servlet-class>javauction.getAUser</servlet-class>
         </servlet>
     
         <servlet-mapping>
-            <servlet-name>test databaase</servlet-name>
-            <url-pattern>/test</url-pattern>
+            <servlet-name>getAUser</servlet-name>
+            <url-pattern>/getAUser.do</url-pattern>
         </servlet-mapping>
 </web-app>

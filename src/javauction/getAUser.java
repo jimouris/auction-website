@@ -1,5 +1,7 @@
 package javauction;
 
+import javauction.model.user;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -8,32 +10,31 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
+import java.sql.SQLException;
 
 /**
- * Created by gpelelis on 17/4/2016.
+ * Created by gpelelis on 19/4/2016.
  */
-@WebServlet(name = "test-db")
-public class testdb extends HttpServlet {
+@WebServlet(name = "getAUser")
+public class getAUser extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
         response.setContentType("text/html");
         PrintWriter out = response.getWriter();
 
-        User mpla = new User("mitsos", "ds", "ds", "dsad", "dsad", "dsad", "ds", "dsad", "dsds", "dsada");
+        out.println("<br/>yeyei");
 
-        ConntectionDB dbc = new ConntectionDB();
-
+        Connection db = (Connection)getServletContext().getAttribute("db");
+        user customer = new user();
         try {
-            Connection con = dbc.initializeConnection();
-            dbc.insertUser(mpla);
-            dbc.printUser(mpla);
-        } catch (Exception e) {
+            out.println("straing from db: <br />" + customer.getUser(db));
+        } catch (SQLException e) {
             e.printStackTrace();
         }
-
 
     }
 }
