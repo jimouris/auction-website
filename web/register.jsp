@@ -8,49 +8,52 @@
     </head>
     <body> 
 
-        <div class="container"> 
+        <div class="container">
+            <%
+                Boolean status = (Boolean)request.getAttribute("status");
+                if(status != null){
+                    out.print(status);
+                }
 
+            %>
             <!-- REGISTER ROW -->
             <div class="row">
                 <div class="one-third column">
                     <section class="register u-full-width">
                         <h1>register at our eshop</h1>
                         <!-- Restriction for validation are inserted on the end of input -->
-                        <form action="" method="POST" id="registerForm">
-                            <label for="regName">Name:</label>
-                            <input class="u-full-width" type="text" id="regName" name="regName" minlength="2" required autofocus>
+                        <form action="register.do" method="POST" id="registerForm">
+                            <label for="email">Email:</label>
+                            <input class="u-full-width" type="email" id="email" name="email">
 
-                            <label for="regSurname">Surname:</label>
-                            <input class="u-full-width" type="text" id="regSurname" name="regSurname" minlength="2" required>
+                            <label for="name">Name:</label>
+                            <input class="u-full-width" type="text" id="name" name="name" minlength="2" required autofocus>
 
+                            <label for="lastname">lastname:</label>
+                            <input class="u-full-width" type="text" id="lastname" name="lastname" minlength="2" required>
 
-                            <label for="regVAT">VAT</label>
-                            <input class="u-full-width" type="number" id="regVAT" name="regVAT" minlength="2" required>
+                            <label for="password">Password:</label>
+                            <input class="u-full-width" type="password" id="password" name="password" minlength="3" required>
+                            <label for="repeat_password">Verify Password:</label>
+                            <input class="u-full-width" type="password" id="repeat_password" name="repeat_password" equalTo="#regPassword" required>
 
-                            <label for="regAddress">Address</label>
-                            <input class="u-full-width" type="text" id="regAddress" name="regAddress" minlength="2" required>
+                            <label for="vat">VAT</label>
+                            <input class="u-full-width" type="number" id="vat" name="vat" minlength="2" required>
 
-                            <label for="regCity">City</label>
-                            <input class="u-full-width" type="text" id="regCity" name="regCity" minlength="2" required>
+                            <label for="address">Address</label>
+                            <input class="u-full-width" type="text" id="address" name="address" minlength="2" required>
 
-                            <label for="regPostCode">Post Code</label>
-                            <input class="u-full-width" type="text" id="regPostCode" name="regPostCode" length="5" required>
+                            <label for="city">City</label>
+                            <input class="u-full-width" type="text" id="city" name="city" minlength="2" required>
 
-                            <label for="regPostCode">Country</label>
+                            <label for="postcode">Post Code</label>
+                            <input class="u-full-width" type="text" id="postcode" name="postcode" length="5" required>
 
+                            <label for="latitude">Add your latitude</label>
+                            <input type="text" name="latitude" id="latitude" value="23.728569442749">
+                            <label for="longitude">Add your longitude</label>
+                            <input type="text" name="longitude" id="longitude" value="37.926358404059">
 
-
-                            <select name="regCountry" class="u-full-width">
-                                <option>Athens</option>
-                            </select>
-
-
-
-                            <label for="regPassword">Password:</label>
-                            <input class="u-full-width" type="password" id="regPassword" name="regPassword" minlength="3" required>
-
-                            <label for="regVerifyPassword">Verify Password:</label>
-                            <input class="u-full-width" type="password" id="regVerifyPassword" name="regVerifyPassword" equalTo="#regPassword" required>
 
                             <input class="button-primary" type="submit" value="Register">
                         </form>

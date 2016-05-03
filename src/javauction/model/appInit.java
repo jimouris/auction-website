@@ -49,6 +49,7 @@ public class appInit implements ServletContextListener {
         try {
             db = DriverManager.getConnection(dbName, username, password);
         } catch (SQLException e) {
+            System.out.println("couldn't connect :" + dbName + username + password);
             e.printStackTrace();
         }
 

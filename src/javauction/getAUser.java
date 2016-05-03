@@ -1,6 +1,6 @@
 package javauction;
 
-import javauction.model.user;
+import javauction.model.customer;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -28,13 +28,6 @@ public class getAUser extends HttpServlet {
 
         out.println("<br/>yeyei");
 
-        Connection db = (Connection)getServletContext().getAttribute("db");
-        user customer = new user();
-        try {
-            out.println("straing from db: <br />" + customer.getUser(db));
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
 
     }
 }
