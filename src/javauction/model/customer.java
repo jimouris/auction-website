@@ -29,8 +29,8 @@ public class customer {
     public boolean registerCustomer(Connection db) {
 
         String sql = "INSERT INTO user"
-            + "(Username, Password, Firstname, lastname, mail, AFM, HomeAddress, City, Country, SignUpDate, PhoneNumber, Latitude, Longitude) VALUES"
-            + "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                + "(Username, Password, Firstname, lastname, mail, AFM, HomeAddress, City, Country, SignUpDate, PhoneNumber, Latitude, Longitude) VALUES"
+                + "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         PreparedStatement pstmt = null;
         int affected = -1;
 
@@ -65,9 +65,9 @@ public class customer {
             System.out.println(pstmt.toString() + affected);
             try {
                 pstmt.close();
-                if(affected > 0) {
+                if (affected > 0) {
                     return true;
-                } else{
+                } else {
                     return false;
                 }
             } catch (SQLException e) {
@@ -75,14 +75,25 @@ public class customer {
             }
         }
 
-    return true;
+        return true;
     }
 
     /* gets two passwords and check if this would be a valid password
      * for a customer of the javauction
      * todo: replace with an actual check of the passwords. something like pass1 == pass2
      */
-    public boolean validCustomerPass(String pass1, String pass2){
+    public boolean validCustomerPass(String pass1, String pass2) {
         return true;
+    }
+
+    /* this function will try to validate a customer
+     * todo: replace with an actual validation
+     */
+    public boolean login() {
+        if (email.contentEquals("root")) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

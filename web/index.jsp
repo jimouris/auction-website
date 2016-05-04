@@ -36,6 +36,7 @@
 <body>
 <div class="container">
 
+
   <!-- SEARCH ROW -->
   <div class="row">
     <section class="search">
@@ -65,11 +66,11 @@
     <div class="one-third column">
       <section class="login u-full-width">
         <h1>Login</h1>
-        <form action="executeLogin" method="POST" id="loginForm">
+        <form action="login.do" method="POST" id="loginForm">
           <label>email</label>
-          <input class="u-full-width" type="email" id="loginUsername" name="loginUsername" required autofocus>
-          <label for="loginPassword">password</label>
-          <input class="u-full-width" type="password" id="loginPassword" name="loginPassword" required>
+          <input class="u-full-width" type="text" id="username" name="username" required autofocus>
+          <label for="password">password</label>
+          <input class="u-full-width" type="password" id="password" name="password" required>
           <input class="button-primary u-pull-right" type="submit" value="Login">
         </form>
       </section>
