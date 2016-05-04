@@ -36,8 +36,10 @@ public class register extends HttpServlet {
             human.lastname = request.getParameter("lastname");
             human.password = request.getParameter("password");
             human.vat = request.getParameter("vat");
+            human.phone = request.getParameter("phone");
             human.address = request.getParameter("address");
             human.city = request.getParameter("city");
+            human.country = request.getParameter("country");
             human.postcode = request.getParameter("postcode");
             human.latitude = request.getParameter("latitude");
             human.longitude = request.getParameter("longitude");

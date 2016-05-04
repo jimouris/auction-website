@@ -1,6 +1,7 @@
 package javauction.model;
 
 import java.sql.*;
+import java.util.Date;
 
 /**
  * Created by gpelelis on 17/4/2016.
@@ -13,56 +14,68 @@ public class customer {
     public String lastname;
     public String password;
     public String vat;
+    public String phone;
     public String address;
     public String city;
     public String postcode;
     public String latitude;
     public String longitude;
+    public String country;
 
     /* insert a new customer to the database
-    * todo: actually insert a new user
+    *  returns true if the addition was succesfull
+    *  returns false if the customer couldn't be added
     **/
     public boolean registerCustomer(Connection db) {
 
         String sql = "INSERT INTO user"
-            + "(Username, Password, Firstname, lastname, mail, AFM, PhoneNumber, HomeAddress, City, Country, SignUpDate) VALUES"
-            + "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            + "(Username, Password, Firstname, lastname, mail, AFM, HomeAddress, City, Country, SignUpDate, PhoneNumber, Latitude, Longitude) VALUES"
+            + "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         PreparedStatement pstmt = null;
-        int affected = 0;
+        int affected = -1;
 
         // create the object which will "send the data"
         try {
             pstmt = db.prepareStatement(sql);
-            Date date = new Date(0);
+            Date currentDate = new Date(System.currentTimeMillis());
+            java.sql.Date sqlDate = new java.sql.Date(currentDate.getTime());
 
 
             // bind the values into the parameter
-            pstmt.setString(1, email);
-            pstmt.setString(2, password);
-            pstmt.setString(3, name);
-            pstmt.setString(4, lastname);
-            pstmt.setString(5, vat);
-            pstmt.setString(6, email);
-            pstmt.setString(7, latitude);
-            pstmt.setString(8, vat);
-            pstmt.setString(9, address);
-            pstmt.setString(10, city);
-            pstmt.setDate(11, Date.valueOf(date.toString()));
-
+            pstmt.setString(1, email); // use as username
+            pstmt.setString(2, password); // Password
+            pstmt.setString(3, name); // the firstname
+            pstmt.setString(4, lastname); // lastname
+            pstmt.setString(5, email); // mail
+            pstmt.setString(6, vat); // AFM
+            pstmt.setString(7, address); // HomeAddress
+            pstmt.setString(8, city); // City
+            pstmt.setString(9, country); // Country
+            pstmt.setDate(10, sqlDate); // SignUpDate
+            pstmt.setString(11, phone); // Phone Number
+            pstmt.setString(12, latitude); // Latitude
+            pstmt.setString(13, longitude); // Longitude
 
             // try to insert the values to db
             affected = pstmt.executeUpdate();
-            System.out.println(pstmt.toString() + affected);
 
-            if(affected == 0) {
-                return false;
-            }
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            System.out.println(pstmt.toString() + affected);
+            try {
+                pstmt.close();
+                if(affected > 0) {
+                    return true;
+                } else{
+                    return false;
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
 
-
-        return true;
+    return true;
     }
 
     /* gets two passwords and check if this would be a valid password

@@ -32,6 +32,7 @@
                             <label for="lastname">lastname:</label>
                             <input class="u-full-width" type="text" id="lastname" name="lastname" minlength="2" required>
 
+
                             <label for="password">Password:</label>
                             <input class="u-full-width" type="password" id="password" name="password" minlength="3" required>
                             <label for="repeat_password">Verify Password:</label>
@@ -40,11 +41,17 @@
                             <label for="vat">VAT</label>
                             <input class="u-full-width" type="number" id="vat" name="vat" minlength="2" required>
 
+                            <label for="phone">phone number:</label>
+                            <input class="u-full-width" type="text" id="phone" name="phone" minlength="2" required>
+
                             <label for="address">Address</label>
                             <input class="u-full-width" type="text" id="address" name="address" minlength="2" required>
 
                             <label for="city">City</label>
                             <input class="u-full-width" type="text" id="city" name="city" minlength="2" required>
+
+                            <label for="country">Country</label>
+                            <input class="u-full-width" type="text" id="country" name="country" minlength="2" required>
 
                             <label for="postcode">Post Code</label>
                             <input class="u-full-width" type="text" id="postcode" name="postcode" length="5" required>
