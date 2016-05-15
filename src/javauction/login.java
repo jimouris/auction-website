@@ -21,22 +21,20 @@ public class login extends HttpServlet {
         // if the viewer has a session then he must go to homepage
         // todo: check if this forward to index.jsp is the right one.
         HttpSession session = request.getSession();
-        if(session.getAttribute("username") != null){
+        if (session.getAttribute("username") != null) {
             request.setAttribute("loginFailed", true);
-            request.setAttribute("msg",  "You are already logged in");
+            request.setAttribute("msg", "You are already logged in");
             RequestDispatcher view = request.getRequestDispatcher("index.jsp");
             view.forward(request, response);
             return;
         }
 
-        // create a new user to be used
-        customer user = new customer(); // instansiate a user to be registered
 
         // get the password and login.
         // If they are empty, then send the viewer back to homepage
         String username = request.getParameter("username");
         String pass = request.getParameter("password");
-        if(username == null || username.length() == 0 || pass == null || pass.length() == 0){
+        if (username == null || username.length() == 0 || pass == null || pass.length() == 0) {
             request.setAttribute("loginFailed", true);
             request.setAttribute("msg", "Username or password can't be empty");
             RequestDispatcher view = request.getRequestDispatcher("index.jsp");
@@ -44,58 +42,71 @@ public class login extends HttpServlet {
             return;
         }
 
-        user.email= username;
-        user.password = pass;
+        // create a new user to be used
+        customer user = new customer(username, pass); // instansiate a user to be registered
+
 
         // get the db connection
         Connection database = (Connection) getServletContext().getAttribute("db");
 
-        // pass the db connection and try to login
-        if (user.login(database)) {
-            // this is a valid user
-            request.setAttribute("loginFailed", false);
-            request.setAttribute("msg", "Congratulation.");
+        // because referer Header attribute can be manipulated
+        // we set a custom parameter from the page that the admin can login
+        // this parameter must be (referrer, backoffice)
+        String from = request.getParameter("referrer");
+        Boolean comes_from_backoffice = false;
+        if (from != null && from.length() != 0)
+            comes_from_backoffice = from.contentEquals("backoffice") ? true : false;
 
-            // get any running sessions and destroy it
-            session = request.getSession();
-            session.invalidate();
-            // now  create a new session
-            session = request.getSession();
+        // test the credential. If the credentials are valid, the user.isValid returns true
+        user.login(database);
 
-            /* checks the type of user that is logged in.
-             * 1) the user is coming from backoffice and is admin
-             * 2) the user is not admin and has valid credential, so sent him to store as logged in
-             * 3) the user probably did a malicious action (like trying admin passwords from homepage).
-             */
-            if(user.isAdmin() && request.getRequestURI().contentEquals("/backoffice.jsp")){ /* 1 */
+        /* The message wrong email or password is presented to the viewer in the following possibilities
+         * 1) the viewer uses wrong credential
+         * 2) the viewer tries to login as a root from homepage
+         */
+        if (comes_from_backoffice) {
+            if (user.isAdmin() && user.isValid()) {
+                // now  create a new session
+                session = request.getSession();
                 session.setAttribute("user-type", "admin");
+
+                // send him to new page as logged in admin
+                request.setAttribute("loginFailed", false);
+                request.setAttribute("msg", "Successful login.");
                 RequestDispatcher view = request.getRequestDispatcher("admin.jsp");
                 view.forward(request, response);
                 return;
-            } else if(!user.isAdmin()){ /* 2 */
+            } else {
+                // send him to new page with an error
+                request.setAttribute("loginFailed", true);
+                request.setAttribute("msg", "Wrong email or password");
+                RequestDispatcher view = request.getRequestDispatcher("backoffice.jsp");
+                view.forward(request, response);
+                return;
+            } // /End user.isAdmin
+        } else {
+            if (user.isValid() && !user.isAdmin()) {
+                // now  create a new session
+                session = request.getSession();
                 session.setAttribute("user-type", "simple");
+
+                // send him to new page as a logged in customer
+                request.setAttribute("loginFailed", false);
+                request.setAttribute("msg", "Successful login.");
                 RequestDispatcher view = request.getRequestDispatcher("store.jsp");
                 view.forward(request, response);
                 return;
-            } else{ /* 3 */
-                session.invalidate();
+            } else if (!user.isValid() || user.isAdmin()) {
+                // send him to new page
                 request.setAttribute("loginFailed", true);
-                request.setAttribute("msg", "The email or password was wrong. Try again");
+                request.setAttribute("msg", "Wrong email or password");
                 RequestDispatcher view = request.getRequestDispatcher("index.jsp");
                 view.forward(request, response);
                 return;
             }
-        } else{
-            // if the credentials were wrong, set the appropriate message to be displayed
-            // and send to homepage in order to login again
-            request.setAttribute("loginFailed", true);
-            request.setAttribute("msg", "The email or password was wrong. Try again");
-            RequestDispatcher view = request.getRequestDispatcher("index.jsp");
-            view.forward(request, response);
-            return;
         }
-
     }
+
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 

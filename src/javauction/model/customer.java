@@ -1,5 +1,7 @@
 package javauction.model;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
+
 import java.sql.*;
 import java.util.Date;
 
@@ -21,7 +23,18 @@ public class customer {
     public String latitude;
     public String longitude;
     public String country;
+    // those are specific for the appication
     public String type;
+    public Boolean valid = false;
+
+    public customer(){
+
+    }
+
+    public customer(String username, String pass) {
+        email = username;
+        password = pass;
+    }
 
     /* insert a new customer to the database
     *  returns true if the addition was succesfull
@@ -104,6 +117,7 @@ public class customer {
 
             // if this was a valid user, then assign some of the data to the customer object
             if (password.contentEquals(db_pass)) {
+                valid = true;
                 if(db_admin)
                     type = "admin";
                 else
@@ -123,5 +137,9 @@ public class customer {
         if(type != null)
             return type.equals("admin") ? true : false;
         return false;
+    }
+
+    public boolean isValid() {
+        return valid;
     }
 }

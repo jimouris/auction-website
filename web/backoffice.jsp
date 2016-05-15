@@ -8,11 +8,22 @@
 <body>
 <div class="container">
         <h1>Administrator's Login</h1>
+        <%
+            Boolean failed = (Boolean)request.getAttribute("loginFailed");
+            String msg = (String)request.getAttribute("msg");
+            if ( failed != null && msg != null && failed ){
+        %>
+        <p class="error"><%= msg %></p>
+        <%
+            }
+        %>
         <form action="login.do" method="POST" id="loginForm">
             <label for="username">Admin's username</label>
             <input type="text" id="username" name="username" required autofocus>
             <label for="password">password</label>
             <input type="password" id="password" name="password" required>
+            <!-- this hidden field must be used only on pages that the admin can login -->
+            <input type="hidden" name="referrer" value="backoffice">
             <input type="submit" value="Admin Login">
         </form>
 
