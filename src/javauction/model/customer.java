@@ -21,6 +21,7 @@ public class customer {
     public String latitude;
     public String longitude;
     public String country;
+    public String type;
 
     /* insert a new customer to the database
     *  returns true if the addition was succesfull
@@ -89,11 +90,38 @@ public class customer {
     /* this function will try to validate a customer
      * todo: replace with an actual validation
      */
-    public boolean login() {
-        if (email.contentEquals("root")) {
-            return true;
-        } else {
+    public boolean login(Connection database) {
+        try {
+            // execute the sql query
+            Statement stmt = database.createStatement();
+            String sql = "select Password, IsAdmin from user where Username = '" + email +"'";
+            ResultSet result = stmt.executeQuery(sql);
+
+            // get the password and if the user is an admin
+            result.next();
+            String db_pass= result.getString("Password");
+            Boolean db_admin =  result.getBoolean("IsAdmin");
+
+            // if this was a valid user, then assign some of the data to the customer object
+            if (password.contentEquals(db_pass)) {
+                if(db_admin)
+                    type = "admin";
+                else
+                    type = "simple";
+                return true;
+            } else {
+                return false;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
             return false;
         }
+    }
+
+    // will return true if the user is an admin.
+    public boolean isAdmin() {
+        if(type != null)
+            return type.equals("admin") ? true : false;
+        return false;
     }
 }

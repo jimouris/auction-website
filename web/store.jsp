@@ -13,6 +13,6 @@
     <meta charset="utf-8">
 </head>
 <body>
-    <h1>This is a special place accessible only by registered customers</h1>
+    <h1>YOu have been succesfully logged in</h1>
 </body>
 </html>
