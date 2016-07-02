@@ -1,0 +1,20 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD//EN"
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <session-factory>
+        <property name="connection.url">jdbc:mysql://localhost:3306/auction-website</property>
+        <property name="connection.driver_class">com.mysql.jdbc.Driver</property>
+        <mapping class="javauction.model.AuctionEntity"/>
+        <mapping class="javauction.model.AuctionCategoryEntity"/>
+        <mapping class="javauction.model.BidEntity"/>
+        <mapping class="javauction.model.CategoryEntity"/>
+        <mapping class="javauction.model.ItemImageEntity"/>
+        <mapping class="javauction.model.MessagesEntity"/>
+        <mapping class="javauction.model.RatingEntity"/>
+        <mapping class="javauction.model.UserEntity"/>
+        <!-- DB schema will be updated if needed -->
+        <!-- <property name="hbm2ddl.auto">update</property> -->
+    </session-factory>
+</hibernate-configuration>

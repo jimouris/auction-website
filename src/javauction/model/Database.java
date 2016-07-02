@@ -7,8 +7,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 
-import javauction.model.*;
-
 /**
 * Created by gpelelis on 2/6/2016.
 */
@@ -109,8 +107,9 @@ public class Database {
 
 		// prepare the query
 		String sql 	= "INSERT INTO user"
-		              + "(Username, Password, Firstname, lastname, mail, AFM, HomeAddress, City, Country, SignUpDate, PhoneNumber, Latitude, Longitude) VALUES"
-		              + "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		              + "(Username, Password, Firstname, Lastname, Email, PhoneNumber, Vat, HomeAddress, Latitude, " +
+						"Longitude, City, Country, SignUpDate,isAdmin, isApproved) VALUES"
+		              + "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 		PreparedStatement pstmt = db.prepareStatement(sql);
 
 		// prepare the values to be inserted
@@ -121,14 +120,16 @@ public class Database {
 		pstmt.setString(3, user.name); // the firstname
 		pstmt.setString(4, user.lastname); // lastname
 		pstmt.setString(5, user.email); // mail
-		pstmt.setString(6, user.vat); // AFM
-		pstmt.setString(7, user.homeaddress); // HomeAddress
-		pstmt.setString(8, user.city); // City
-		pstmt.setString(9, user.country); // Country
-		pstmt.setDate(10, sqlDate); // SignUpDate
-		pstmt.setString(11, user.phonenumber); // Phone Number
-		pstmt.setString(12, user.latitude); // Latitude
-		pstmt.setString(13, user.longitude); // Longitude
+		pstmt.setString(6, user.phonenumber); // Phone Number
+		pstmt.setString(7, user.vat); // AFM
+		pstmt.setString(8, user.homeaddress); // HomeAddress
+		pstmt.setString(9, user.latitude); // Latitude
+		pstmt.setString(10, user.longitude); // Longitude
+		pstmt.setString(11, user.city); // City
+		pstmt.setString(12, user.country); // Country
+		pstmt.setDate(13, sqlDate); // SignUpDate
+		pstmt.setInt(14, 0); // Country
+		pstmt.setInt(15, 0); // Country
 
 		// try to insert the values to db
 		int affected = -1;

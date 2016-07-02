@@ -1,11 +1,9 @@
 package javauction.model;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
-
-import java.sql.*;
-import java.util.Date;
-import javauction.model.OpStatus;
-import javauction.model.Database;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 /**
  * Created by gpelelis on 17/4/2016.
@@ -70,10 +68,13 @@ public class customer {
 
         try {
             // check if the user can register
-            if (db_access.exist(this, db))
+            if (db_access.exist(this, db)) {
                 return OpStatus.UsernameExist;
-            if (!this.validCustomerPass(repeat_password))
+            }
+
+            if (!this.validCustomerPass(repeat_password)) {
                 return OpStatus.DiffPass;
+            }
 
             // insert a unique user to the database
             if (db_access.registerUser(this, db))
