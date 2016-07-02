@@ -10,9 +10,9 @@
 
         <div class="container">
             <%
-                Boolean status = (Boolean)request.getAttribute("status");
-                if(status != null){
-                    out.print(status);
+                String msg = (String)request.getAttribute("regStatus");
+                if(msg != null){
+                    out.print(msg);
                 }
 
             %>
@@ -23,7 +23,10 @@
                         <h1>register at our eshop</h1>
                         <!-- Restriction for validation are inserted on the end of input -->
                         <form action="register.do" method="POST" id="registerForm">
-                            <label for="email">Email:</label>
+                            <label for="username">Username</label>
+                            <input class="u-full-width" type="text" id="username" name="username">
+
+                            <label for="email">Email(this will be also your username):</label>
                             <input class="u-full-width" type="email" id="email" name="email">
 
                             <label for="name">Name:</label>

@@ -4,6 +4,8 @@ import com.sun.org.apache.xpath.internal.operations.Bool;
 
 import java.sql.*;
 import java.util.Date;
+import javauction.model.OpStatus;
+import javauction.model.Database;
 
 /**
  * Created by gpelelis on 17/4/2016.
@@ -11,114 +13,121 @@ import java.util.Date;
  */
 public class customer {
 
+    public String username;
     public String email;
     public String name;
     public String lastname;
     public String password;
     public String vat;
-    public String phone;
-    public String address;
+    public String phonenumber;
+    public String homeaddress;
     public String city;
     public String postcode;
     public String latitude;
     public String longitude;
     public String country;
+    public Boolean isApproved;
     // those are specific for the appication
     public String type;
     public Boolean valid = false;
 
-    public customer(){
+    public customer() {}
 
-    }
-
-    public customer(String username, String pass) {
-        email = username;
+    public customer(String usrname, String pass) {
+        username = usrname;
         password = pass;
     }
 
-    /* insert a new customer to the database
-    *  returns true if the addition was succesfull
-    *  returns false if the customer couldn't be added
-    **/
-    public boolean registerCustomer(Connection db) {
+    public customer(String username, String name, String lastname) {
+        this.username = username;
+        this.name = name;
+        this.lastname = lastname;
+    }
 
-        String sql = "INSERT INTO user"
-                + "(Username, Password, Firstname, lastname, mail, AFM, HomeAddress, City, Country, SignUpDate, PhoneNumber, Latitude, Longitude) VALUES"
-                + "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        PreparedStatement pstmt = null;
-        int affected = -1;
+    public customer(String username, String email, String name, String lastname, String password,
+                    String vat, String phonenumber, String homeaddress, String city,
+                    String latitude, String longitude, String country, Boolean isApproved){
+    this.username = username;
+    this.email = email;
+    this.name = name;
+    this.lastname = lastname;
+    this.password = password;
+    this.vat = vat;
+    this.phonenumber = phonenumber;
+    this.homeaddress = homeaddress;
+    this.city = city;
+    this.postcode = postcode;
+    this.latitude = latitude;
+    this.longitude = longitude;
+    this.country = country;
+    this.isApproved = isApproved;   
+    }
 
-        // create the object which will "send the data"
+    /* registers a new user to the app */
+    public OpStatus register(String repeat_password, Connection db) {
+        // get access to database
+        Database db_access = new Database();
+
         try {
-            pstmt = db.prepareStatement(sql);
-            Date currentDate = new Date(System.currentTimeMillis());
-            java.sql.Date sqlDate = new java.sql.Date(currentDate.getTime());
+            // check if the user can register
+            if (db_access.exist(this, db))
+                return OpStatus.UsernameExist;
+            if (!this.validCustomerPass(repeat_password))
+                return OpStatus.DiffPass;
 
-
-            // bind the values into the parameter
-            pstmt.setString(1, email); // use as username
-            pstmt.setString(2, password); // Password
-            pstmt.setString(3, name); // the firstname
-            pstmt.setString(4, lastname); // lastname
-            pstmt.setString(5, email); // mail
-            pstmt.setString(6, vat); // AFM
-            pstmt.setString(7, address); // HomeAddress
-            pstmt.setString(8, city); // City
-            pstmt.setString(9, country); // Country
-            pstmt.setDate(10, sqlDate); // SignUpDate
-            pstmt.setString(11, phone); // Phone Number
-            pstmt.setString(12, latitude); // Latitude
-            pstmt.setString(13, longitude); // Longitude
-
-            // try to insert the values to db
-            affected = pstmt.executeUpdate();
-
+            // insert a unique user to the database
+            if (db_access.registerUser(this, db))
+                return OpStatus.Success;
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            System.out.println(pstmt.toString() + affected);
-            try {
-                pstmt.close();
-                if (affected > 0) {
-                    return true;
-                } else {
-                    return false;
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
         }
 
-        return true;
+        return OpStatus.Error;
     }
 
-    /* gets two passwords and check if this would be a valid password
-     * for a customer of the javauction
-     * todo: replace with an actual check of the passwords. something like pass1 == pass2
-     */
-    public boolean validCustomerPass(String pass1, String pass2) {
-        return true;
+
+    /* checks if a password is valid for the user */
+    public boolean validCustomerPass(String pass) {
+        return password.equals(pass);
     }
+
+    public OpStatus loginAdmin(Connection db) {
+        // get access to database
+        Database db_access = new Database();
+
+        try {
+            // check the credentials of the user
+            if (db_access.authAdmin(this, db))
+                return OpStatus.Success;
+            else
+                return OpStatus.WrongCredentials;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return OpStatus.Error;
+    }
+
 
     /* this function will try to validate a customer
      * todo: replace with an actual validation
      */
     public boolean login(Connection database) {
         try {
-            // execute the sql query
+            // execute the sql select query
             Statement stmt = database.createStatement();
-            String sql = "select Password, IsAdmin from user where Username = '" + email +"'";
+            String sql = "select Password, IsAdmin from user where Username = '" + email + "'";
             ResultSet result = stmt.executeQuery(sql);
 
             // get the password and if the user is an admin
             result.next();
-            String db_pass= result.getString("Password");
+            String db_pass = result.getString("Password");
             Boolean db_admin =  result.getBoolean("IsAdmin");
 
             // if this was a valid user, then assign some of the data to the customer object
             if (password.contentEquals(db_pass)) {
                 valid = true;
-                if(db_admin)
+                if (db_admin)
                     type = "admin";
                 else
                     type = "simple";
@@ -134,7 +143,7 @@ public class customer {
 
     // will return true if the user is an admin.
     public boolean isAdmin() {
-        if(type != null)
+        if (type != null)
             return type.equals("admin") ? true : false;
         return false;
     }
@@ -142,4 +151,135 @@ public class customer {
     public boolean isValid() {
         return valid;
     }
+
+
+    public String getUsername(){
+        return username;
+    }
+
+    public String setUsername(String username) {
+        this.username = username;
+        return username;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String setEmail(String email) {
+        this.email = email;
+        return email;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String setName(String name) {
+        this.name = name;
+        return name;
+    }
+
+    public String getLastname() {
+        return lastname;
+    }
+
+    public String setLastname(String lastname) {
+        this.lastname = lastname;
+        return lastname;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public String setPassword(String password) {
+        this.password = password;
+        return password;
+    }
+
+    public String getVat() {
+        return vat;
+    }
+
+    public String setVat(String vat) {
+        this.vat = vat;
+        return vat;
+    }
+
+    public String getphonenumber() {
+        return phonenumber;
+    }
+
+    public String setphonenumber(String phonenumber) {
+        this.phonenumber = phonenumber;
+        return phonenumber;
+    }
+
+    public String gethomeaddress() {
+        return homeaddress;
+    }
+
+    public String sethomeaddress(String homeaddress) {
+        this.homeaddress = homeaddress;
+        return homeaddress;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public String setCity(String city) {
+        this.city = city;
+        return city;
+    }
+
+    public String getPostcode() {
+        return postcode;
+    }
+
+    public String setPostcode(String postcode) {
+        this.postcode = postcode;
+        return postcode;
+    }
+
+    public String getLatitude() {
+        return latitude;
+    }
+
+    public String setLatitude(String latitude) {
+        this.latitude = latitude;
+        return latitude;
+    }
+
+    public String getLongitude() {
+        return longitude;
+    }
+
+    public String setLongitude(String longitude) {
+        this.longitude = longitude;
+        return longitude;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public String setCountry(String country) {
+        this.country = country;
+        return country;
+    }
+
+    public Boolean setisApproved(Boolean aprove){
+        this.isApproved = aprove;
+        return isApproved;
+    }
+
+    public Boolean isApproved(){
+        return isApproved;
+    }
+
+
+
+
 }

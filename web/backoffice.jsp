@@ -8,16 +8,14 @@
 <body>
 <div class="container">
         <h1>Administrator's Login</h1>
-        <%
-            Boolean failed = (Boolean)request.getAttribute("loginFailed");
-            String msg = (String)request.getAttribute("msg");
-            if ( failed != null && msg != null && failed ){
-        %>
-        <p class="error"><%= msg %></p>
-        <%
-            }
-        %>
-        <form action="login.do" method="POST" id="loginForm">
+         <%
+                String msg = (String)request.getAttribute("regStatus");
+                if(msg != null){
+                    out.print(msg);
+                }
+
+            %>
+        <form action="loginAdmin.do" method="POST" id="loginForm">
             <label for="username">Admin's username</label>
             <input type="text" id="username" name="username" required autofocus>
             <label for="password">password</label>

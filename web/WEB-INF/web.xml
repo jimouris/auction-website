@@ -68,4 +68,26 @@
             <servlet-name>login</servlet-name>
             <url-pattern>/login.do</url-pattern>
         </servlet-mapping>
+
+        <servlet>
+            <servlet-name>loginAdmin</servlet-name>
+            <servlet-class>javauction.loginAdmin</servlet-class>
+        </servlet>
+        
+        <servlet-mapping>
+            <servlet-name>loginAdmin</servlet-name>
+            <url-pattern>/loginAdmin.do</url-pattern>
+        </servlet-mapping>
+
+        <servlet>
+            <servlet-name>listUsers</servlet-name>
+            <servlet-class>javauction.listUsers</servlet-class>
+        </servlet>
+        
+        <servlet-mapping>
+            <servlet-name>listUsers</servlet-name>
+            <url-pattern>/list-users.do</url-pattern>
+        </servlet-mapping>
 </web-app>
+
+

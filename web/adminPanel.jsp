@@ -8,7 +8,8 @@
 </head>
 <body>
 
-<h1>This is the main page of admin. Yolo</h1>
+<h1>This is the main page of admin.</h1>
+<a href="./list-users.do">View all users</a>
 
 </body>
 </html>
