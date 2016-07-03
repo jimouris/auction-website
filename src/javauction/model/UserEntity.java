@@ -7,9 +7,13 @@ import java.sql.Date;
  * Created by jimouris on 7/2/16.
  */
 @Entity
-@Table(name = "user", schema = "auction-website", catalog = "")
+@Table(name = "user", schema = "auctionwebsite", catalog = "")
 public class UserEntity {
-    private long userId;
+
+    @Id
+    @GeneratedValue(strategy=GenerationType.AUTO)
+    private int userId;
+
     private String username;
     private String password;
     private String firstname;
@@ -26,13 +30,59 @@ public class UserEntity {
     private byte isAdmin;
     private byte isApproved;
 
+    public UserEntity(String username, String password, String firstname, String lastname, String email, String phoneNumber, String vat,
+                      String homeAddress, String latitude, String longitude, String city, String country) {
+        this.username = username;
+        this.password = password;
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.vat = vat;
+        this.homeAddress = homeAddress;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.city = city;
+        this.country = country;
+        this.isAdmin = 0;
+        this.isApproved = 0;
+        java.util.Date currentDate = new java.util.Date(System.currentTimeMillis());
+        java.sql.Date sqlDate = new java.sql.Date(currentDate.getTime());
+        this.signUpDate = sqlDate;
+    }
+
+    public UserEntity() {
+    }
+
+    @Override
+    public String toString() {
+        return "UserEntity{" +
+                "userId=" + userId +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", firstname='" + firstname + '\'' +
+                ", lastname='" + lastname + '\'' +
+                ", email='" + email + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", vat='" + vat + '\'' +
+                ", homeAddress='" + homeAddress + '\'' +
+                ", latitude='" + latitude + '\'' +
+                ", longitude='" + longitude + '\'' +
+                ", city='" + city + '\'' +
+                ", country='" + country + '\'' +
+                ", signUpDate=" + signUpDate +
+                ", isAdmin=" + isAdmin +
+                ", isApproved=" + isApproved +
+                '}';
+    }
+
     @Id
     @Column(name = "UserID")
-    public long getUserId() {
+    public int getUserId() {
         return userId;
     }
 
-    public void setUserId(long userId) {
+    public void setUserId(int userId) {
         this.userId = userId;
     }
 

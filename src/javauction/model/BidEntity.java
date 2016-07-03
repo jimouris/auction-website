@@ -7,7 +7,7 @@ import java.sql.Date;
  * Created by jimouris on 7/2/16.
  */
 @Entity
-@Table(name = "bid", schema = "auction-website", catalog = "")
+@Table(name = "bid", schema = "auctionwebsite", catalog = "")
 @IdClass(BidEntityPK.class)
 public class BidEntity {
     private long bidderId;

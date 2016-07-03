@@ -5,7 +5,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
 
 /**
 * Created by gpelelis on 2/6/2016.
@@ -97,49 +96,49 @@ public class Database {
 		}
 		result.close();
 		pstmt.close();
-		
+
 		return status;
 	}
 
 
 	public Boolean registerUser(customer user, Connection db) throws SQLException {
 		Boolean status = null;
-
-		// prepare the query
-		String sql 	= "INSERT INTO user"
-		              + "(Username, Password, Firstname, Lastname, Email, PhoneNumber, Vat, HomeAddress, Latitude, " +
-						"Longitude, City, Country, SignUpDate,isAdmin, isApproved) VALUES"
-		              + "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-		PreparedStatement pstmt = db.prepareStatement(sql);
-
-		// prepare the values to be inserted
-		Date currentDate = new Date(System.currentTimeMillis());
-		java.sql.Date sqlDate = new java.sql.Date(currentDate.getTime());
-		pstmt.setString(1, user.username); // use as username
-		pstmt.setString(2, user.password); // Password
-		pstmt.setString(3, user.name); // the firstname
-		pstmt.setString(4, user.lastname); // lastname
-		pstmt.setString(5, user.email); // mail
-		pstmt.setString(6, user.phonenumber); // Phone Number
-		pstmt.setString(7, user.vat); // AFM
-		pstmt.setString(8, user.homeaddress); // HomeAddress
-		pstmt.setString(9, user.latitude); // Latitude
-		pstmt.setString(10, user.longitude); // Longitude
-		pstmt.setString(11, user.city); // City
-		pstmt.setString(12, user.country); // Country
-		pstmt.setDate(13, sqlDate); // SignUpDate
-		pstmt.setInt(14, 0); // Country
-		pstmt.setInt(15, 0); // Country
-
-		// try to insert the values to db
-		int affected = -1;
-		affected = pstmt.executeUpdate();
-		pstmt.close();
-
-		if (affected > 0)
-			status = true;
-		else
-			status = false;
+//
+//		// prepare the query
+//		String sql 	= "INSERT INTO user"
+//		              + "(Username, Password, Firstname, Lastname, Email, PhoneNumber, Vat, HomeAddress, Latitude, " +
+//						"Longitude, City, Country, SignUpDate,isAdmin, isApproved) VALUES"
+//		              + "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+//		PreparedStatement pstmt = db.prepareStatement(sql);
+//
+//		// prepare the values to be inserted
+//		Date currentDate = new Date(System.currentTimeMillis());
+//		java.sql.Date sqlDate = new java.sql.Date(currentDate.getTime());
+//		pstmt.setString(1, user.username); // use as username
+//		pstmt.setString(2, user.password); // Password
+//		pstmt.setString(3, user.name); // the firstname
+//		pstmt.setString(4, user.lastname); // lastname
+//		pstmt.setString(5, user.email); // mail
+//		pstmt.setString(6, user.phonenumber); // Phone Number
+//		pstmt.setString(7, user.vat); // AFM
+//		pstmt.setString(8, user.homeaddress); // HomeAddress
+//		pstmt.setString(9, user.latitude); // Latitude
+//		pstmt.setString(10, user.longitude); // Longitude
+//		pstmt.setString(11, user.city); // City
+//		pstmt.setString(12, user.country); // Country
+//		pstmt.setDate(13, sqlDate); // SignUpDate
+//		pstmt.setInt(14, 0); // Country
+//		pstmt.setInt(15, 0); // Country
+//
+//		// try to insert the values to db
+//		int affected = -1;
+//		affected = pstmt.executeUpdate();
+//		pstmt.close();
+//
+//		if (affected > 0)
+//			status = true;
+//		else
+//			status = false;
 
 		return status;
 	}

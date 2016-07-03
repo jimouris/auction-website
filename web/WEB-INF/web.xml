@@ -15,7 +15,7 @@
 
         <context-param>
             <param-name>db url</param-name>
-            <param-value>jdbc:mysql://localhost:3306/auction-website</param-value>
+            <param-value>jdbc:mysql://localhost:3306/auctionwebsite</param-value>
         </context-param>
 
         <context-param>

@@ -7,7 +7,7 @@ import java.sql.Date;
  * Created by jimouris on 7/2/16.
  */
 @Entity
-@Table(name = "messages", schema = "auction-website", catalog = "")
+@Table(name = "messages", schema = "auctionwebsite", catalog = "")
 public class MessagesEntity {
     private long messageId;
     private String message;

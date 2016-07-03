@@ -4,8 +4,17 @@
         "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
 <hibernate-configuration>
     <session-factory>
-        <property name="connection.url">jdbc:mysql://localhost:3306/auction-website</property>
-        <property name="connection.driver_class">com.mysql.jdbc.Driver</property>
+
+        <!-- Database connection settings -->
+        <property name="connection.url">jdbc:mysql://localhost:3306/auctionwebsite</property>
+        <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
+        <property name="hibernate.connection.username">root</property>
+        <property name="hibernate.connection.password">root</property>
+
+        <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
+
+        <property name="hibernate.show_sql">true</property>
+
         <mapping class="javauction.model.AuctionEntity"/>
         <mapping class="javauction.model.AuctionCategoryEntity"/>
         <mapping class="javauction.model.BidEntity"/>

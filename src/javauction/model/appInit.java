@@ -6,12 +6,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
-import javax.servlet.http.HttpSessionAttributeListener;
-import javax.servlet.http.HttpSessionEvent;
-import javax.servlet.http.HttpSessionListener;
-import javax.servlet.http.HttpSessionBindingEvent;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 
 @WebListener()
@@ -45,16 +40,16 @@ public class appInit implements ServletContextListener {
         }
 
         /* try to establish a db connection. */
-        Connection db = null;
-        try {
-            db = DriverManager.getConnection(dbName, username, password);
-        } catch (SQLException e) {
-            System.out.println("couldn't connect :" + dbName + username + password);
-            e.printStackTrace();
-        }
+//        Connection db = null;
+//        try {
+//            db = DriverManager.getConnection(dbName, username, password);
+//        } catch (SQLException e) {
+//            System.out.println("couldn't connect :" + dbName + username + password);
+//            e.printStackTrace();
+//        }
 
         /* make the object accessible from every jsp and seervlet */
-        sc.setAttribute("db", db);
+//        sc.setAttribute("db", db);
     }
 
     public void contextDestroyed(ServletContextEvent sce) {

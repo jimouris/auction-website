@@ -9,7 +9,7 @@ import javax.persistence.Table;
  * Created by jimouris on 7/2/16.
  */
 @Entity
-@Table(name = "auctionCategory", schema = "auction-website", catalog = "")
+@Table(name = "auctionCategory", schema = "auctionwebsite", catalog = "")
 public class AuctionCategoryEntity {
     private long auctionId;
 

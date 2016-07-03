@@ -6,7 +6,7 @@ import javax.persistence.*;
  * Created by jimouris on 7/2/16.
  */
 @Entity
-@Table(name = "category", schema = "auction-website", catalog = "")
+@Table(name = "category", schema = "auctionwebsite", catalog = "")
 public class CategoryEntity {
     private int categoryId;
     private String categoryName;
