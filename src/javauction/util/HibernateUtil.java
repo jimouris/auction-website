@@ -1,3 +1,5 @@
+package javauction.util;
+
 import org.hibernate.HibernateException;
 import org.hibernate.SessionFactory;
 import org.hibernate.Session;
@@ -12,7 +14,7 @@ import java.util.Map;
 /**
  * Created by jimouris on 7/2/16.
  */
-public class Main {
+public class HibernateUtil {
     private static final SessionFactory ourSessionFactory;
     private static final ServiceRegistry serviceRegistry;
 
