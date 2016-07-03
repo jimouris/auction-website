@@ -3,7 +3,6 @@ package javauction.service;
 import javauction.model.UserEntity;
 import javauction.util.HibernateUtil;
 import org.hibernate.Session;
-import org.hibernate.Transaction;
 
 /**
  * Created by jimouris on 7/2/16.
@@ -14,7 +13,6 @@ public class RegisterService {
         Session session = HibernateUtil.getSession();
 //        if(isUserExists(user)) return false;
 
-        Transaction tx = null;
         try {
             session.beginTransaction();
             System.out.println(user.toString());

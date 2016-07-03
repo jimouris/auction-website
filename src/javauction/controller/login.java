@@ -1,4 +1,4 @@
-package javauction;
+package javauction.controller;
 
 import javauction.model.customer;
 

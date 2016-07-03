@@ -41,7 +41,7 @@
 
         <servlet>
             <servlet-name>register new user</servlet-name>
-            <servlet-class>javauction.register</servlet-class>
+            <servlet-class>javauction.controller.register</servlet-class>
         </servlet>
 
         <servlet-mapping>
@@ -51,7 +51,7 @@
     
         <servlet>
             <servlet-name>getAUser</servlet-name>
-            <servlet-class>javauction.getAUser</servlet-class>
+            <servlet-class>javauction.controller.getAUser</servlet-class>
         </servlet>
     
         <servlet-mapping>
@@ -61,7 +61,7 @@
 
         <servlet>
             <servlet-name>login</servlet-name>
-            <servlet-class>javauction.login</servlet-class>
+            <servlet-class>javauction.controller.login</servlet-class>
         </servlet>
     
         <servlet-mapping>
@@ -71,22 +71,12 @@
 
         <servlet>
             <servlet-name>loginAdmin</servlet-name>
-            <servlet-class>javauction.loginAdmin</servlet-class>
+            <servlet-class>javauction.controller.loginAdmin</servlet-class>
         </servlet>
         
         <servlet-mapping>
             <servlet-name>loginAdmin</servlet-name>
             <url-pattern>/loginAdmin.do</url-pattern>
-        </servlet-mapping>
-
-        <servlet>
-            <servlet-name>listUsers</servlet-name>
-            <servlet-class>javauction.listUsers</servlet-class>
-        </servlet>
-        
-        <servlet-mapping>
-            <servlet-name>listUsers</servlet-name>
-            <url-pattern>/list-users.do</url-pattern>
         </servlet-mapping>
 </web-app>
 

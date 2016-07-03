@@ -1,4 +1,4 @@
-package javauction;
+package javauction.controller;
 
 import javauction.model.UserEntity;
 import javauction.service.RegisterService;
@@ -41,11 +41,8 @@ public class register extends HttpServlet {
 
         // tell the customer to register a new user
         try {
-            System.out.println("1");
             RegisterService registerService = new RegisterService();
-            System.out.println("2");
             boolean result = registerService.register(user);
-            System.out.println("3");
 
             if (result) {
                 request.setAttribute("regStatus", "Successfully registered");

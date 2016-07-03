@@ -1,4 +1,6 @@
-package javauction;
+package javauction.controller;
+
+import javauction.service.LoginService;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -6,10 +8,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.sql.Connection;
-
-import javauction.model.customer;
-import javauction.model.OpStatus;
+import java.util.List;
 
 /**
  * Created by gpelelis on 17/4/2016.
@@ -20,26 +19,28 @@ public class loginAdmin extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html");
 
-        // prepare variables
-        OpStatus status;
+        boolean result = false;
         String next_page = "/backoffice.jsp";
-        Connection db = (Connection) getServletContext().getAttribute("db");
 
         // get the user input & create the object
-        customer user = new customer();
-        user.username = request.getParameter("username");
-        user.password = request.getParameter("password");
+        String username = request.getParameter("username");
+        String password = request.getParameter("password");
 
         // check the credentials
-        status = user.loginAdmin(db);
+        // tell the customer to register a new user
+        LoginService loginService = new LoginService();
+        try {
+            result = loginService.authenticateAdmin(username, password);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-        // generate the message that we want to send to the user
-        if (status == OpStatus.Success) {
-            next_page = "/adminPanel.jsp";
-        } else if (status == OpStatus.Error) {
-            request.setAttribute("regStatus", "There was an error");
-        } else if (status == OpStatus.WrongCredentials) {
-            request.setAttribute("regStatus", "Username or password is wrong");
+        List userLst;
+        if (result) {
+            next_page = "/listUsers.jsp";
+            userLst = loginService.getAllUsers();
+
+            request.setAttribute("userLst", userLst);
         }
 
         // then forward the request to welcome.jsp with the information of status

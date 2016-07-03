@@ -58,7 +58,7 @@ public class customer {
     this.latitude = latitude;
     this.longitude = longitude;
     this.country = country;
-    this.isApproved = isApproved;   
+    this.isApproved = isApproved;
     }
 
     /* registers a new user to the app */
@@ -77,7 +77,7 @@ public class customer {
             }
 
             // insert a unique user to the database
-            if (db_access.registerUser(this, db))
+//            if (db_access.registerUser(this, db))
                 return OpStatus.Success;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -96,15 +96,15 @@ public class customer {
         // get access to database
         Database db_access = new Database();
 
-        try {
-            // check the credentials of the user
-            if (db_access.authAdmin(this, db))
-                return OpStatus.Success;
-            else
-                return OpStatus.WrongCredentials;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            // check the credentials of the user
+////            if (db_access.authAdmin(this, db))
+//                return OpStatus.Success;
+////            else
+//                return OpStatus.WrongCredentials;
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
 
         return OpStatus.Error;
     }

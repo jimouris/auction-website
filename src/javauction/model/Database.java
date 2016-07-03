@@ -40,31 +40,31 @@ public class Database {
 
 
 	/* tries to authenticate an admin */
-	public Boolean authAdmin(customer user, Connection db) throws SQLException {
-		Boolean status = null;
-
-		// execute the sql select query
-		String sql = "SELECT COUNT(*) as occurs FROM user where username = ? and password = ? and isAdmin = 1";
-		PreparedStatement pstmt = db.prepareStatement(sql);
-		pstmt.setString(1, user.username);
-		pstmt.setString(2, user.password);
-		ResultSet result = pstmt.executeQuery();
-
-		// get the number of duplicates
-		result.next();
-		int occurs = result.getInt("occurs");
-		result.close();
-		pstmt.close();
-
-
-		// there should be only one admin with those credentials
-		if (occurs == 1)
-			status = true; // authAdmin = true
-		else
-			status = false; // authAdmin = false
-
-		return status;
-	}
+//	public Boolean authAdmin(customer user, Connection db) throws SQLException {
+//		Boolean status = null;
+//
+//		// execute the sql select query
+//		String sql = "SELECT COUNT(*) as occurs FROM user where username = ? and password = ? and isAdmin = 1";
+//		PreparedStatement pstmt = db.prepareStatement(sql);
+//		pstmt.setString(1, user.username);
+//		pstmt.setString(2, user.password);
+//		ResultSet result = pstmt.executeQuery();
+//
+//		// get the number of duplicates
+//		result.next();
+//		int occurs = result.getInt("occurs");
+//		result.close();
+//		pstmt.close();
+//
+//
+//		// there should be only one admin with those credentials
+//		if (occurs == 1)
+//			status = true; // authAdmin = true
+//		else
+//			status = false; // authAdmin = false
+//
+//		return status;
+//	}
 
 
 	/* tries to authenticate an admin */
@@ -101,8 +101,8 @@ public class Database {
 	}
 
 
-	public Boolean registerUser(customer user, Connection db) throws SQLException {
-		Boolean status = null;
+//	public Boolean registerUser(customer user, Connection db) throws SQLException {
+//		Boolean status = null;
 //
 //		// prepare the query
 //		String sql 	= "INSERT INTO user"
@@ -139,8 +139,7 @@ public class Database {
 //			status = true;
 //		else
 //			status = false;
-
-		return status;
-	}
+//		return status;
+//	}
 
 }

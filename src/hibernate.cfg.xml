@@ -13,7 +13,7 @@
 
         <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
 
-        <property name="hibernate.show_sql">true</property>
+        <!--<property name="hibernate.show_sql">true</property>-->
 
         <mapping class="javauction.model.AuctionEntity"/>
         <mapping class="javauction.model.AuctionCategoryEntity"/>
