@@ -1,5 +1,6 @@
 package javauction.controller;
 
+import javauction.service.UserService;
 import javauction.service.LoginService;
 
 import javax.servlet.RequestDispatcher;
@@ -28,8 +29,8 @@ public class loginAdmin extends HttpServlet {
 
         // check the credentials
         // tell the customer to register a new user
-        LoginService loginService = new LoginService();
         try {
+            LoginService loginService = new LoginService();
             result = loginService.authenticateAdmin(username, password);
         } catch (Exception e) {
             e.printStackTrace();
@@ -38,7 +39,8 @@ public class loginAdmin extends HttpServlet {
         List userLst;
         if (result) {
             next_page = "/listUsers.jsp";
-            userLst = loginService.getAllUsers();
+            UserService userService = new UserService();
+            userLst = userService.getAllUsers();
 
             request.setAttribute("userLst", userLst);
         }

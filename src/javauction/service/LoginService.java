@@ -26,18 +26,5 @@ public class LoginService {
         return false;
     }
 
-    public List getAllUsers(){
-        Session session = HibernateUtil.getSession();
-        try {
-            Query query = session.createQuery("from UserEntity where isAdmin=0");
-            List results = query.list();
-            return results;
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            session.close();
-        }
-        return null;
-    }
 
 }

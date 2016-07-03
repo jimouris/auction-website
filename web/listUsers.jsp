@@ -1,4 +1,4 @@
-<%@ page import="java.util.List" %><%--<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>--%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%--<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>--%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -25,9 +25,10 @@
     <table>
         <c:forEach var="user" items="${userLst}">
             <tr>
-                <td>${user.Username}</td>
-                <td>${user.Firstname}</td>
-                <td><a href="viewInfo.jsp">more</a></td>
+                <td>${user.username}</td>
+                <td>${user.firstname}</td>
+                <td>${user.isApproved}</td>
+                <td><a href=getAUser.do?uid=${user.userId}>more info</a></td>
             </tr>
         </c:forEach>
     </table>

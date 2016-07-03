@@ -1,67 +1,42 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>Administrator login page</title>
+    <title>View user's info</title>
 
-    <link href="./css/skeleton.css" rel="stylesheet">
 </head>
 <body>
-<div class="container">
-    <!-- HEADER STUFF -->
-    <div class="row">
-        <div class="two columns">
-            <a href="./admin.jsp">
-                <img class="three columns" src="./images/logo.png"><span class="nine columns">Home</span>
-            </a>
-        </div>
-        <div class="offset-by-nine one column">
-            <ul class="nav u-full-width row">
-                <li class="u-full-width column"><a href=""><span class="delete">Logout</span></a></li>
-            </ul>
-        </div>
-    </div>
-    <!-- end of header row -->
 
-
-
-    <!-- print user's data -->
-    <div class="row">
-        <table>
-            <thead>
-            <tr>
-                <th>Χαρακτηριστικό</th>
-                <th>Τιμή</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td>First Name</td>
-            </tr>
-            <tr>
-                <td>Last Name:</td>
-            </tr>
-            <tr>
-                <td>City:</td>
-            </tr>
-            <tr>
-                <td>Country:</td>
-            </tr>
-            <tr>
-                <td>VAT:</td>
-            </tr>
-            <tr>
-                <td>Email:</td>
-            </tr>
-            </tbody>
-        </table>
-        <form action="executeApprove" method="post">
-            <input type=hidden name=id value=>
-            <input type=submit class=button-primary value=Approve>
-        </form>
-    </div>
-</div>
-<!-- end of container -->
+    <jsp:useBean id="user" class="javauction.model.UserEntity" scope="request" />
+    <form action="approveUser.do" method="post">
+        <input type="hidden" value=${user.userId} name="uid">
+        <input type=submit value=Approve>
+        <dl>Username</dl>
+        <dd>${user.username}</dd>
+        <dl>Firstname</dl>
+        <dd>${user.firstname}</dd>
+        <dl>Lastname</dl>
+        <dd>${user.lastname}</dd>
+        <dl>Email</dl>
+        <dd>${user.email}</dd>
+        <dl>PhoneNumber</dl>
+        <dd>${user.phoneNumber}</dd>
+        <dl>VAT</dl>
+        <dd>${user.vat}</dd>
+        <dl>Home Address</dl>
+        <dd>${user.homeAddress}</dd>
+        <dl>Latitude</dl>
+        <dd>${user.latitude}</dd>
+        <dl>Longtitude</dl>
+        <dd>${user.longitude}</dd>
+        <dl>City</dl>
+        <dd>${user.city}</dd>
+        <dl>Country</dl>
+        <dd>${user.country}</dd>
+        <dl>Sign up date</dl>
+        <dd>${user.signUpDate}</dd>
+    </form>
 </body>
 </html>

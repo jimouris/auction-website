@@ -12,15 +12,12 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Created by gpelelis on 19/4/2016.
+ * Created by jimouris on 7/3/16.
  */
-@WebServlet(name = "getAUser")
-public class getAUser extends HttpServlet {
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+@WebServlet(name = "updateUser")
+public class updateUser extends HttpServlet {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-	}
-
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html");
 
         UserEntity user;
@@ -30,8 +27,8 @@ public class getAUser extends HttpServlet {
         // retrieve user's info
         try {
             UserService userService = new UserService();
+            Boolean status = userService.approveUser(uid);
             user = userService.getUser(uid);
-            System.out.println(user);
             request.setAttribute("user", user);
         } catch (Exception e) {
             e.printStackTrace();
@@ -40,5 +37,9 @@ public class getAUser extends HttpServlet {
         // then forward the request to userInfo.jsp with the information of status
         RequestDispatcher view = request.getRequestDispatcher(next_page);
         view.forward(request, response);
-	}
+    }
+
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+    }
 }
