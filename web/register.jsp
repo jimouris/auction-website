@@ -22,7 +22,8 @@
                     <section class="register u-full-width">
                         <h1>register at our eshop</h1>
                         <!-- Restriction for validation are inserted on the end of input -->
-                        <form action="register.do" method="POST" id="registerForm">
+                        <form action="user.do" method="POST" id="registerForm">
+                            <input type="hidden" name="action" value="register">
                             <label for="username">Username</label>
                             <input class="u-full-width" type="text" id="username" name="username">
 

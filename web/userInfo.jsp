@@ -10,9 +10,9 @@
 <body>
 
     <jsp:useBean id="user" class="javauction.model.UserEntity" scope="request" />
-    <form action="approveUser.do" method="post">
+    <form action="user.do" method="post">
         <input type="hidden" value=${user.userId} name="uid">
-        <input type=submit value=Approve>
+        <input type=submit value=approveUser name="action">
         <dl>Username</dl>
         <dd>${user.username}</dd>
         <dl>Firstname</dl>

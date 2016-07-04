@@ -70,23 +70,13 @@
     </servlet-mapping>
 
     <servlet>
-        <servlet-name>getAUser</servlet-name>
-        <servlet-class>javauction.controller.getAUser</servlet-class>
+        <servlet-name>user</servlet-name>
+        <servlet-class>javauction.controller.user</servlet-class>
     </servlet>
 
     <servlet-mapping>
-        <servlet-name>getAUser</servlet-name>
-        <url-pattern>/getAUser.do</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-        <servlet-name>updateUser</servlet-name>
-        <servlet-class>javauction.controller.updateUser</servlet-class>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>updateUser</servlet-name>
-        <url-pattern>/approveUser.do</url-pattern>
+        <servlet-name>user</servlet-name>
+        <url-pattern>/user.do</url-pattern>
     </servlet-mapping>
 
 
