@@ -22,7 +22,7 @@
             <label for="password">password</label>
             <input type="password" id="password" name="password" required>
             <!-- this hidden field must be used only on pages that the admin can login -->
-            <input type="hidden" name="referrer" value="backoffice">
+            <input type="hidden" name="action" value="admin">
             <input type="submit" value="Admin Login">
         </form>
 

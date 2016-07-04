@@ -66,20 +66,12 @@
     <div class="one-third column">
       <section class="login u-full-width">
         <h1>Login</h1>
-        <%
-          Boolean failed = (Boolean)request.getAttribute("loginFailed");
-          String msg = (String)request.getAttribute("msg");
-          if ( failed != null && msg != null && failed ){
-            %>
-            <p class="error"><%= msg %></p>
-            <%
-          }
-        %>
         <form action="login.do" method="POST" id="loginForm">
           <label>email</label>
           <input class="u-full-width" type="text" id="username" name="username"  autofocus>
           <label for="password">password</label>
           <input class="u-full-width" type="password" id="password" name="password" required>
+          <input type="hidden" name="action" value="user">
           <input class="button-primary u-pull-right" type="submit" value="Login">
         </form>
       </section>

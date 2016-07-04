@@ -12,6 +12,7 @@ import java.util.List;
  */
 public class LoginService {
 
+    // authenticate the admin
     public boolean authenticateAdmin(String userName, String password) {
         Session session = HibernateUtil.getSession();
         try {
@@ -26,5 +27,18 @@ public class LoginService {
         return false;
     }
 
-
+    // authenticate a regular user
+    public boolean authenticateUser(String username, String password) {
+        Session session = HibernateUtil.getSession();
+        try {
+            Query query = session.createQuery("from UserEntity where username='"+username+"' and password='"+password+"' and isAdmin=0");
+            List results = query.list();
+            return results.size() == 1;
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+        return false;
+    }
 }

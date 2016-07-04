@@ -40,16 +40,6 @@
 
 
     <servlet>
-        <servlet-name>register new user</servlet-name>
-        <servlet-class>javauction.controller.register</servlet-class>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>register new user</servlet-name>
-        <url-pattern>/register.do</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
         <servlet-name>login</servlet-name>
         <servlet-class>javauction.controller.login</servlet-class>
     </servlet>
@@ -59,15 +49,6 @@
         <url-pattern>/login.do</url-pattern>
     </servlet-mapping>
 
-    <servlet>
-        <servlet-name>loginAdmin</servlet-name>
-        <servlet-class>javauction.controller.loginAdmin</servlet-class>
-    </servlet>
-
-    <servlet-mapping>
-        <servlet-name>loginAdmin</servlet-name>
-        <url-pattern>/loginAdmin.do</url-pattern>
-    </servlet-mapping>
 
     <servlet>
         <servlet-name>user</servlet-name>

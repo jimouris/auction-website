@@ -4,39 +4,7 @@
     <meta charset="utf-8">
     <title>Welcome Page</title>
 
-    <link href="./css/skeleton.css" rel="stylesheet">
-    <style>
-        .look{
-            font-size: 2.3em;
-            position: absolute;
-            font-weight: 900;
-            top: -22px;
-            left: -34px;
-        }
-        h4.u-center-text.button {
-            position: relative;
-            top: -10px;
-            background: white;
-            box-shadow: 0 -4px 47px -5px #eee;
-            border: none;
-            border-top: 1px solid #333;
-            border-radius: 0;
-            margin-top:0;
-        }
-
-
-        @-webkit-keyframes moveDown{
-            from{ top: -10px;}
-            to{ top: -2px;}
-        }
-
-
-        h4.u-center-text.button:hover{
-            -webkit-animation: moveDown 500ms;
-            top: -2px;
-        }
-
-    </style>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css" rel="stylesheet">
 </head>
 <body>
 <div class="container">
