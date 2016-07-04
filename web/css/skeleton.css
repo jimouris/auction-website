@@ -12,7 +12,6 @@
 ––––––––––––––––––––––––––––––––––––––––––––––––––
 - Grid
 - Base Styles
-- Object States
 - Typography
 - Links
 - Buttons
@@ -20,11 +19,8 @@
 - Lists
 - Code
 - Tables
-- Tooltips
-- Navigations
 - Spacing
 - Utilities
-- Error formating
 - Clearing
 - Media Queries
 */
@@ -32,9 +28,6 @@
 
 /* Grid
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
-*{
-  position: relative;
-}
 .container {
   position: relative;
   width: 100%;
@@ -62,24 +55,9 @@
   .column,
   .columns {
     margin-left: 4%; }
-  h4 + .column,
   .column:first-child,
   .columns:first-child {
     margin-left: 0; }
-
-  /* use those on table collumns*/
-  .one.table                      { width: 8.333333333333%;}  
-  .two.table                      { width: 16.666666666667%;}  
-  .three.table                    { width: 25%;}
-  .four.table                     { width: 33.333333333%;}
-  .five.table                     { width: 41.66666666666667%;}
-  .six.table                      { width: 50%;}
-  .seven.table                    { width: 58.33333333333333%;}
-  .eight.table                    { width: 66.66666666666667%;}
-  .nine.table                     { width: 75%;}
-  .ten.table                      { width: 83.333333333%;}
-  .eleven.table                   { width: 91.66666666666667%;}
-
 
   .one.column,
   .one.columns                    { width: 4.66666666667%; }
@@ -97,10 +75,6 @@
 
   .one-third.column               { width: 30.6666666667%; }
   .two-thirds.column              { width: 65.3333333333%; }
-
-  .one-fourth.column              { width: 22%; }
-  .two-fourths.column             { width: 48%; }
-  .three-fourths.column           { width: 74%; }
 
   .one-half.column                { width: 48%; }
 
@@ -151,41 +125,7 @@ body {
   line-height: 1.6;
   font-weight: 400;
   font-family: "Raleway", "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  color: #222;
-  background: #e8e8e8; 
-}
-
-
-/* Object States
-–––––––––––––––––––––––––––––––––––––––––––––––––– */
-.delete{
-  color: #e82456;
-  background-color: white;
-  border: 1px solid #d81422;
-  border-radius: 2px;
-  padding: 1rem;
-  cursor: pointer;
-}
-
-.delete:hover{
-  color: white;
-  background: #e82456;
-  border: 1px solid transparent;
-}
-
-.new{
-  color: #2663d3;
-  border-bottom: 2px solid #2663d3;
-}
-
-.old{
-  color: #777;
-}
-
-.unvailable{
-  color: #888;
-  cursor: not-allowed;
-}
+  color: #222; }
 
 
 /* Typography
@@ -203,10 +143,10 @@ h6 { font-size: 1.5rem; line-height: 1.6;  letter-spacing: 0; }
 
 /* Larger than phablet */
 @media (min-width: 550px) {
-  h1 { font-size: 2.0rem; border-bottom: 1px solid lightgray; padding-bottom: 0.8rem;}
+  h1 { font-size: 5.0rem; }
   h2 { font-size: 4.2rem; }
   h3 { font-size: 3.6rem; }
-  h4 { font-size: 1.8rem; }
+  h4 { font-size: 3.0rem; }
   h5 { font-size: 2.4rem; }
   h6 { font-size: 1.5rem; }
 }
@@ -218,16 +158,9 @@ p {
 /* Links
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
 a {
-  color: #1EAEDB; 
-  text-decoration: none;
-}
+  color: #1EAEDB; }
 a:hover {
-  color: #0FA0CE; 
-  text-decoration: none;
-}
-.important-text{
-  color: #33C3F0;
-}
+  color: #0FA0CE; }
 
 
 /* Buttons
@@ -247,13 +180,13 @@ input[type="button"] {
   line-height: 38px;
   letter-spacing: .1rem;
   text-transform: uppercase;
+  text-decoration: none;
   white-space: nowrap;
   background-color: transparent;
   border-radius: 4px;
   border: 1px solid #bbb;
   cursor: pointer;
   box-sizing: border-box; }
-
 .button:hover,
 button:hover,
 input[type="submit"]:hover,
@@ -267,7 +200,6 @@ input[type="button"]:focus {
   color: #333;
   border-color: #888;
   outline: 0; }
-
 .button.button-primary,
 button.button-primary,
 input[type="submit"].button-primary,
@@ -276,7 +208,6 @@ input[type="button"].button-primary {
   color: #FFF;
   background-color: #33C3F0;
   border-color: #33C3F0; }
-
 .button.button-primary:hover,
 button.button-primary:hover,
 input[type="submit"].button-primary:hover,
@@ -287,10 +218,10 @@ button.button-primary:focus,
 input[type="submit"].button-primary:focus,
 input[type="reset"].button-primary:focus,
 input[type="button"].button-primary:focus {
-  color: #33C3F0;
-  background-color: white;
-  border-color: #1EAEDB;
-}
+  color: #FFF;
+  background-color: #1EAEDB;
+  border-color: #1EAEDB; }
+
 
 /* Forms
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
@@ -301,8 +232,6 @@ input[type="text"],
 input[type="tel"],
 input[type="url"],
 input[type="password"],
-input[type="date"],
-input[list],
 textarea,
 select {
   height: 38px;
@@ -320,11 +249,10 @@ input[type="text"],
 input[type="tel"],
 input[type="url"],
 input[type="password"],
-input[type="date"],
 textarea {
   -webkit-appearance: none;
-     -moz-appearance: none;
-          appearance: none; }
+  -moz-appearance: none;
+  appearance: none; }
 textarea {
   min-height: 65px;
   padding-top: 6px;
@@ -336,7 +264,6 @@ input[type="text"]:focus,
 input[type="tel"]:focus,
 input[type="url"]:focus,
 input[type="password"]:focus,
-input[type="date"]:focus,
 textarea:focus,
 select:focus {
   border: 1px solid #33C3F0;
@@ -353,7 +280,7 @@ input[type="checkbox"],
 input[type="radio"] {
   display: inline; }
 label > .label-body {
-  display: inline;
+  display: inline-block;
   margin-left: .5rem;
   font-weight: normal; }
 
@@ -375,9 +302,7 @@ ol ul {
   font-size: 90%; }
 li {
   margin-bottom: 1rem; }
-li.no-style{
-  list-style: none;
-}
+
 
 /* Code
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
@@ -397,16 +322,9 @@ pre > code {
 
 /* Tables
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
-table{
-  border-collapse: collapse;
-}
-thead th,
-thead td{
-  border-bottom: none;
-}
 th,
 td {
-  padding: 12px 15px 9px;
+  padding: 12px 15px;
   text-align: left;
   border-bottom: 1px solid #E1E1E1; }
 th:first-child,
@@ -417,75 +335,11 @@ td:last-child {
   padding-right: 0; }
 
 
-
-/* Tooltips
-–––––––––––––––––––––––––––––––––––––––––––––––––– */
-.tooltip{
-  position: relative;
-  cursor: pointer;
-}  
-
-.tooltipText{
-  cursor: auto;
-  position: absolute;
-  left: 0;
-  top: 1.3em;
-  background: #333;
-  color: #eee;
-  border-radius: 4px;
-  padding: 0.7rem 1.4rem;
-  width: 4em;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 180ms ease-in;
-  z-index: 10
-}
-
-.tooltipText .tooltipMargin{
-  width: 4em;
-}
-
-.tooltipText:hover{
-  visibility: visible;
-  opacity: 1;
-}
-.tooltipFire:hover + .tooltipText{
-  opacity: 1;
-  visibility: visible;
-}
-
-
-/* Tabbed stuff
-–––––––––––––––––––––––––––––––––––––––––––––––––– */
-.hidden{
-  visibility: hidden;
-  opacity: 0;
-  transition: opacity 150ms ease-in;
-  height: 0;
-  overflow: hidden;
-}
-
-/* Navigations
-–––––––––––––––––––––––––––––––––––––––––––––––––– */
-ul.nav,
-.row ul.nav{
-  margin-top: 1rem;
-}
-
-.nav li{
-  list-style: none;
-  display: inline-block;
-  cursor: pointer;
-  text-transform: uppercase;
-}
-
-
-
 /* Spacing
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
 button,
 .button {
-  /* margin-bottom: 1rem; */ }
+  margin-bottom: 1rem; }
 input,
 textarea,
 select,
@@ -500,14 +354,8 @@ p,
 ul,
 ol,
 form {
-  margin-bottom: 1.5rem; }
-.row{
-    margin: 1rem 0;
-    padding: 1rem 2rem;
-}
-h4{
-  margin-top: 0.8rem;
-}
+  margin-bottom: 2.5rem; }
+
 
 /* Utilities
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
@@ -521,80 +369,17 @@ h4{
   float: right; }
 .u-pull-left {
   float: left; }
-.u-center-80{
-  display: block;
-  max-width: 80%;
-  width: initial;
-  margin: 0 auto;
-}
-.u-center-text{
-  text-align: center;
-  display: block;
-}
-.u-text-right{
-  text-align: right;
-}
-.columns.u-center,
-.u-center{
-  margin: 0 auto;
-  float: none;
-}
-.u-top-10{
-  margin-top: 10px;
-}
-
-
-/* Errors
-–––––––––––––––––––––––––––––––––––––––––––––––––– */
-/*
-Note: The following code is responsible to format the error messages
-that are produced through jqueryValidator plugin.
-To find out more visit http://jqueryvalidation.org/ 
-*/
-label.error {
-    margin-top: -11px;
-    margin-left: 4px;
-    color: rgb(241, 40, 81);
-}
-
-input.error {
-    border: 1px solid rgb(241, 40, 81);
-}
-
-input.error:focus + label.error{
-    color: #33C3F0;
-}
-
-form .valid {
-    border: 1px solid rgb(31, 230, 45);
-}
 
 
 /* Misc
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
 hr {
-  margin-top: 0.5rem;
-  margin-bottom: 0.5rem;
+  margin-top: 3rem;
+  margin-bottom: 3.5rem;
   border-width: 0;
   border-top: 1px solid #E1E1E1; }
 
-.row{
-  border: 1px solid lightgray;
-  border-radius: 6px;
-  background: #fff;
-}
 
-.row .row{
-  border: none;
-  margin: 0;
-  padding: 0;
-}
-
-.important{
-  display: table;
-  color: #e82456;
-  border-bottom: 1px solid #e82456;
-}
 /* Clearing
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
 
@@ -607,7 +392,7 @@ hr {
   clear: both; }
 
 
-/* MediQueries
+/* Media Queries
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
 /*
 Note: The best way to structure the use of media queries is to create the queries

@@ -13,32 +13,6 @@
         <tracking-mode>COOKIE</tracking-mode>
     </session-config>
 
-    <context-param>
-        <param-name>db url</param-name>
-        <param-value>jdbc:mysql://localhost:3306/auctionwebsite</param-value>
-    </context-param>
-
-    <context-param>
-        <param-name>db driver</param-name>
-        <param-value>com.mysql.jdbc.Driver</param-value>
-    </context-param>
-
-    <context-param>
-        <param-name>db user</param-name>
-        <param-value>root</param-value>
-    </context-param>
-
-    <context-param>
-        <param-name>db pass</param-name>
-        <param-value>root</param-value>
-    </context-param>
-
-
-    <!--<listener>-->
-        <!--<listener-class>javauction.model.appInit</listener-class>-->
-    <!--</listener>-->
-
-
     <servlet>
         <servlet-name>login</servlet-name>
         <servlet-class>javauction.controller.login</servlet-class>
@@ -58,6 +32,18 @@
     <servlet-mapping>
         <servlet-name>user</servlet-name>
         <url-pattern>/user.do</url-pattern>
+    </servlet-mapping>
+
+
+
+    <servlet>
+        <servlet-name>auction</servlet-name>
+        <servlet-class>javauction.controller.auction</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>auction</servlet-name>
+        <url-pattern>/auction.do</url-pattern>
     </servlet-mapping>
 
 

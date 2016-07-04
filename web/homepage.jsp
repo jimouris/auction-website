@@ -85,16 +85,6 @@
     </div>
     <!-- end of search row -->
 
-    <!-- DIMOPRASIES ROW -->
 
-    <!-- enf of dimoprasies row -->
-
-    <!-- CATEGORIES ROW -->
-    <div class="row u-full-width u-cf">
-        <h1>Navigate based on the categories</h1>
-        <section class="categories">
-            <ul></ul>
-        </section>
-    </div>
 </body>
 </html>

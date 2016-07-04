@@ -7,9 +7,13 @@ import java.sql.Date;
  * Created by jimouris on 7/2/16.
  */
 @Entity
-@Table(name = "auction", schema = "auctionwebsite", catalog = "")
+@Table(name = "auction", schema = "auctionwebsite")
 public class AuctionEntity {
+
+    @Id
+    @GeneratedValue(strategy=GenerationType.AUTO)
     private long auctionId;
+    private long sellerId;
     private String name;
     private String description;
     private double lowestBid;
@@ -18,12 +22,31 @@ public class AuctionEntity {
     private Date startingDate;
     private Date endingDate;
     private String country;
-    private String location;
+    private String city;
     private Integer numOfBids;
     private Double longtitude;
     private double latitude;
     private Byte isStarted;
-    private Integer buyPrice;
+    private double buyPrice;
+
+    // used for the javabean
+    public AuctionEntity() {
+    }
+
+    public AuctionEntity(String name, String description, double lowestBid, String country, String city, double buyPrice, Date startingDate, Byte isStarted, Date endDate) {
+        this.name = name;
+        this.description = description;
+        this.lowestBid = lowestBid;
+        this.country = country;
+        this.city = city;
+        this.startingDate = startingDate;
+        this.endingDate = endDate;
+        this.isStarted = isStarted;
+        this.buyPrice = buyPrice;
+
+        // todo: get the real id of seller
+        this.sellerId = 25;
+    }
 
     @Id
     @Column(name = "AuctionID")
@@ -33,6 +56,16 @@ public class AuctionEntity {
 
     public void setAuctionId(long auctionId) {
         this.auctionId = auctionId;
+    }
+
+    @Basic
+    @Column(name = "SellerID")
+    public long getSelledId() {
+        return sellerId;
+    }
+
+    public void setSelledId(long selledId) {
+        this.sellerId = selledId;
     }
 
     @Basic
@@ -116,13 +149,13 @@ public class AuctionEntity {
     }
 
     @Basic
-    @Column(name = "Location")
-    public String getLocation() {
-        return location;
+    @Column(name = "City")
+    public String getCity() {
+        return city;
     }
 
-    public void setLocation(String location) {
-        this.location = location;
+    public void setCity(String location) {
+        this.city = location;
     }
 
     @Basic
@@ -167,13 +200,11 @@ public class AuctionEntity {
 
     @Basic
     @Column(name = "BuyPrice")
-    public Integer getBuyPrice() {
+    public double getBuyPrice() {
         return buyPrice;
     }
 
-    public void setBuyPrice(Integer buyPrice) {
-        this.buyPrice = buyPrice;
-    }
+    public void setBuyPrice(double buyPrice) { this.buyPrice = buyPrice; }
 
     @Override
     public boolean equals(Object o) {
@@ -187,18 +218,17 @@ public class AuctionEntity {
         if (Double.compare(that.currentBid, currentBid) != 0) return false;
         if (Double.compare(that.finalPrice, finalPrice) != 0) return false;
         if (Double.compare(that.latitude, latitude) != 0) return false;
+        if (Double.compare(that.buyPrice, buyPrice) != 0) return false;
         if (name != null ? !name.equals(that.name) : that.name != null) return false;
         if (description != null ? !description.equals(that.description) : that.description != null) return false;
         if (startingDate != null ? !startingDate.equals(that.startingDate) : that.startingDate != null) return false;
         if (endingDate != null ? !endingDate.equals(that.endingDate) : that.endingDate != null) return false;
         if (country != null ? !country.equals(that.country) : that.country != null) return false;
-        if (location != null ? !location.equals(that.location) : that.location != null) return false;
+        if (city != null ? !city.equals(that.city) : that.city != null) return false;
         if (numOfBids != null ? !numOfBids.equals(that.numOfBids) : that.numOfBids != null) return false;
         if (longtitude != null ? !longtitude.equals(that.longtitude) : that.longtitude != null) return false;
-        if (isStarted != null ? !isStarted.equals(that.isStarted) : that.isStarted != null) return false;
-        if (buyPrice != null ? !buyPrice.equals(that.buyPrice) : that.buyPrice != null) return false;
+        return isStarted != null ? isStarted.equals(that.isStarted) : that.isStarted == null;
 
-        return true;
     }
 
     @Override
@@ -217,13 +247,35 @@ public class AuctionEntity {
         result = 31 * result + (startingDate != null ? startingDate.hashCode() : 0);
         result = 31 * result + (endingDate != null ? endingDate.hashCode() : 0);
         result = 31 * result + (country != null ? country.hashCode() : 0);
-        result = 31 * result + (location != null ? location.hashCode() : 0);
+        result = 31 * result + (city != null ? city.hashCode() : 0);
         result = 31 * result + (numOfBids != null ? numOfBids.hashCode() : 0);
         result = 31 * result + (longtitude != null ? longtitude.hashCode() : 0);
         temp = Double.doubleToLongBits(latitude);
         result = 31 * result + (int) (temp ^ (temp >>> 32));
         result = 31 * result + (isStarted != null ? isStarted.hashCode() : 0);
-        result = 31 * result + (buyPrice != null ? buyPrice.hashCode() : 0);
+        temp = Double.doubleToLongBits(buyPrice);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "AuctionEntity{" +
+                "auctionId=" + auctionId +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", lowestBid=" + lowestBid +
+                ", currentBid=" + currentBid +
+                ", finalPrice=" + finalPrice +
+                ", startingDate=" + startingDate +
+                ", endingDate=" + endingDate +
+                ", country='" + country + '\'' +
+                ", city='" + city + '\'' +
+                ", numOfBids=" + numOfBids +
+                ", longtitude=" + longtitude +
+                ", latitude=" + latitude +
+                ", isStarted=" + isStarted +
+                ", buyPrice=" + buyPrice +
+                '}';
     }
 }
