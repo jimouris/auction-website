@@ -5,14 +5,21 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>View user's info</title>
-
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css" rel="stylesheet">
 </head>
 <body>
+    <a href="user.do?action=getAllUsers">view all users</a>
 
     <jsp:useBean id="user" class="javauction.model.UserEntity" scope="request" />
     <form action="user.do" method="post">
         <input type="hidden" value=${user.userId} name="uid">
-        <input type=submit value=approveUser name="action">
+        <c:if test="${user.isApproved == 0}">
+            <input type=submit value=approveUser name="action">
+        </c:if>
+        <c:if test="${user.isApproved == 1}">
+            <h2>The user is approved</h2>
+        </c:if>
+
         <dl>Username</dl>
         <dd>${user.username}</dd>
         <dl>Firstname</dl>

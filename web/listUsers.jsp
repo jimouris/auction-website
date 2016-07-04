@@ -7,15 +7,13 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Administrator login page</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css" rel="stylesheet">   
 </head>
 <body>
 <div class="container">
-        <h1>List users</h1>
+    <a href="/">home</a>
 
-    <!-- id = request.setAttribute("id", whateva);
-    class = well the class
-    scope = where should I look? -->
-
+    <h1>List users</h1>
     <jsp:useBean id="userLst" class="java.util.ArrayList" scope="request" />
 
     <%--<%--%>

@@ -34,9 +34,9 @@
     </context-param>
 
 
-    <listener>
-        <listener-class>javauction.model.appInit</listener-class>
-    </listener>
+    <!--<listener>-->
+        <!--<listener-class>javauction.model.appInit</listener-class>-->
+    <!--</listener>-->
 
 
     <servlet>
