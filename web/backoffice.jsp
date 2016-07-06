@@ -16,7 +16,7 @@
                 }
 
             %>
-        <form action="loginAdmin.do" method="POST" id="loginForm">
+        <form action="login.do" method="POST" id="loginForm">
             <label for="username">Admin's username</label>
             <input type="text" id="username" name="username" required autofocus>
             <label for="password">password</label>
