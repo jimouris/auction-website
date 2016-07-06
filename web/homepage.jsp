@@ -29,8 +29,8 @@
         <section class="four columns">
             <h1><span class="look">></span> Auctions</h1>
             <a class="button button-primary" href="./newAuction.jsp">Create an auction</a>
-            <a class="button button u-top-10" href="./auctions.jsp">View your auctions</a>
-            <a class="button button u-top-10" href="./auctions.jsp?p=all">View all active auctions</a>
+            <a class="button button u-top-10" href="listAuctions.jsp?action=getAllAuctions" value="ViewAllAuctions">View your auctions</a>
+            <a class="button button u-top-10" href="listAuctions.jsp?p=all">View all active auctions</a>
         </section>
 
 

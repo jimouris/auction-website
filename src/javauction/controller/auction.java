@@ -3,6 +3,7 @@ package javauction.controller;
 import javauction.model.AuctionEntity;
 import javauction.service.AuctionService;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -13,6 +14,7 @@ import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.List;
 
 /**
  * Created by gpelelis on 4/7/2016.
@@ -78,9 +80,23 @@ public class auction extends HttpServlet {
 //            RequestDispatcher view = request.getRequestDispatcher(next_page);
 //            view.forward(request, response);
         }
+
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+        if (request.getParameter("action").equals("ViewAllAuctions")) {
+            List AuctionLst;
+            String next_page = "/listAuctions.jsp";
+            AuctionService auctionService = new AuctionService();
+            AuctionLst = auctionService.getAllAuctions(33);
+            // TODO: 7/6/16 !!! replace 33 with SellerID !!!
+
+            request.setAttribute("AuctionLst", AuctionLst);
+
+            RequestDispatcher view = request.getRequestDispatcher(next_page);
+            view.forward(request, response);
+        }
 
     }
 }
