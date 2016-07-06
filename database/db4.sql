@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS `auctionwebsite`.`user` (
   UNIQUE INDEX `Id_UNIQUE` (`UserID` ASC),
   UNIQUE INDEX `Username_UNIQUE` (`Username` ASC))
 ENGINE = InnoDB
-AUTO_INCREMENT = 30
+AUTO_INCREMENT = 32
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -61,7 +61,7 @@ CREATE TABLE IF NOT EXISTS `auctionwebsite`.`auction` (
   `NumOfBids` INT(11) NULL DEFAULT NULL,
   `Longtitude` FLOAT NULL DEFAULT NULL,
   `Latitude` FLOAT NOT NULL,
-  `IsStarted` TINYINT(1) NULL DEFAULT NULL,
+  `IsStarted` TINYINT(1) NOT NULL DEFAULT '0',
   `BuyPrice` INT(11) NULL DEFAULT NULL,
   PRIMARY KEY (`AuctionID`),
   INDEX `fk_auction_user_idx` (`SellerID` ASC),
@@ -69,8 +69,8 @@ CREATE TABLE IF NOT EXISTS `auctionwebsite`.`auction` (
   CONSTRAINT `fk_auction_user`
     FOREIGN KEY (`SellerID`)
     REFERENCES `auctionwebsite`.`user` (`UserID`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   CONSTRAINT `fk_auction_user1`
     FOREIGN KEY (`BuyerID`)
     REFERENCES `auctionwebsite`.`user` (`UserID`)
@@ -102,13 +102,13 @@ CREATE TABLE IF NOT EXISTS `auctionwebsite`.`auctioncategory` (
   CONSTRAINT `fk_auctionCategory_auction1`
     FOREIGN KEY (`AuctionId`)
     REFERENCES `auctionwebsite`.`auction` (`AuctionID`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   CONSTRAINT `fk_auctionCategory_category1`
     FOREIGN KEY (`CategroryId`)
     REFERENCES `auctionwebsite`.`category` (`CategoryID`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
@@ -127,13 +127,13 @@ CREATE TABLE IF NOT EXISTS `auctionwebsite`.`bid` (
   CONSTRAINT `fk_bid_auction1`
     FOREIGN KEY (`AuctionID`)
     REFERENCES `auctionwebsite`.`auction` (`AuctionID`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   CONSTRAINT `fk_bid_user1`
     FOREIGN KEY (`BidderID`)
     REFERENCES `auctionwebsite`.`user` (`UserID`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
@@ -149,8 +149,8 @@ CREATE TABLE IF NOT EXISTS `auctionwebsite`.`itemimage` (
   CONSTRAINT `fk_itemImage_auction1`
     FOREIGN KEY (`AuctionId`)
     REFERENCES `auctionwebsite`.`auction` (`AuctionID`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
@@ -165,7 +165,7 @@ CREATE TABLE IF NOT EXISTS `auctionwebsite`.`messages` (
   `AuctionID` BIGINT(20) NOT NULL,
   `Message` VARCHAR(1000) NOT NULL,
   `ReceivedDate` DATE NOT NULL,
-  `IsRead` TINYINT(1) NOT NULL DEFAULT '0',
+  `IsRead` BOOL(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`MessageID`),
   UNIQUE INDEX `MessageID_UNIQUE` (`MessageID` ASC),
   INDEX `fk_messages_user1_idx` (`SenderID` ASC),
@@ -174,18 +174,18 @@ CREATE TABLE IF NOT EXISTS `auctionwebsite`.`messages` (
   CONSTRAINT `fk_messages_auction1`
     FOREIGN KEY (`AuctionID`)
     REFERENCES `auctionwebsite`.`auction` (`AuctionID`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   CONSTRAINT `fk_messages_user1`
     FOREIGN KEY (`SenderID`)
     REFERENCES `auctionwebsite`.`user` (`UserID`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   CONSTRAINT `fk_messages_user2`
     FOREIGN KEY (`ReceiverID`)
     REFERENCES `auctionwebsite`.`user` (`UserID`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
@@ -203,13 +203,13 @@ CREATE TABLE IF NOT EXISTS `auctionwebsite`.`rating` (
   CONSTRAINT `fk_rating_user1`
     FOREIGN KEY (`FromID`)
     REFERENCES `auctionwebsite`.`user` (`UserID`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   CONSTRAINT `fk_rating_user2`
     FOREIGN KEY (`ToID`)
     REFERENCES `auctionwebsite`.`user` (`UserID`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 

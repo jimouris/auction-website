@@ -12,10 +12,17 @@ import java.util.List;
  */
 public class UserService {
 
-    public UserEntity getUser(int uid) {
+    public UserEntity getUser(Object obj) {
         Session session = HibernateUtil.getSession();
         try {
-            UserEntity user = (UserEntity) session.get(UserEntity.class, uid);
+            UserEntity user = null;
+            if (obj instanceof String) {
+                String username = obj.toString();
+                user = (UserEntity) session.get(UserEntity.class, username);
+            } else if (obj instanceof Integer) {
+                int uid = (int) obj;
+                user = (UserEntity) session.get(UserEntity.class, uid);
+            }
             return user;
         } catch (Exception e) {
             e.printStackTrace();
