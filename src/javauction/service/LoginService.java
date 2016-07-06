@@ -12,33 +12,57 @@ import java.util.List;
  */
 public class LoginService {
 
+    public enum LoginStatus {
+        LOGIN_FAIL,
+        LOGIN_SUCCESS,
+        LOGIN_WRONG_UNAME_PASSWD,
+        LOGIN_NOT_APPROVED,
+        LOGIN_NOT_ADMIN
+    }
+
     // authenticate the admin
-    public boolean authenticateAdmin(String userName, String password) {
+    public LoginStatus authenticateAdmin(String username, String password) {
         Session session = HibernateUtil.getSession();
         try {
-            Query query = session.createQuery("from UserEntity where username='"+userName+"' and password='"+password+"' and isAdmin=1");
+            Query query = session.createQuery("from UserEntity where username='"+username+"' and password='"+password+"'");
             List results = query.list();
-            return results.size() == 1;
+            if (results.size() == 0) {
+                return LoginStatus.LOGIN_WRONG_UNAME_PASSWD;
+            }
+            query = session.createQuery("from UserEntity where username='"+username+"' and password='"+password+"' and isAdmin=1");
+            results = query.list();
+            if (results.size() == 0) {
+                return LoginStatus.LOGIN_NOT_ADMIN;
+            }
+            return LoginStatus.LOGIN_SUCCESS;
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
             session.close();
         }
-        return false;
+        return LoginStatus.LOGIN_FAIL;
     }
 
     // authenticate a regular user
-    public boolean authenticateUser(String username, String password) {
+    public LoginStatus authenticateUser(String username, String password) {
         Session session = HibernateUtil.getSession();
         try {
             Query query = session.createQuery("from UserEntity where username='"+username+"' and password='"+password+"' and isAdmin=0");
             List results = query.list();
-            return results.size() == 1;
+            if (results.size() == 0) {
+                return LoginStatus.LOGIN_WRONG_UNAME_PASSWD;
+            }
+            query = session.createQuery("from UserEntity where username='"+username+"' and password='"+password+"' and isApproved=1 and isAdmin=0");
+            results = query.list();
+            if (results.size() == 0) {
+                return LoginStatus.LOGIN_NOT_APPROVED;
+            }
+            return LoginStatus.LOGIN_SUCCESS;
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
             session.close();
         }
-        return false;
+        return LoginStatus.LOGIN_FAIL;
     }
 }
