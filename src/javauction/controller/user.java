@@ -41,7 +41,7 @@ public class user extends HttpServlet {
             // then forward the request to userInfo.jsp with the information of status
             RequestDispatcher view = request.getRequestDispatcher(next_page);
             view.forward(request, response);
-        } else if (request.getParameter("action").equals("register  ")){
+        } else if (request.getParameter("action").equals("register")){
             response.setContentType("text/html");
 
             // prepare variables
