@@ -47,6 +47,14 @@ public class login extends HttpServlet {
             } else if (usr_type.equals("user")){
                 result = loginService.authenticateUser(username, password);
                 if (result == LoginService.LoginStatus.LOGIN_SUCCESS) {
+                    session = request.getSession();
+                    UserService userservice = new UserService();
+                    UserEntity user = new UserEntity();
+                    user = userservice.getUser(username);
+                    session.setAttribute("uid", user.getUserId());
+                    // send him to new page as a logged in customer
+                    RequestDispatcher view = request.getRequestDispatcher("welcome.jsp");
+                    view.forward(request, response);
                     next_page = "homepage.jsp";
                 } else if (result == LoginService.LoginStatus.LOGIN_NOT_APPROVED) {
 //                    next_page = "approvalerror.jsp";
