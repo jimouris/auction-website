@@ -33,7 +33,7 @@ public class AuctionEntity {
     public AuctionEntity() {
     }
 
-    public AuctionEntity(String name, String description, double lowestBid, String country, String city, double buyPrice, Date startingDate, Byte isStarted, Date endDate) {
+    public AuctionEntity(String name, String description, double lowestBid, String country, String city, double buyPrice, Date startingDate, Byte isStarted, Date endDate, Int sellerId) {
         this.name = name;
         this.description = description;
         this.lowestBid = lowestBid;
@@ -45,7 +45,7 @@ public class AuctionEntity {
         this.buyPrice = buyPrice;
 
         // todo: get the real id of seller
-        this.sellerId = 25;
+        this.sellerId = sellerId;
     }
 
     @Id
