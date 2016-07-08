@@ -32,8 +32,8 @@ CREATE TABLE IF NOT EXISTS `auctionwebsite`.`user` (
   `City` VARCHAR(60) NOT NULL,
   `Country` VARCHAR(45) NOT NULL,
   `SignUpDate` DATE NOT NULL,
-  `IsAdmin` TINYINT(1) NOT NULL DEFAULT '0',
-  `isApproved` TINYINT(1) NOT NULL DEFAULT '0',
+  `IsAdmin` TINYINT(1) NOT NULL DEFAULT 0,
+  `isApproved` TINYINT(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`UserID`),
   UNIQUE INDEX `Id_UNIQUE` (`UserID` ASC),
   UNIQUE INDEX `Username_UNIQUE` (`Username` ASC))
@@ -46,7 +46,7 @@ DEFAULT CHARACTER SET = utf8;
 -- Table `auctionwebsite`.`auction`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `auctionwebsite`.`auction` (
-  `AuctionID` BIGINT(20) NOT NULL,
+  `AuctionID` BIGINT(20) NOT NULL AUTO_INCREMENT,
   `SellerID` BIGINT(20) NOT NULL,
   `BuyerID` BIGINT(20) NULL DEFAULT NULL,
   `Name` VARCHAR(150) NOT NULL,
@@ -61,7 +61,7 @@ CREATE TABLE IF NOT EXISTS `auctionwebsite`.`auction` (
   `NumOfBids` INT(11) NULL DEFAULT NULL,
   `Longtitude` FLOAT NULL DEFAULT NULL,
   `Latitude` FLOAT NOT NULL,
-  `IsStarted` TINYINT(1) NOT NULL DEFAULT '0',
+  `IsStarted` TINYINT(1) NULL DEFAULT 0,
   `BuyPrice` INT(11) NULL DEFAULT NULL,
   PRIMARY KEY (`AuctionID`),
   INDEX `fk_auction_user_idx` (`SellerID` ASC),
@@ -165,7 +165,7 @@ CREATE TABLE IF NOT EXISTS `auctionwebsite`.`messages` (
   `AuctionID` BIGINT(20) NOT NULL,
   `Message` VARCHAR(1000) NOT NULL,
   `ReceivedDate` DATE NOT NULL,
-  `IsRead` BOOL(1) NOT NULL DEFAULT 0,
+  `IsRead` TINYINT(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`MessageID`),
   UNIQUE INDEX `MessageID_UNIQUE` (`MessageID` ASC),
   INDEX `fk_messages_user1_idx` (`SenderID` ASC),
