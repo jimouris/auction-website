@@ -1,12 +1,15 @@
 package javauction.controller;
 
+import javauction.model.UserEntity;
 import javauction.service.LoginService;
+import javauction.service.UserService;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 /**
@@ -47,14 +50,18 @@ public class login extends HttpServlet {
             } else if (usr_type.equals("user")){
                 result = loginService.authenticateUser(username, password);
                 if (result == LoginService.LoginStatus.LOGIN_SUCCESS) {
-                    session = request.getSession();
+
+                    HttpSession session = request.getSession();
                     UserService userservice = new UserService();
-                    UserEntity user = new UserEntity();
-                    user = userservice.getUser(username);
+                    UserEntity user = userservice.getUser(username);
                     session.setAttribute("uid", user.getUserId());
+
                     // send him to new page as a logged in customer
-                    RequestDispatcher view = request.getRequestDispatcher("welcome.jsp");
-                    view.forward(request, response);
+//                    RequestDispatcher view = request.getRequestDispatcher("welcome.jsp"); ?????? auto giati???
+//                    view.forward(request, response);
+
+//                    System.out.println("my session id is" + session.getAttribute("uid"));
+
                     next_page = "homepage.jsp";
                 } else if (result == LoginService.LoginStatus.LOGIN_NOT_APPROVED) {
 //                    next_page = "approvalerror.jsp";

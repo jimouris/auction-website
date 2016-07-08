@@ -1,5 +1,6 @@
 <!-- allo mpakalistiko gia na paroume data pio katw -->
 <%@ page import="java.io.*,java.util.*" %>
+<%@ page import="org.hibernate.Session" %>
 <!doctype html>
 <html>
     <head>
@@ -37,10 +38,9 @@
                     <h1>Create a new auction</h1>
                     <!-- Restriction for validation are inserted on the end of input -->
                     <form action="auction.do" method="POST" id="new_auction">
-                        <!-- mpakalistikos tropos gia na pareis to session -->
-                        <%! String user_id = session.getAttribute("uid"); %>
-                        <input type="hidden" name="userid" value=<% out.print(user_id); %>>
-                        
+
+                        <%--<input type="hidden" value="<%= session.getAttribute("uid") %>" />--%>
+
                         <label for="name">Name of auctioned item:</label>
                         <input class="u-full-width" type="text" id="name" name="name" minlength="2" required autofocus>
 

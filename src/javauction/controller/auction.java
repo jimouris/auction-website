@@ -9,6 +9,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.Date;
 import java.text.ParseException;
@@ -32,7 +33,9 @@ public class auction extends HttpServlet {
             String Country = request.getParameter("country");
             String City = request.getParameter("city");
             String instantBuy = request.getParameter("instantBuy");
-            int userId  = Interger.parseInt(request.getParameter("userid");
+            /* get userid from session. userid will be sellerid for this specific auction! */
+            HttpSession session = request.getSession();
+            long userId = (long) session.getAttribute("uid");
 
             // find out if we can sell this auction instantly
             float buyPrice = -1;
@@ -91,6 +94,10 @@ public class auction extends HttpServlet {
             String next_page = "/listAuctions.jsp";
             AuctionService auctionService = new AuctionService();
             AuctionLst = auctionService.getAllAuctions(33);
+
+//            HttpSession session = request.getSession();
+//            long userID = (long) session.getAttribute("uid");
+//            System.out.println("MPOMOPADASDAS "+userID);
             // TODO: 7/6/16 !!! replace 33 with SellerID !!!
 
             request.setAttribute("AuctionLst", AuctionLst);

@@ -18,7 +18,11 @@ public class UserService {
             UserEntity user = null;
             if (obj instanceof String) {
                 String username = obj.toString();
-                user = (UserEntity) session.get(UserEntity.class, username);
+                Query query = session.createQuery("from UserEntity where username='"+username+"' and isAdmin=0");
+                List results = query.list();
+                if (results.size() > 0) {
+                    user = (UserEntity) results.get(0);
+                }
             } else if (obj instanceof Integer) {
                 int uid = (int) obj;
                 user = (UserEntity) session.get(UserEntity.class, uid);

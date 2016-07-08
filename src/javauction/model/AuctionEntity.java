@@ -13,6 +13,7 @@ public class AuctionEntity {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
     private long auctionId;
+
     private long sellerId;
     private String name;
     private String description;
@@ -33,7 +34,7 @@ public class AuctionEntity {
     public AuctionEntity() {
     }
 
-    public AuctionEntity(String name, String description, double lowestBid, String country, String city, double buyPrice, Date startingDate, Byte isStarted, Date endDate, Int sellerId) {
+    public AuctionEntity(String name, String description, double lowestBid, String country, String city, double buyPrice, Date startingDate, Byte isStarted, Date endDate, long sellerId) {
         this.name = name;
         this.description = description;
         this.lowestBid = lowestBid;
