@@ -32,6 +32,7 @@ public class auction extends HttpServlet {
             String Country = request.getParameter("country");
             String City = request.getParameter("city");
             String instantBuy = request.getParameter("instantBuy");
+            int userId  = Interger.parseInt(request.getParameter("userid");
 
             // find out if we can sell this auction instantly
             float buyPrice = -1;
@@ -60,7 +61,7 @@ public class auction extends HttpServlet {
                 isStarted = 1;
             }
 
-            AuctionEntity auction = new AuctionEntity(Name, Description, LowestBid, Country, City, buyPrice, startDate, isStarted, endDate);
+            AuctionEntity auction = new AuctionEntity(Name, Description, LowestBid, Country, City, buyPrice, startDate, isStarted, endDate, userId);
 
             // tell the service to add a new auction
             try {
