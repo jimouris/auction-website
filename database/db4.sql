@@ -81,39 +81,6 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `auctionwebsite`.`category`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `auctionwebsite`.`category` (
-  `CategoryID` INT(11) NOT NULL AUTO_INCREMENT,
-  `CategoryName` VARCHAR(100) NULL DEFAULT NULL,
-  PRIMARY KEY (`CategoryID`))
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8;
-
-
--- -----------------------------------------------------
--- Table `auctionwebsite`.`auctioncategory`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `auctionwebsite`.`auctioncategory` (
-  `AuctionId` BIGINT(20) NOT NULL,
-  `CategoryId` INT(11) NULL DEFAULT NULL,
-  PRIMARY KEY (`AuctionId`),
-  INDEX `fk_auctionCategory_category1_idx` (`CategoryId` ASC),
-  CONSTRAINT `fk_auctionCategory_auction1`
-    FOREIGN KEY (`AuctionId`)
-    REFERENCES `auctionwebsite`.`auction` (`AuctionID`)
-    ON DELETE CASCADE
-    ON UPDATE CASCADE,
-  CONSTRAINT `fk_auctionCategory_category1`
-    FOREIGN KEY (`CategoryId`)
-    REFERENCES `auctionwebsite`.`category` (`CategoryID`)
-    ON DELETE CASCADE
-    ON UPDATE CASCADE)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8;
-
-
--- -----------------------------------------------------
 -- Table `auctionwebsite`.`bid`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `auctionwebsite`.`bid` (
@@ -134,6 +101,17 @@ CREATE TABLE IF NOT EXISTS `auctionwebsite`.`bid` (
     REFERENCES `auctionwebsite`.`user` (`UserID`)
     ON DELETE CASCADE
     ON UPDATE CASCADE)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `auctionwebsite`.`category`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `auctionwebsite`.`category` (
+  `CategoryID` INT(11) NOT NULL AUTO_INCREMENT,
+  `CategoryName` VARCHAR(100) NULL DEFAULT NULL,
+  PRIMARY KEY (`CategoryID`))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
@@ -208,6 +186,29 @@ CREATE TABLE IF NOT EXISTS `auctionwebsite`.`rating` (
   CONSTRAINT `fk_rating_user2`
     FOREIGN KEY (`ToID`)
     REFERENCES `auctionwebsite`.`user` (`UserID`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `auctionwebsite`.`auction_has_category`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `auctionwebsite`.`auction_has_category` (
+  `auction_AuctionID` BIGINT(20) NOT NULL,
+  `category_CategoryID` INT(11) NOT NULL,
+  PRIMARY KEY (`auction_AuctionID`, `category_CategoryID`),
+  INDEX `fk_auction_has_category_category1_idx` (`category_CategoryID` ASC),
+  INDEX `fk_auction_has_category_auction1_idx` (`auction_AuctionID` ASC),
+  CONSTRAINT `fk_auction_has_category_auction1`
+    FOREIGN KEY (`auction_AuctionID`)
+    REFERENCES `auctionwebsite`.`auction` (`AuctionID`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  CONSTRAINT `fk_auction_has_category_category1`
+    FOREIGN KEY (`category_CategoryID`)
+    REFERENCES `auctionwebsite`.`category` (`CategoryID`)
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB
