@@ -10,8 +10,6 @@ import java.sql.Date;
 @Table(name = "user", schema = "auctionwebsite", catalog = "")
 public class UserEntity {
 
-    @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
     private long userId;
 
     private String username;
@@ -77,6 +75,7 @@ public class UserEntity {
     }
 
     @Id
+    @GeneratedValue(strategy=GenerationType.AUTO)
     @Column(name = "UserID")
     public long getUserId() {
         return userId;
