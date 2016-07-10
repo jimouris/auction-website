@@ -2,6 +2,7 @@ package javauction.controller;
 
 import javauction.model.AuctionEntity;
 import javauction.service.AuctionService;
+import javauction.service.CategoryService;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -98,6 +99,16 @@ public class auction extends HttpServlet {
             request.setAttribute("auctionLst", auctionLst);
 
             String next_page = "/listAuctions.jsp";
+            RequestDispatcher view = request.getRequestDispatcher(next_page);
+            view.forward(request, response);
+        } else if (request.getParameter("action").equals("newAuction")){
+            // gather all categories to display on jsp
+            CategoryService categoryService = new CategoryService();
+            List categoryLst = categoryService.getAllCategories();
+            System.out.println(categoryLst);
+            request.setAttribute("categoryLst", categoryLst);
+
+            String next_page = "/newAuction.jsp";
             RequestDispatcher view = request.getRequestDispatcher(next_page);
             view.forward(request, response);
         }

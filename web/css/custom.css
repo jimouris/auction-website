@@ -5,3 +5,9 @@
 .u-hardhide{
     display: none!important;
 }
+
+.a-select--multiple{
+    display: block;
+    height: 10em;
+    width: 15em;
+}

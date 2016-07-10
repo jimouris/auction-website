@@ -50,4 +50,12 @@ public class CategoryEntity {
         result = 31 * result + (categoryName != null ? categoryName.hashCode() : 0);
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "CategoryEntity{" +
+                "categoryId=" + categoryId +
+                ", categoryName='" + categoryName + '\'' +
+                '}';
+    }
 }
