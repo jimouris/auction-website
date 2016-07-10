@@ -55,12 +55,12 @@ CREATE TABLE IF NOT EXISTS `auctionwebsite`.`auction` (
   `CurrentBid` DOUBLE NOT NULL,
   `FinalPrice` DOUBLE NOT NULL,
   `StartingDate` DATE NOT NULL,
-  `EndingDate` DATE NOT NULL,
+  `EndingDate` DATE NULL DEFAULT NULL,
   `Country` VARCHAR(45) NOT NULL,
   `City` VARCHAR(45) NOT NULL,
   `NumOfBids` INT(11) NULL DEFAULT NULL,
   `Longtitude` FLOAT NULL DEFAULT NULL,
-  `Latitude` FLOAT NOT NULL,
+  `Latitude` FLOAT NULL DEFAULT NULL,
   `IsStarted` TINYINT(1) NULL DEFAULT 0,
   `BuyPrice` INT(11) NULL DEFAULT NULL,
   PRIMARY KEY (`AuctionID`),
@@ -96,16 +96,16 @@ DEFAULT CHARACTER SET = utf8;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `auctionwebsite`.`auctioncategory` (
   `AuctionId` BIGINT(20) NOT NULL,
-  `CategroryId` INT(11) NULL DEFAULT NULL,
+  `CategoryId` INT(11) NULL DEFAULT NULL,
   PRIMARY KEY (`AuctionId`),
-  INDEX `fk_auctionCategory_category1_idx` (`CategroryId` ASC),
+  INDEX `fk_auctionCategory_category1_idx` (`CategoryId` ASC),
   CONSTRAINT `fk_auctionCategory_auction1`
     FOREIGN KEY (`AuctionId`)
     REFERENCES `auctionwebsite`.`auction` (`AuctionID`)
     ON DELETE CASCADE
     ON UPDATE CASCADE,
   CONSTRAINT `fk_auctionCategory_category1`
-    FOREIGN KEY (`CategroryId`)
+    FOREIGN KEY (`CategoryId`)
     REFERENCES `auctionwebsite`.`category` (`CategoryID`)
     ON DELETE CASCADE
     ON UPDATE CASCADE)
