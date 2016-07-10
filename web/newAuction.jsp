@@ -1,6 +1,5 @@
 <!-- allo mpakalistiko gia na paroume data pio katw -->
-<%@ page import="java.io.*,java.util.*" %>
-<%@ page import="org.hibernate.Session" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!doctype html>
 <html>
     <head>
@@ -29,8 +28,6 @@
         </div>
         <!-- end of header row -->
 
-
-
         <!-- NEW AUCTION ROW -->
         <div class="row">
             <div class="column">
@@ -39,10 +36,18 @@
                     <!-- Restriction for validation are inserted on the end of input -->
                     <form action="auction.do" method="POST" id="new_auction">
 
-                        <%--<input type="hidden" value="<%= session.getAttribute("uid") %>" />--%>
-
                         <label for="name">Name of auctioned item:</label>
                         <input class="u-full-width" type="text" id="name" name="name" minlength="2" required autofocus>
+
+                        <label for="categories">Select at least one category:</label>
+                        <jsp:useBean id="categoryLst" class="java.util.ArrayList" scope="request" />
+                        <select class="a-select--multiple" id="categories" name="categories" multiple size=${categoryLst.size()}>
+                        <c:forEach var="category" items="${categoryLst}">
+                            <option value=${category.categoryId}>${category.categoryName}</option>
+                        </c:forEach>
+                        </select>
+
+
 
                         <b>Can someone instantly buy your product?</b>
                         <label class="u-full-width">
