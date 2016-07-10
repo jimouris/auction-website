@@ -20,7 +20,6 @@ public class customer {
     public String phonenumber;
     public String homeaddress;
     public String city;
-    public String postcode;
     public String latitude;
     public String longitude;
     public String country;
@@ -54,7 +53,6 @@ public class customer {
     this.phonenumber = phonenumber;
     this.homeaddress = homeaddress;
     this.city = city;
-    this.postcode = postcode;
     this.latitude = latitude;
     this.longitude = longitude;
     this.country = country;
@@ -233,15 +231,6 @@ public class customer {
     public String setCity(String city) {
         this.city = city;
         return city;
-    }
-
-    public String getPostcode() {
-        return postcode;
-    }
-
-    public String setPostcode(String postcode) {
-        this.postcode = postcode;
-        return postcode;
     }
 
     public String getLatitude() {
