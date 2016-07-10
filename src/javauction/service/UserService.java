@@ -23,8 +23,8 @@ public class UserService {
                 if (results.size() > 0) {
                     user = (UserEntity) results.get(0);
                 }
-            } else if (obj instanceof Integer) {
-                int uid = (int) obj;
+            } else if (obj instanceof Long) {
+                long uid = (long) obj;
                 user = (UserEntity) session.get(UserEntity.class, uid);
             }
             return user;
@@ -50,7 +50,7 @@ public class UserService {
         return null;
     }
 
-    public Boolean approveUser(int uid) {
+    public Boolean approveUser(long uid) {
         Session session = HibernateUtil.getSession();
         try {
             session.beginTransaction();

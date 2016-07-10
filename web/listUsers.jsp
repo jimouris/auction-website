@@ -11,7 +11,7 @@
 </head>
 <body>
 <div class="container">
-    <a href="/">home</a>
+    <a href="/admin.jsp">home</a>
 
     <h1>List users</h1>
     <jsp:useBean id="userLst" class="java.util.ArrayList" scope="request" />

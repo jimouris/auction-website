@@ -26,7 +26,7 @@ public class user extends HttpServlet {
 
             UserEntity user;
             String next_page = "/userInfo.jsp";
-            int uid = Integer.parseInt(request.getParameter("uid"));
+            long uid = Long.parseLong(request.getParameter("uid"));
 
             // retrieve user's info
             try {
@@ -104,13 +104,12 @@ public class user extends HttpServlet {
         if (request.getParameter("action").equals("getAUser")) {
             UserEntity user;
             String next_page = "/userInfo.jsp";
-            int uid = Integer.parseInt(request.getParameter("uid"));
+            long uid = Long.parseLong(request.getParameter("uid"));
 
             // retrieve user's info
             try {
                 UserService userService = new UserService();
                 user = userService.getUser(uid);
-                System.out.println(user);
                 request.setAttribute("user", user);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -121,11 +120,11 @@ public class user extends HttpServlet {
             view.forward(request, response);
         } else if (request.getParameter("action").equals("getAllUsers")){
             List userLst;
-                String next_page = "/listUsers.jsp";
-                UserService userService = new UserService();
-                userLst = userService.getAllUsers();
+            String next_page = "/listUsers.jsp";
+            UserService userService = new UserService();
+            userLst = userService.getAllUsers();
 
-                request.setAttribute("userLst", userLst);
+            request.setAttribute("userLst", userLst);
 
             // then forward the request to welcome.jsp with the information of status
             RequestDispatcher view = request.getRequestDispatcher(next_page);

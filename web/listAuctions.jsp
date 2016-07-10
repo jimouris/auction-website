@@ -11,7 +11,7 @@
 </head>
 <body>
 <div class="container">
-    <a href="/">homepage</a>
+    <a href="/homepage.jsp">homepage</a>
 
     <h1>List Auctions</h1>
     <jsp:useBean id="auctionLst" class="java.util.ArrayList" scope="request" />
