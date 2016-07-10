@@ -89,19 +89,15 @@ public class auction extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        if (request.getParameter("action").equals("ViewAllAuctions")) {
-            List AuctionLst;
-            String next_page = "/listAuctions.jsp";
+        if (request.getParameter("action").equals("getAllAuctions")) {
+            HttpSession session = request.getSession();
+            long userID = (long) session.getAttribute("uid");
+
             AuctionService auctionService = new AuctionService();
-            AuctionLst = auctionService.getAllAuctions(33);
+            List auctionLst = auctionService.getAllAuctions(userID);
+            request.setAttribute("auctionLst", auctionLst);
 
-//            HttpSession session = request.getSession();
-//            long userID = (long) session.getAttribute("uid");
-//            System.out.println("MPOMOPADASDAS "+userID);
-            // TODO: 7/6/16 !!! replace 33 with SellerID !!!
-
-            request.setAttribute("AuctionLst", AuctionLst);
-
+            String next_page = "/listAuctions.jsp";
             RequestDispatcher view = request.getRequestDispatcher(next_page);
             view.forward(request, response);
         }

@@ -29,7 +29,7 @@ public class AuctionService {
     public List getAllAuctions(long sid){
         Session session = HibernateUtil.getSession();
         try {
-            Query query = session.createQuery("from AuctionEntity where sellerId =: sid");
+            Query query = session.createQuery("from AuctionEntity where sellerId =" + sid);
             List results = query.list();
             return results;
         } catch (Exception e) {
