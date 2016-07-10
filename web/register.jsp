@@ -57,9 +57,6 @@
                             <label for="country">Country</label>
                             <input class="u-full-width" type="text" id="country" name="country" minlength="2" required>
 
-                            <label for="postcode">Post Code</label>
-                            <input class="u-full-width" type="text" id="postcode" name="postcode" length="5" required>
-
                             <label for="latitude">Add your latitude</label>
                             <input type="text" name="latitude" id="latitude" value="23.728569442749">
                             <label for="longitude">Add your longitude</label>
