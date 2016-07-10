@@ -22,6 +22,7 @@
                 <td>${auction.name}</td>
                 <td>${auction.description}</td>
                 <td>${auction.lowestBid}</td>
+                <td><a class="button button-primary" href=auction.do?action=getAnAuction&aid=${auction.auctionId}>View/Edit Auction</a></td>
             </tr>
         </c:forEach>
 

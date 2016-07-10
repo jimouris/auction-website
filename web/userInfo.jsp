@@ -16,34 +16,35 @@
         <c:if test="${user.isApproved == 0}">
             <input type=submit value=approveUser name="action">
         </c:if>
-        <c:if test="${user.isApproved == 1}">
-            <h2>The user is approved</h2>
-        </c:if>
-
-        <dl>Username</dl>
-        <dd>${user.username}</dd>
-        <dl>Firstname</dl>
-        <dd>${user.firstname}</dd>
-        <dl>Lastname</dl>
-        <dd>${user.lastname}</dd>
-        <dl>Email</dl>
-        <dd>${user.email}</dd>
-        <dl>PhoneNumber</dl>
-        <dd>${user.phoneNumber}</dd>
-        <dl>VAT</dl>
-        <dd>${user.vat}</dd>
-        <dl>Home Address</dl>
-        <dd>${user.homeAddress}</dd>
-        <dl>Latitude</dl>
-        <dd>${user.latitude}</dd>
-        <dl>Longtitude</dl>
-        <dd>${user.longitude}</dd>
-        <dl>City</dl>
-        <dd>${user.city}</dd>
-        <dl>Country</dl>
-        <dd>${user.country}</dd>
-        <dl>Sign up date</dl>
-        <dd>${user.signUpDate}</dd>
     </form>
+    <c:if test="${user.isApproved == 1}">
+        <h2>The user is approved</h2>
+    </c:if>
+
+    <dl>Username</dl>
+    <dd>${user.username}</dd>
+    <dl>Firstname</dl>
+    <dd>${user.firstname}</dd>
+    <dl>Lastname</dl>
+    <dd>${user.lastname}</dd>
+    <dl>Email</dl>
+    <dd>${user.email}</dd>
+    <dl>PhoneNumber</dl>
+    <dd>${user.phoneNumber}</dd>
+    <dl>VAT</dl>
+    <dd>${user.vat}</dd>
+    <dl>Home Address</dl>
+    <dd>${user.homeAddress}</dd>
+    <dl>Latitude</dl>
+    <dd>${user.latitude}</dd>
+    <dl>Longtitude</dl>
+    <dd>${user.longitude}</dd>
+    <dl>City</dl>
+    <dd>${user.city}</dd>
+    <dl>Country</dl>
+    <dd>${user.country}</dd>
+    <dl>Sign up date</dl>
+    <dd>${user.signUpDate}</dd>
+
 </body>
 </html>

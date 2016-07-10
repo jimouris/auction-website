@@ -11,7 +11,8 @@ import java.sql.Date;
 public class AuctionEntity {
 
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "AuctionID")
     private long auctionId;
 
     private long sellerId;
@@ -49,8 +50,7 @@ public class AuctionEntity {
         this.sellerId = sellerId;
     }
 
-    @Id
-    @Column(name = "AuctionID")
+
     public long getAuctionId() {
         return auctionId;
     }

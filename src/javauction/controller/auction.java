@@ -66,30 +66,32 @@ public class auction extends HttpServlet {
             }
 
             AuctionEntity auction = new AuctionEntity(Name, Description, LowestBid, Country, City, buyPrice, startDate, isStarted, endDate, userId);
-
+            String next_page = null;
             // tell the service to add a new auction
             try {
                 AuctionService auctionService = new AuctionService();
-                boolean result = auctionService.addAuction(auction);
-
-                if (result) {
-                    System.out.println("success" + auction);
+                /* if auction submitted successfully */
+                if (auctionService.addAuction(auction)) {
+                    request.setAttribute("aid", auction.getAuctionId());
+                    next_page = "/auctionSubmit.jsp";
                 } else {
-                    System.out.println("failure" + auction);
+
+                    System.out.println("failure: " + auction);
+
                 }
 
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
-//            RequestDispatcher view = request.getRequestDispatcher(next_page);
-//            view.forward(request, response);
+            RequestDispatcher view = request.getRequestDispatcher(next_page);
+            view.forward(request, response);
         }
 
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+        String next_page = null;
         if (request.getParameter("action").equals("getAllAuctions")) {
             HttpSession session = request.getSession();
             long userID = (long) session.getAttribute("uid");
@@ -98,20 +100,24 @@ public class auction extends HttpServlet {
             List auctionLst = auctionService.getAllAuctions(userID);
             request.setAttribute("auctionLst", auctionLst);
 
-            String next_page = "/listAuctions.jsp";
-            RequestDispatcher view = request.getRequestDispatcher(next_page);
-            view.forward(request, response);
+            next_page = "/listAuctions.jsp";
         } else if (request.getParameter("action").equals("newAuction")){
             // gather all categories to display on jsp
             CategoryService categoryService = new CategoryService();
             List categoryLst = categoryService.getAllCategories();
-            System.out.println(categoryLst);
             request.setAttribute("categoryLst", categoryLst);
 
-            String next_page = "/newAuction.jsp";
-            RequestDispatcher view = request.getRequestDispatcher(next_page);
-            view.forward(request, response);
+            next_page = "/newAuction.jsp";
+        } else if (request.getParameter("action").equals("getAnAuction")) {
+            long aid = Long.parseLong(request.getParameter("aid"));
+            AuctionService auctionService = new AuctionService();
+            AuctionEntity auction = auctionService.getAuction(aid);
+            request.setAttribute("auction", auction);
+            next_page = "/auctionInfo.jsp";
         }
 
+        RequestDispatcher view = request.getRequestDispatcher(next_page);
+        view.forward(request, response);
     }
+
 }

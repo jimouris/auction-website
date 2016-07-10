@@ -18,12 +18,37 @@ public class AuctionService {
             session.beginTransaction();
             session.save(auction);
             session.getTransaction().commit();
+            return true;
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
             session.close();
         }
-        return true;
+        return false;
+    }
+
+    public AuctionEntity getAuction(Object obj) {
+        Session session = HibernateUtil.getSession();
+        try {
+            AuctionEntity auction = null;
+            if (obj instanceof String) {
+                String auction_name = obj.toString();
+                Query query = session.createQuery("from AuctionEntity where name='"+auction_name+"'");
+                List results = query.list();
+                if (results.size() > 0) {
+                    auction = (AuctionEntity) results.get(0);
+                }
+            } else if (obj instanceof Long) {
+                long aid = (long) obj;
+                auction = (AuctionEntity) session.get(AuctionEntity.class, aid);
+            }
+            return auction;
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+        return null;
     }
 
     public List getAllAuctions(long sid){
@@ -39,4 +64,5 @@ public class AuctionService {
         }
         return null;
     }
+
 }
