@@ -62,13 +62,13 @@ public class AuctionService {
         return null;
     }
 
-    public List getAllAuctions(long sid, boolean getOnlyActive) {
+    public List getAllAuctions(long sid, boolean getAllActive) {
         Session session = HibernateUtil.getSession();
         List results = null;
         try {
             Query query;
-            if (getOnlyActive) {
-                query = session.createQuery("from AuctionEntity where sellerId =" + sid + " and isStarted=1");
+            if (getAllActive) {
+                query = session.createQuery("from AuctionEntity where isStarted=1");
             } else {
                 query = session.createQuery("from AuctionEntity where sellerId =" + sid);
             }

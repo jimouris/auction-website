@@ -110,29 +110,31 @@ public class auction extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String next_page = null;
         String param = request.getParameter("action");
-        if (param.equals("getAllAuctions") ||
-            param.equals("getAllActiveAuctions")) {
-
-            HttpSession session = request.getSession();
-            long userID = (long) session.getAttribute("uid");
-            AuctionService auctionService = new AuctionService();
-            List auctionLst = auctionService.getAllAuctions(userID, param.equals("getAllActiveAuctions"));
-
-            request.setAttribute("auctionLst", auctionLst);
-            next_page = "/listAuctions.jsp";
-        } else if (param.equals("newAuction")){
-            // gather all categories to display on jsp
-            CategoryService categoryService = new CategoryService();
-            List categoryLst = categoryService.getAllCategories();
-            request.setAttribute("categoryLst", categoryLst);
-
-            next_page = "/newAuction.jsp";
-        } else if (param.equals("getAnAuction")) {
-            long aid = Long.parseLong(request.getParameter("aid"));
-            AuctionService auctionService = new AuctionService();
-            AuctionEntity auction = auctionService.getAuction(aid);
-            request.setAttribute("auction", auction);
-            next_page = "/auctionInfo.jsp";
+        AuctionService auctionService = new AuctionService();
+        switch (param) {
+            case "getAllAuctions": /* get all actions with sellerId = uid (from session) */
+                HttpSession session = request.getSession();
+                long userID = (long) session.getAttribute("uid");
+                List auctionLst = auctionService.getAllAuctions(userID, false);
+                request.setAttribute("auctionLst", auctionLst);
+                next_page = "/listAuctions.jsp";
+                break;
+            case "getAllActiveAuctions": /* get all active auctions, all sellers */
+                request.setAttribute("auctionLst", auctionService.getAllAuctions(-1, true));
+                next_page = "/listAuctions.jsp";
+                break;
+            case "newAuction": /* gather all categories to display on jsp */
+                CategoryService categoryService = new CategoryService();
+                List categoryLst = categoryService.getAllCategories();
+                request.setAttribute("categoryLst", categoryLst);
+                next_page = "/newAuction.jsp";
+                break;
+            case "getAnAuction": /* get an auction with auctionId = aid */
+                long aid = Long.parseLong(request.getParameter("aid"));
+                AuctionEntity auction = auctionService.getAuction(aid);
+                request.setAttribute("auction", auction);
+                next_page = "/auctionInfo.jsp";
+                break;
         }
 
         RequestDispatcher view = request.getRequestDispatcher(next_page);
