@@ -120,16 +120,20 @@ public class AuctionService {
             tx = session.beginTransaction();
             Criteria criteria = session.createCriteria(AuctionEntity.class);
             /* category search */
-            // TODO category search
+            if (categories != null) {
+                // TODO category search
+            }
             /* description search */
-            criteria.add(Restrictions.like("description", desc, MatchMode.ANYWHERE));
+            if (desc != "") criteria.add(Restrictions.like("description", desc, MatchMode.ANYWHERE));
             /* minPrice < price < maxPrice */
             criteria.add(Restrictions.between("buyPrice", minPrice, maxPrice));
             /* location search*/
-            Criterion city = Restrictions.like("city", location, MatchMode.EXACT);
-            Criterion country = Restrictions.like("country", location, MatchMode.EXACT);
-            LogicalExpression cityORcountry = Restrictions.or(city, country);
-            criteria.add(cityORcountry);
+            if (location != "") {
+                Criterion city = Restrictions.like("city", location, MatchMode.EXACT);
+                Criterion country = Restrictions.like("country", location, MatchMode.EXACT);
+                LogicalExpression cityORcountry = Restrictions.or(city, country);
+                criteria.add(cityORcountry);
+            }
 
             auctions = criteria.list();
             tx.commit();
