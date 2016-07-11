@@ -23,7 +23,6 @@
         <url-pattern>/login.do</url-pattern>
     </servlet-mapping>
 
-
     <servlet>
         <servlet-name>user</servlet-name>
         <servlet-class>javauction.controller.user</servlet-class>
@@ -33,8 +32,6 @@
         <servlet-name>user</servlet-name>
         <url-pattern>/user.do</url-pattern>
     </servlet-mapping>
-
-
 
     <servlet>
         <servlet-name>auction</servlet-name>
@@ -46,6 +43,16 @@
         <url-pattern>/auction.do</url-pattern>
     </servlet-mapping>
 
+
+    <servlet>
+        <servlet-name>search</servlet-name>
+        <servlet-class>javauction.controller.search</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>search</servlet-name>
+        <url-pattern>/search.do</url-pattern>
+    </servlet-mapping>
 
 </web-app>
 

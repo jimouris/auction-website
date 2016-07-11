@@ -2,8 +2,11 @@ package javauction.service;
 
 import javauction.model.AuctionEntity;
 import javauction.util.HibernateUtil;
-import org.hibernate.Query;
-import org.hibernate.Session;
+import org.hibernate.*;
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.LogicalExpression;
+import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Restrictions;
 
 import java.util.List;
 
@@ -64,5 +67,61 @@ public class AuctionService {
         }
         return null;
     }
+
+    /* simple search: search for auctions whose names contain string name */
+    public List<AuctionEntity> searchAuction(String name) {
+        Session session = HibernateUtil.getSession();
+        Transaction tx = null;
+        List <AuctionEntity> auctions = null;
+        try {
+            tx = session.beginTransaction();
+            Criteria criteria = session.createCriteria(AuctionEntity.class);
+            criteria.add(Restrictions.like("name", name, MatchMode.ANYWHERE));
+            auctions = criteria.list();
+            tx.commit();
+        } catch (HibernateException e) {
+            if (tx != null) {
+                tx.rollback();
+            }
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+        return auctions;
+    }
+
+    /* advanced search, using custom criteria! */
+    public List<AuctionEntity> searchAuction(String[] categories, String desc, double minPrice, double maxPrice, String location) {
+        Session session = HibernateUtil.getSession();
+        Transaction tx = null;
+        List <AuctionEntity> auctions = null;
+        try {
+            tx = session.beginTransaction();
+            Criteria criteria = session.createCriteria(AuctionEntity.class);
+            /* category search */
+            // TODO category search
+            /* description search */
+            criteria.add(Restrictions.like("description", desc, MatchMode.ANYWHERE));
+            /* minPrice < price < maxPrice */
+            criteria.add(Restrictions.between("buyPrice", minPrice, maxPrice));
+            /* location search*/
+            Criterion city = Restrictions.like("city", location, MatchMode.EXACT);
+            Criterion country = Restrictions.like("country", location, MatchMode.EXACT);
+            LogicalExpression cityORcountry = Restrictions.or(city, country);
+            criteria.add(cityORcountry);
+
+            auctions = criteria.list();
+            tx.commit();
+        } catch (HibernateException e) {
+            if (tx != null) {
+                tx.rollback();
+            }
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+        return auctions;
+    }
+
 
 }

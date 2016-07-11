@@ -5,6 +5,7 @@
     <title>Welcome Page</title>
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css" rel="stylesheet">
+    <link href="css/custom.css" rel="stylesheet">
 </head>
 <body>
 <div class="container">
@@ -35,52 +36,15 @@
 
 
         <section class="search eight columns">
+
             <h1>Search for a product</h1>
-            <form class="row" action="./search.jsp" method="POST" id="search">
-                <div class="nine columns">
-                    <input class="u-full-width" type="text" name="searchTetx">
-                </div>
-                <div class="three columns">
-                    <input class="u-full-width button-primary" type="submit" value="Search">
-                </div>
+            <form action="search.do" method="POST">
+                <input class="u-full-width" type="text" name="name">
+                <button class="button-primary" type="submit" name="action" value="doSimpleSearch">Search</button>
             </form>
 
-            <h4>Use custom criteria?</h4>
-            <label class="disableCustomCriteria one-half column">
-                <input type="radio" name="criteria" value="disable" onclick="document.getElementById('customCriteria').setAttribute('style','visibility: hidden; opacity: 0; height: 0')" checked>
-                <span class="label-body">No, I want just a simple search.</span>
-            </label>
-            <label class="enableCustomCriteria one-half column">
-                <input type="radio" name="criteria" value="enable" onclick="document.getElementById('customCriteria').setAttribute('style','visibility: visible; opacity: 1; height: auto;')">
-                <span class="label-body">Yea! I love custom advanced search.</span>
-            </label>
-            <div class="row hidden u-full-width" id="customCriteria">
-                <div class="one-third column">
-                    <label for="searchCategory">Category</label>
-                    <input class="u-full-width" form="search" list="datalistCategories" name="searchCategory" id="searchCategory">
-                    <datalist id="datalistCategories">
-                        <option value="computer">
-                        <option value="smartphones">
-                        <option value="vinyls">
-                        <option value="furniture">
-                    </datalist>
-                </div>
-                <div class="one-third column">
-                    <label for="searchPrice">Price</label>
-                    <input class="u-full-width" form="search" type="number" min=0 max=10000 name="searchPriceInput" id="searchPriceInput" value="5000" oninput="this.form.searchPriceRange.value=this.value">
-                    <input class="u-full-width" form="search" type="range" min=0 max=10000 name="searchPriceRange" id="searchPriceRange" oninput="this.form.searchPriceInput.value=this.value">
-                </div>
-                <div class="one-third column">
-                    <label for="searchLocation">Location</label>
-                    <input class="u-full-width" form="search" type="search" name="searchLocation" id="searchLocation">
-                </div>
-                <div class="u-cf"></div>
-                <div class="u-full-width">
-                    <label for="searchDescription">Description</label>
-                    <textarea form="search" class="u-full-width" placeholder="a high quality sa..." name="searchDescription" id="searchDescription"></textarea>
-                </div>
-            </div>
-            <!-- end of custom criteria row -->
+
+            <a class="button" href="search.do?action=advancedSearch">Advanced Search</a>
         </section>
     </div>
     <!-- end of search row -->
