@@ -18,8 +18,16 @@
         </div>
         <div class="offset-by-seven four columns">
             <ul class="nav u-full-width row">
-                <li class="offset-by-one-third one-third column newMessage tooltip"><span class="tooltipFire">Messages</span><div class="tooltipText"><div class="tooltipMargin"></div><a href="./messages_inc.jsp">Income</a><br /><a href="./messages_out.jsp">SENT</a></div></li>
-                <li class="one-third column"><a href="./logout.jsp?type=regular"><span class="delete">Logout</span></a></li>
+                <li class="offset-by-one-third one-third column newMessage tooltip"><span class="tooltipFire">Messages</span>
+                    <div class="tooltipText"><div class="tooltipMargin"></div>
+                    <a href="./messages_inbox.jsp">Inbox</a>
+                    <br/>
+                    <a href="./messages_sent.jsp">Sent</a>
+                    </div>
+                </li>
+                <li class="one-third column">
+                    <a href="./logout.jsp?type=regular"><span class="delete">Logout</span></a>
+                </li>
             </ul>
         </div>
     </div>
@@ -36,14 +44,11 @@
 
 
         <section class="search eight columns">
-
-            <h1>Search for a product</h1>
+            <h1><span class="look">></span> Search for a product</h1>
             <form action="search.do" method="POST">
                 <input class="u-full-width" type="text" name="name">
                 <button class="button-primary" type="submit" name="action" value="doSimpleSearch">Search</button>
             </form>
-
-
             <a class="button" href="search.do?action=advancedSearch">Advanced Search</a>
         </section>
     </div>
