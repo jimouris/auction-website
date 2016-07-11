@@ -22,10 +22,14 @@ public class AuctionService {
             session.save(auction);
             session.getTransaction().commit();
             return true;
-        } catch (Exception e) {
+        } catch (HibernateException e) {
             e.printStackTrace();
         } finally {
-            session.close();
+            try {
+                if (session != null) session.close();
+            } catch (Exception e) {
+                // ignore
+            }
         }
         return false;
     }
@@ -46,33 +50,41 @@ public class AuctionService {
                 auction = (AuctionEntity) session.get(AuctionEntity.class, aid);
             }
             return auction;
-        } catch (Exception e) {
+        } catch (HibernateException e) {
             e.printStackTrace();
         } finally {
-            session.close();
+            try {
+                if (session != null) session.close();
+            } catch (Exception e) {
+                // ignore
+            }
         }
         return null;
     }
 
     public List getAllAuctions(long sid){
         Session session = HibernateUtil.getSession();
+        List results = null;
         try {
             Query query = session.createQuery("from AuctionEntity where sellerId =" + sid);
-            List results = query.list();
-            return results;
-        } catch (Exception e) {
+            results = query.list();
+        } catch (HibernateException e) {
             e.printStackTrace();
         } finally {
-            session.close();
+            try {
+                if (session != null) session.close();
+            } catch (Exception e) {
+                // ignore
+            }
         }
-        return null;
+        return results;
     }
 
     /* simple search: search for auctions whose names contain string name */
-    public List<AuctionEntity> searchAuction(String name) {
+    public List searchAuction(String name) {
         Session session = HibernateUtil.getSession();
         Transaction tx = null;
-        List <AuctionEntity> auctions = null;
+        List auctions = null;
         try {
             tx = session.beginTransaction();
             Criteria criteria = session.createCriteria(AuctionEntity.class);
@@ -85,16 +97,20 @@ public class AuctionService {
             }
             e.printStackTrace();
         } finally {
-            session.close();
+            try {
+                if (session != null) session.close();
+            } catch (Exception e) {
+                // ignore
+            }
         }
         return auctions;
     }
 
     /* advanced search, using custom criteria! */
-    public List<AuctionEntity> searchAuction(String[] categories, String desc, double minPrice, double maxPrice, String location) {
+    public List searchAuction(String[] categories, String desc, double minPrice, double maxPrice, String location) {
         Session session = HibernateUtil.getSession();
         Transaction tx = null;
-        List <AuctionEntity> auctions = null;
+        List auctions = null;
         try {
             tx = session.beginTransaction();
             Criteria criteria = session.createCriteria(AuctionEntity.class);
@@ -118,7 +134,11 @@ public class AuctionService {
             }
             e.printStackTrace();
         } finally {
-            session.close();
+            try {
+                if (session != null) session.close();
+            } catch (Exception e) {
+                // ignore
+            }
         }
         return auctions;
     }
