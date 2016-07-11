@@ -62,11 +62,16 @@ public class AuctionService {
         return null;
     }
 
-    public List getAllAuctions(long sid){
+    public List getAllAuctions(long sid, boolean getOnlyActive) {
         Session session = HibernateUtil.getSession();
         List results = null;
         try {
-            Query query = session.createQuery("from AuctionEntity where sellerId =" + sid);
+            Query query;
+            if (getOnlyActive) {
+                query = session.createQuery("from AuctionEntity where sellerId =" + sid + " and isStarted=1");
+            } else {
+                query = session.createQuery("from AuctionEntity where sellerId =" + sid);
+            }
             results = query.list();
         } catch (HibernateException e) {
             e.printStackTrace();
@@ -143,5 +148,22 @@ public class AuctionService {
         return auctions;
     }
 
-
+    public void activateAuction(long aid) {
+        Session session = HibernateUtil.getSession();
+        try {
+            session.beginTransaction();
+            AuctionEntity auction = (AuctionEntity) session.get(AuctionEntity.class, aid);
+            auction.setIsStarted((byte) 1);
+            session.update(auction);
+            session.getTransaction().commit();
+        } catch (HibernateException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (session != null) session.close();
+            } catch (Exception e) {
+                // ignore
+            }
+        }
+    }
 }

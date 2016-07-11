@@ -23,7 +23,9 @@ import java.util.List;
  */
 @WebServlet(name = "auction")
 public class auction extends HttpServlet {
+
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        String next_page = null;
         if (request.getParameter("action").equals("addNew")){
             // get the user input
             String Name = request.getParameter("name");
@@ -66,7 +68,6 @@ public class auction extends HttpServlet {
             }
 
             AuctionEntity auction = new AuctionEntity(Name, Description, LowestBid, Country, City, buyPrice, startDate, isStarted, endDate, userId);
-            String next_page = null;
             // tell the service to add a new auction
             try {
                 AuctionService auctionService = new AuctionService();
@@ -83,32 +84,50 @@ public class auction extends HttpServlet {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        } else if (request.getParameter("action").equals("activateAuction")){
+            response.setContentType("text/html");
 
-            RequestDispatcher view = request.getRequestDispatcher(next_page);
-            view.forward(request, response);
+            AuctionEntity auction;
+            long aid = Long.parseLong(request.getParameter("aid"));
+
+            // retrieve auction's info
+            try {
+                AuctionService auctionService = new AuctionService();
+                auctionService.activateAuction(aid);
+                auction = auctionService.getAuction(aid);
+                request.setAttribute("auction", auction);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            next_page = "/auctionInfo.jsp";
+
         }
 
+        RequestDispatcher view = request.getRequestDispatcher(next_page);
+        view.forward(request, response);
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String next_page = null;
-        if (request.getParameter("action").equals("getAllAuctions")) {
+        String param = request.getParameter("action");
+        if (param.equals("getAllAuctions") ||
+            param.equals("getAllActiveAuctions")) {
+
             HttpSession session = request.getSession();
             long userID = (long) session.getAttribute("uid");
-
             AuctionService auctionService = new AuctionService();
-            List auctionLst = auctionService.getAllAuctions(userID);
-            request.setAttribute("auctionLst", auctionLst);
+            List auctionLst = auctionService.getAllAuctions(userID, param.equals("getAllActiveAuctions"));
 
+            request.setAttribute("auctionLst", auctionLst);
             next_page = "/listAuctions.jsp";
-        } else if (request.getParameter("action").equals("newAuction")){
+        } else if (param.equals("newAuction")){
             // gather all categories to display on jsp
             CategoryService categoryService = new CategoryService();
             List categoryLst = categoryService.getAllCategories();
             request.setAttribute("categoryLst", categoryLst);
 
             next_page = "/newAuction.jsp";
-        } else if (request.getParameter("action").equals("getAnAuction")) {
+        } else if (param.equals("getAnAuction")) {
             long aid = Long.parseLong(request.getParameter("aid"));
             AuctionService auctionService = new AuctionService();
             AuctionEntity auction = auctionService.getAuction(aid);

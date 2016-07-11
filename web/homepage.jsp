@@ -39,7 +39,7 @@
             <h1><span class="look">></span> Auctions</h1>
             <a class="button button-primary" href="auction.do?action=newAuction">Create an auction</a>
             <a class="button button u-top-10" href="auction.do?action=getAllAuctions">View your auctions</a>
-            <a class="button button u-top-10" href="listAuctions.jsp?p=all">View all active auctions</a>
+            <a class="button button u-top-10" href="auction.do?action=getAllActiveAuctions">View all active auctions</a>
         </section>
 
 
