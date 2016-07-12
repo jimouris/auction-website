@@ -25,7 +25,9 @@ import java.util.List;
 public class auction extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        AuctionService auctionService = new AuctionService();
         String next_page = null;
+
         if (request.getParameter("action").equals("addNew")){
             // get the user input
             String Name = request.getParameter("name");
@@ -36,10 +38,10 @@ public class auction extends HttpServlet {
             String Country = request.getParameter("country");
             String City = request.getParameter("city");
             String instantBuy = request.getParameter("instantBuy");
+// TODO: Get categories!
             /* get userid from session. userid will be sellerid for this specific auction! */
             HttpSession session = request.getSession();
             long userId = (long) session.getAttribute("uid");
-
             // find out if we can sell this auction instantly
             float buyPrice = -1;
             if (instantBuy.equals("true")){
@@ -70,7 +72,6 @@ public class auction extends HttpServlet {
             AuctionEntity auction = new AuctionEntity(Name, Description, LowestBid, Country, City, buyPrice, startDate, isStarted, endDate, userId);
             // tell the service to add a new auction
             try {
-                AuctionService auctionService = new AuctionService();
                 /* if auction submitted successfully */
                 if (auctionService.addAuction(auction)) {
                     request.setAttribute("aid", auction.getAuctionId());
@@ -92,7 +93,6 @@ public class auction extends HttpServlet {
 
             // retrieve auction's info
             try {
-                AuctionService auctionService = new AuctionService();
                 auctionService.activateAuction(aid);
                 auction = auctionService.getAuction(aid);
                 request.setAttribute("auction", auction);
@@ -100,6 +100,32 @@ public class auction extends HttpServlet {
                 e.printStackTrace();
             }
             next_page = "/auctionInfo.jsp";
+        } else if (request.getParameter("action").equals("updateAuction")) {
+            String name = request.getParameter("name");
+            String desc = request.getParameter("description");
+            float lowestBid = Float.parseFloat(request.getParameter("lowestBid"));
+            float currentBid = Float.parseFloat(request.getParameter("currentBid"));
+            float finalPrice = Float.parseFloat(request.getParameter("finalPrice"));
+            float buyPrice = Float.parseFloat(request.getParameter("buyPrice"));
+            String city = request.getParameter("city");
+            String country = request.getParameter("country");
+            Date startingDate = Date.valueOf(request.getParameter("startingDate"));
+            Date endingDate = Date.valueOf(request.getParameter("endingDate"));
+            long aid = Long.parseLong(request.getParameter("aid"));
+// TODO: Also Update categories!
+
+//            AuctionEntity auction = auctionService.getAuction(aid);
+//            auction.updateAuctionFields(name, desc, lowestBid, currentBid, finalPrice, buyPrice, city, country, startingDate, endingDate);
+
+            try {
+                auctionService.updateAuction(aid, name, desc, lowestBid, currentBid, finalPrice, buyPrice, city, country, startingDate, endingDate);
+
+                AuctionEntity auction = auctionService.getAuction(aid);
+                request.setAttribute("auction", auction);
+                next_page = "/auctionInfo.jsp";
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
         }
 

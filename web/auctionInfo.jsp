@@ -7,6 +7,7 @@
     <title>Administrator login page</title>
 
     <link href="./css/skeleton.css" rel="stylesheet">
+    <link href="./css/custom.css" rel="stylesheet">
 </head>
 <body>
     <!-- HEADER STUFF -->
@@ -15,45 +16,88 @@
     <!-- end of header row -->
 
     <jsp:useBean id="auction" class="javauction.model.AuctionEntity" scope="request" />
-    <form action="auction.do" method="post">
-        <input type="hidden" value=${auction.auctionId} name="aid">
-        <c:if test="${auction.isStarted == 0}">
-            <input type=submit value=activateAuction name="action">
+
+    <div class="custom-container">
+
+        <form action="auction.do" method="post">
+            <input type="hidden" value=${auction.auctionId} name="aid">
+            <c:if test="${auction.isStarted == 0}">
+                <input type=submit value=activateAuction name="action">
+            </c:if>
+        </form>
+        <c:if test="${auction.isStarted == 1}">
+            <h2>The auction is started-active</h2>
         </c:if>
-    </form>
-    <c:if test="${auction.isStarted == 1}">
-        <h2>The auction is started-active</h2>
-    </c:if>
 
-    <dl>Name</dl>
-    <dd>${auction.name}</dd>
-    <dl>Description</dl>
-    <dd>${auction.description}</dd>
-    <dl>Lowest Bid</dl>
-    <dd>${auction.lowestBid}</dd>
-    <dl>Current Bid</dl>
-    <dd>${auction.currentBid}</dd>
-    <dl>Final Price</dl>
-    <dd>${auction.finalPrice}</dd>
-    <dl>Starting Date</dl>
-    <dd>${auction.startingDate}</dd>
-    <dl>Ending Date</dl>
-    <dd>${auction.endingDate}</dd>
-    <dl>Country</dl>
-    <dd>${auction.country}</dd>
-    <dl>City</dl>
-    <dd>${auction.city}</dd>
-    <dl>Buy Price</dl>
-    <dd>${auction.buyPrice}</dd>
+        <a class="js-make-writable button">edit some fields</a>
 
-    <%--<h4 class=important>The auction is not active yet. Set an end date and active it.</h4>--%>
-    <%--<form class=row action=./editAuction method=GET>--%>
-        <%--<label>Set end date: <input name=date type=date id=js-endDate required/></label>--%>
-        <%--<input type=hidden name=auctionid value=" + auction_id + " />--%>
-        <%--<input type=hidden name=mode value=start />--%>
-        <%--<input class=button-primary type=submit value='Active it'>--%>
-    <%--</form>--%>
-<!-- end of container -->
+        <form action="auction.do" method="POST" id="view_updateAuction">
+            <div class="row">
+                <div class="one-half column">
+                    <label>Name</label>
+                    <input class="u-full-width" type="text" name="name" minlength="2" required disabled value="${auction.name}">
+
+                    <%--<label for="categories">Categories selected:</label>--%>
+                    <%--<jsp:useBean id="categoriesLst" class="java.util.ArrayList" scope="request" />--%>
+                    <%--<select class="a-select--multiple" id="categories" name="categories" multiple size=${categoriesLst.size()}>--%>
+                    <%--<c:forEach var="category" items="${categoriesLst}">--%>
+                    <%--<option value=${category.categoryId}>${category.categoryName}</option>--%>
+                    <%--</c:forEach>--%>
+                    <%--</select>--%>
+                    <%--<br>--%>
+
+                    <label>Description</label>
+                    <input class="u-full-width" type="text" name="description" minlength="2" disabled required autofocus value="${auction.description}">
+
+                    <label>Lowest bid</label>
+                    <input class="u-full-width" type="number" name="lowestBid" minlength="1" disabled required value="${auction.lowestBid}">
+
+                    <label>Current bid</label>
+                    <input class="u-full-width" type="number" name="currentBid" minlength="1" disabled readonly value="${auction.currentBid}">
+
+                    <label>Final price (after bidding)</label>
+                    <input class="u-full-width" type="number" name="finalPrice" minlength="1" disabled readonly value="${auction.finalPrice}">
+
+                    <label>Buy price (Instant buy)</label>
+                    <input class="u-full-width" type="number" name="buyPrice" minlength="1" disabled required value="${auction.buyPrice}">
+                </div>
+
+                <div class="one-half column">
+                    <label>City</label>
+                    <input class="u-full-width" type="text" name="city" minlength="2" required disabled value="${auction.city}">
+
+                    <label>The country where is the auction item.</label>
+                    <input class="u-full-width" type="text" name="country" minlength="2" required disabled value="${auction.country}">
+
+                    <label>Starting date</label>
+                    <input class="u-full-width" type="date" name="startingDate" required disabled  value="${auction.startingDate}">
+
+                    <label>Ending date</label>
+                    <input class="u-full-width" type="date" name="endingDate" required disabled value="${auction.endingDate}">
+
+                    <input type="hidden" name="aid" value="${auction.auctionId}">
+                </div>
+            </div>
+            <button class="button-primary" type="submit" name="action" value="updateAuction" disabled>Edit/Update</button>
+        </form>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js" type="text/javascript"></script>
+    <script>
+        window.inputActive = false;
+
+        $('.js-make-writable').on('click', function(){
+            if (window.inputActive){
+                $('input:not([readonly]), button').prop('disabled', true);
+                window.inputActive = false;
+            }
+            else{
+                $('[disabled]').prop('disabled', false);
+                window.inputActive = true;
+            }
+        });
+    </script>
+
 
 </body>
 </html>

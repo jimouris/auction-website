@@ -8,6 +8,7 @@ import org.hibernate.criterion.LogicalExpression;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
 
+import java.sql.Date;
 import java.util.List;
 
 /**
@@ -170,4 +171,38 @@ public class AuctionService {
             }
         }
     }
+
+    public void updateAuction(long aid, String name, String desc, double lowestBid, double currentBid, double finalPrice,
+                              double buyPrice, String city, String country, Date startingDate, Date endingDate) {
+
+        Session session = HibernateUtil.getSession();
+        Transaction tx = null;
+        AuctionEntity auction = getAuction(aid);
+        try {
+            tx = session.beginTransaction();
+            auction.setName(name);
+            auction.setDescription(desc);
+            auction.setLowestBid(lowestBid);
+            auction.setCurrentBid(currentBid);
+            auction.setFinalPrice(finalPrice);
+            auction.setBuyPrice(buyPrice);
+            auction.setBuyPrice(buyPrice);
+            auction.setCity(city);
+            auction.setCountry(country);
+            auction.setStartingDate(startingDate);
+            auction.setEndingDate(endingDate);
+            session.update(auction);
+            tx.commit();
+        } catch (HibernateException e) {
+            if (tx!=null) tx.rollback();
+            e.printStackTrace();
+        } finally {
+            try {
+                if (session != null) session.close();
+            } catch (Exception e) {
+                // ignore
+            }
+        }
+    }
+
 }
