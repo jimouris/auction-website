@@ -14,7 +14,7 @@
     <a href="./homepage.jsp">Homepage</a>
     <a href="auction.do?action=getAllAuctions">View All Auctions</a>
     <!-- end of header row -->
-
+<c:if test ="${not empty auction}">
     <jsp:useBean id="auction" class="javauction.model.AuctionEntity" scope="request" />
 
     <div class="custom-container">
@@ -99,7 +99,10 @@
             }
         });
     </script>
-
+</c:if>
+<c:if test ="${empty auction}">
+    <h3>The auction with id ${param.aid} does not exist!</h3>
+</c:if>
 
 </body>
 </html>
