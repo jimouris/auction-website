@@ -38,6 +38,10 @@ public class login extends HttpServlet {
             if (usr_type.equals("admin")) {
                 result = loginService.authenticateAdmin(username, password);
                 if (result == LoginService.LoginStatus.LOGIN_SUCCESS) {
+
+                    HttpSession session = request.getSession();
+                    session.setAttribute("isAdmin", true);
+
                     next_page = "admin.jsp";
                 } else if (result == LoginService.LoginStatus.LOGIN_NOT_ADMIN) {
                     next_page = "index.jsp";
@@ -55,6 +59,7 @@ public class login extends HttpServlet {
                     UserService userservice = new UserService();
                     UserEntity user = userservice.getUser(username);
                     session.setAttribute("uid", user.getUserId());
+                    session.setAttribute("isAdmin", false);
 
                     // send him to new page as a logged in customer
 //                    RequestDispatcher view = request.getRequestDispatcher("welcome.jsp"); ?????? auto giati???

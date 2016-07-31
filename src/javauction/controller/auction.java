@@ -137,9 +137,9 @@ public class auction extends HttpServlet {
         String next_page = null;
         String param = request.getParameter("action");
         AuctionService auctionService = new AuctionService();
+        HttpSession session = request.getSession();
         switch (param) {
             case "getAllAuctions": /* get all actions with sellerId = uid (from session) */
-                HttpSession session = request.getSession();
                 long userID = (long) session.getAttribute("uid");
                 List auctionLst = auctionService.getAllAuctions(userID, false);
                 request.setAttribute("auctionLst", auctionLst);
@@ -158,6 +158,11 @@ public class auction extends HttpServlet {
             case "getAnAuction": /* get an auction with auctionId = aid */
                 long aid = Long.parseLong(request.getParameter("aid"));
                 AuctionEntity auction = auctionService.getAuction(aid);
+                // check if session.uid == link-parameters.uid (seller)
+                long sid_link = Long.parseLong(request.getParameter("uid"));
+                long sid = (long) session.getAttribute("uid");
+                session.setAttribute("isSeller", sid == sid_link);
+
                 request.setAttribute("auction", auction);
                 next_page = "/auctionInfo.jsp";
                 break;

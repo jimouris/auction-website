@@ -1,3 +1,5 @@
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
 <!doctype html>
 <html>
 <head>
@@ -8,6 +10,7 @@
     <link href="css/custom.css" rel="stylesheet">
 </head>
 <body>
+
 <div class="container">
     <!-- HEADER STUFF -->
     <div class="row">

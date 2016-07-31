@@ -10,26 +10,32 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css" rel="stylesheet">
 </head>
 <body>
-<div class="container">
-    <a href="/admin.jsp">home</a>
+<c:if test="${isAdmin}">
+    <div class="container">
+        <a href="/admin.jsp">home</a>
 
-    <h1>List users</h1>
-    <jsp:useBean id="userLst" class="java.util.ArrayList" scope="request" />
+        <h1>List users</h1>
+        <jsp:useBean id="userLst" class="java.util.ArrayList" scope="request" />
 
-    <%--<%--%>
-        <%--List userLst = (List) request.getAttribute("userLst");--%>
-        <%--out.print(userLst.get(0));--%>
-    <%--%>--%>
-    <table>
-        <c:forEach var="user" items="${userLst}">
-            <tr>
-                <td>${user.username}</td>
-                <td>${user.firstname}</td>
-                <td>${user.isApproved}</td>
-                <td><a href=user.do?action=getAUser&uid=${user.userId}>more info</a></td>
-            </tr>
-        </c:forEach>
-    </table>
-</div>
+            <%--<%--%>
+            <%--List userLst = (List) request.getAttribute("userLst");--%>
+            <%--out.print(userLst.get(0));--%>
+            <%--%>--%>
+        <table>
+            <c:forEach var="user" items="${userLst}">
+                <tr>
+                    <td>${user.username}</td>
+                    <td>${user.firstname}</td>
+                    <td>${user.isApproved}</td>
+                    <td><a href=user.do?action=getAUser&uid=${user.userId}>more info</a></td>
+                </tr>
+            </c:forEach>
+        </table>
+    </div>
+</c:if>
+<c:if test="${not isAdmin}">
+    <h1>You are not admin. Go back to <a href="/" class="button-primary">homepage</a>.</h1>
+</c:if>
+
 </body>
 </html>

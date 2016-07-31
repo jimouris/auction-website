@@ -29,7 +29,9 @@
             <h2>The auction is started-active</h2>
         </c:if>
 
-        <a class="js-make-writable button">edit some fields</a>
+        <c:if test="${isSeller}">
+            <a class="js-make-writable button">edit some fields</a>
+        </c:if>
 
         <form action="auction.do" method="POST" id="view_updateAuction">
             <div class="row">

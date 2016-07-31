@@ -1,4 +1,6 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
 <!-- <!DOCTYPE html> -->
 <html>
 <head>
@@ -8,9 +10,14 @@
 </head>
 <body>
 
-<h1>This is the main page of admin.</h1>
-<p>Γεια σου ρε χοντρέ!</p>
-<a href="user.do?action=getAllUsers">View all users my nigga</a>
+<c:if test="${isAdmin}">
+    <h1>This is the main page of admin.</h1>
+    <p>Γεια σου ρε χοντρέ!</p>
+    <a href="user.do?action=getAllUsers">View all users my nigga</a>
+</c:if>
+<c:if test="${not isAdmin}">
+    <h1>You are not admin. Go back to <a href="/" class="button-primary">homepage</a>.</h1>
+</c:if>
 
 </body>
 </html>
