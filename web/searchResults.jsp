@@ -20,7 +20,7 @@
                 <td>${auction.name}</td>
                 <td>${auction.description}</td>
                 <td>${auction.lowestBid}</td>
-                <td><a class="button button-primary" href=auction.do?action=getAnAuction&aid=${auction.auctionId}>View Auction</a></td>
+                <td><a class="button button-primary" href=auction.do?action=getAnAuction&aid=${auction.auctionId}&uid=${uid}>View Auction</a></td>
             </tr>
         </c:forEach>
 

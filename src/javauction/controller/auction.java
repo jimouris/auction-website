@@ -160,7 +160,11 @@ public class auction extends HttpServlet {
                 AuctionEntity auction = auctionService.getAuction(aid);
                 // check if session.uid == link-parameters.uid (seller)
                 long sid_link = Long.parseLong(request.getParameter("uid"));
-                long sid = (long) session.getAttribute("uid");
+                long uid = (long) session.getAttribute("uid");
+                assert(sid_link == uid);
+                /* get seller id for the auction */
+                long sid = auction.getSelledId();
+
                 session.setAttribute("isSeller", sid == sid_link);
 
                 request.setAttribute("auction", auction);

@@ -14,6 +14,7 @@
     <a href="./homepage.jsp">Homepage</a>
     <a href="auction.do?action=getAllAuctions">View All Auctions</a>
     <!-- end of header row -->
+    ${isSeller}
 <c:if test ="${not empty auction}">
     <jsp:useBean id="auction" class="javauction.model.AuctionEntity" scope="request" />
 
