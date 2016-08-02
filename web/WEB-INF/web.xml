@@ -24,6 +24,16 @@
     </servlet-mapping>
 
     <servlet>
+        <servlet-name>logout</servlet-name>
+        <servlet-class>javauction.controller.logout</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>logout</servlet-name>
+        <url-pattern>/logout.do</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
         <servlet-name>user</servlet-name>
         <servlet-class>javauction.controller.user</servlet-class>
     </servlet>

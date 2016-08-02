@@ -22,7 +22,7 @@
           <div class="offset-by-seven four columns">
             <ul class="nav u-full-width row">
               <li class="offset-by-one-third one-third column newMessage tooltip"><span class="tooltipFire">Messages</span><div class="tooltipText"><div class="tooltipMargin"></div><a href="./messages_inc.jsp">Income</a><br /><a href="./messages_out.jsp">SENT</a></div></li>
-              <li class="one-third column"><a href="./logout.jsp?type=regular"><span class="delete">Logout</span></a></li>
+              <li class="one-third column"><a href="./logout.do"><span class="delete">Logout</span></a></li>
             </ul>
           </div>
         </div>

@@ -1,3 +1,4 @@
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 <!doctype html>
@@ -11,7 +12,8 @@
 </head>
 <body>
 
-<div class="container">
+<c:if test ="${not empty uid}">
+    <div class="container">
     <!-- HEADER STUFF -->
     <div class="row">
         <div class="one column">
@@ -29,7 +31,8 @@
                     </div>
                 </li>
                 <li class="one-third column">
-                    <a href="./logout.jsp?type=regular"><span class="delete">Logout</span></a>
+                    <a href="logout.do"><span class="delete">Logout</span></a>
+                    <%--<form action="logout.do" method="post"> <input type="submit" value="Logout"/></form>--%>
                 </li>
             </ul>
         </div>
@@ -56,7 +59,11 @@
         </section>
     </div>
     <!-- end of search row -->
-
+</c:if>
+<c:if test ="${empty uid}">
+    <h3>You are logged out</h3>
+    <p>Please go to the <a href="/">start page</a> and login again.</p>
+</c:if>
 
 </body>
 </html>

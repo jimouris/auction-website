@@ -26,9 +26,9 @@ public class login extends HttpServlet {
         String password = request.getParameter("password");
         String usr_type = request.getParameter("action");
 
-
         LoginService.LoginStatus result;
         String next_page = "/";
+        HttpSession session = request.getSession();
 
         // check the credentials
         // and forward to appropriate page if admin or user
@@ -39,7 +39,6 @@ public class login extends HttpServlet {
                 result = loginService.authenticateAdmin(username, password);
                 if (result == LoginService.LoginStatus.LOGIN_SUCCESS) {
 
-                    HttpSession session = request.getSession();
                     session.setAttribute("isAdmin", true);
 
                     next_page = "admin.jsp";
@@ -55,17 +54,10 @@ public class login extends HttpServlet {
                 result = loginService.authenticateUser(username, password);
                 if (result == LoginService.LoginStatus.LOGIN_SUCCESS) {
 
-                    HttpSession session = request.getSession();
                     UserService userservice = new UserService();
                     UserEntity user = userservice.getUser(username);
                     session.setAttribute("uid", user.getUserId());
                     session.setAttribute("isAdmin", false);
-
-                    // send him to new page as a logged in customer
-//                    RequestDispatcher view = request.getRequestDispatcher("welcome.jsp"); ?????? auto giati???
-//                    view.forward(request, response);
-
-//                    System.out.println("my session id is" + session.getAttribute("uid"));
 
                     next_page = "homepage.jsp";
                 } else if (result == LoginService.LoginStatus.LOGIN_NOT_APPROVED) {
