@@ -40,14 +40,14 @@
                     <label>Name</label>
                     <input class="u-full-width" type="text" name="name" minlength="2" required disabled value="${auction.name}">
 
-                    <%--<label for="categories">Categories selected:</label>--%>
-                    <%--<jsp:useBean id="categoriesLst" class="java.util.ArrayList" scope="request" />--%>
-                    <%--<select class="a-select--multiple" id="categories" name="categories" multiple size=${categoriesLst.size()}>--%>
-                    <%--<c:forEach var="category" items="${categoriesLst}">--%>
-                    <%--<option value=${category.categoryId}>${category.categoryName}</option>--%>
-                    <%--</c:forEach>--%>
-                    <%--</select>--%>
-                    <%--<br>--%>
+                    <label for="categories">Categories selected:</label>
+                    <jsp:useBean id="categoriesLst" class="java.util.ArrayList" scope="request" />
+                    <select class="a-select--multiple" id="categories" name="categories" multiple size=${categoriesLst.size()}>
+                        <c:forEach var="category" items="${categoriesLst}">
+                        <option value=${category.categoryId}>${category.categoryName}</option>
+                        </c:forEach>
+                    </select>
+                    <br>
 
                     <label>Description</label>
                     <input class="u-full-width" type="text" name="description" minlength="2" disabled required autofocus value="${auction.description}">

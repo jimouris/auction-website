@@ -16,10 +16,7 @@ import java.io.IOException;
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by gpelelis on 4/7/2016.
@@ -125,12 +122,12 @@ public class auction extends HttpServlet {
             Date endingDate = Date.valueOf(request.getParameter("endingDate"));
             long aid = Long.parseLong(request.getParameter("aid"));
 // TODO: Also Update categories!
+            String[] categories = request.getParameterValues("categories");
+            System.out.println("new act:"+Arrays.toString(categories));
 
-//            AuctionEntity auction = auctionService.getAuction(aid);
-//            auction.updateAuctionFields(name, desc, lowestBid, currentBid, finalPrice, buyPrice, city, country, startingDate, endingDate);
 
             try {
-                auctionService.updateAuction(aid, name, desc, lowestBid, currentBid, finalPrice, buyPrice, city, country, startingDate, endingDate);
+                auctionService.updateAuction(null, aid, name, desc, lowestBid, currentBid, finalPrice, buyPrice, city, country, startingDate, endingDate);
 
                 AuctionEntity auction = auctionService.getAuction(aid);
                 request.setAttribute("auction", auction);

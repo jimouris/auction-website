@@ -20,7 +20,7 @@ public class search extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String next_page = null;
         if (request.getParameter("action").equals("doAdvancedSearch")) {
-            String[] categories = request.getParameterValues("categoriesLst");
+            String[] categories = request.getParameterValues("categories");
             double minPrice = 0;
             if (!request.getParameter("minPrice").equals("")) {
                 minPrice = Double.parseDouble(request.getParameter("minPrice"));
@@ -31,7 +31,6 @@ public class search extends HttpServlet {
             }
             String location = request.getParameter("location");
             String description = request.getParameter("description");
-
             AuctionService auctionService = new AuctionService();
             List <AuctionEntity> auctionsLst = auctionService.searchAuction(categories, description, minPrice, maxPrice, location);
 

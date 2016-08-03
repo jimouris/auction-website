@@ -1,15 +1,15 @@
 package javauction.service;
 
 import javauction.model.AuctionEntity;
+import javauction.model.CategoryEntity;
 import javauction.util.HibernateUtil;
 import org.hibernate.*;
-import org.hibernate.criterion.Criterion;
-import org.hibernate.criterion.LogicalExpression;
-import org.hibernate.criterion.MatchMode;
-import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.*;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by gpelelis on 5/7/2016.
@@ -122,7 +122,14 @@ public class AuctionService {
             Criteria criteria = session.createCriteria(AuctionEntity.class);
             /* category search */
             if (categories != null) {
-                // TODO category search
+                /* convert list of strings to list of integers */
+                List <Integer> intCategories = new ArrayList<>();
+                for (String c : categories) {
+                    intCategories.add(Integer.parseInt(c));
+                }
+
+                criteria.createAlias("categories", "auctionCategory");
+                criteria.add(Restrictions.in("auctionCategory.categoryId", intCategories));
             }
             /* description search */
             if (desc != "") criteria.add(Restrictions.like("description", desc, MatchMode.ANYWHERE));
@@ -136,6 +143,7 @@ public class AuctionService {
                 criteria.add(cityORcountry);
             }
 
+            criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
             auctions = criteria.list();
             tx.commit();
         } catch (HibernateException e) {
@@ -172,7 +180,7 @@ public class AuctionService {
         }
     }
 
-    public void updateAuction(long aid, String name, String desc, double lowestBid, double currentBid, double finalPrice,
+    public void updateAuction(Set<CategoryEntity> categories, long aid, String name, String desc, double lowestBid, double currentBid, double finalPrice,
                               double buyPrice, String city, String country, Date startingDate, Date endingDate) {
 
         Session session = HibernateUtil.getSession();
@@ -180,6 +188,7 @@ public class AuctionService {
         AuctionEntity auction = getAuction(aid);
         try {
             tx = session.beginTransaction();
+//            auction.setCategories(categories);
             auction.setName(name);
             auction.setDescription(desc);
             auction.setLowestBid(lowestBid);
