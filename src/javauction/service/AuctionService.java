@@ -188,7 +188,7 @@ public class AuctionService {
         AuctionEntity auction = getAuction(aid);
         try {
             tx = session.beginTransaction();
-//            auction.setCategories(categories);
+            auction.setCategories(categories);
             auction.setName(name);
             auction.setDescription(desc);
             auction.setLowestBid(lowestBid);

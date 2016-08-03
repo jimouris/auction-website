@@ -74,14 +74,13 @@ public class auction extends HttpServlet {
             // tell the service to add a new auction
             try {
                 // map the auction with the specified categories
-                CategoryEntity category = null;
+                CategoryEntity category;
                 Set<CategoryEntity> categories = new HashSet<>();
                 for (String cid : categoriesParam){
                     category = categoryService.getCategory(Integer.parseInt(cid));
                     categories.add(category);
                 }
                 auction.setCategories(categories);
-
 
                 /* if auction submitted successfully */
                 if (auctionService.addAuction(auction)) {
@@ -121,16 +120,26 @@ public class auction extends HttpServlet {
             Date startingDate = Date.valueOf(request.getParameter("startingDate"));
             Date endingDate = Date.valueOf(request.getParameter("endingDate"));
             long aid = Long.parseLong(request.getParameter("aid"));
-// TODO: Also Update categories!
-            String[] categories = request.getParameterValues("categories");
-            System.out.println("new act:"+Arrays.toString(categories));
-
+            String[] categoriesParam = request.getParameterValues("categories");
 
             try {
-                auctionService.updateAuction(null, aid, name, desc, lowestBid, currentBid, finalPrice, buyPrice, city, country, startingDate, endingDate);
+                // map the auction with the specified categories
+                CategoryEntity category;
+                Set<CategoryEntity> categories = new HashSet<>();
+                for (String cid : categoriesParam){
+                    category = categoryService.getCategory(Integer.parseInt(cid));
+                    categories.add(category);
+                }
+                auctionService.updateAuction(categories, aid, name, desc, lowestBid, currentBid, finalPrice, buyPrice, city, country, startingDate, endingDate);
 
                 AuctionEntity auction = auctionService.getAuction(aid);
                 request.setAttribute("auction", auction);
+                List categoryLst = categoryService.getAllCategories();
+                request.setAttribute("categoryLst", categoryLst);
+
+//                request.setAttribute("usedCategories", auction.getCategories());
+//                System.out.println("dsadas"+auction.getCategories());
+
                 next_page = "/auctionInfo.jsp";
             } catch (Exception e) {
                 e.printStackTrace();
@@ -147,6 +156,8 @@ public class auction extends HttpServlet {
         String param = request.getParameter("action");
         AuctionService auctionService = new AuctionService();
         HttpSession session = request.getSession();
+        CategoryService categoryService = new CategoryService();
+        List categoryLst = categoryService.getAllCategories();
         switch (param) {
             case "getAllAuctions": /* get all actions with sellerId = uid (from session) */
                 long userID = (long) session.getAttribute("uid");
@@ -159,8 +170,6 @@ public class auction extends HttpServlet {
                 next_page = "/listAuctions.jsp";
                 break;
             case "newAuction": /* gather all categories to display on jsp */
-                CategoryService categoryService = new CategoryService();
-                List categoryLst = categoryService.getAllCategories();
                 request.setAttribute("categoryLst", categoryLst);
                 next_page = "/newAuction.jsp";
                 break;
@@ -173,8 +182,18 @@ public class auction extends HttpServlet {
                 assert(sid_link == uid);
                 /* get seller id for the auction */
                 long sid = auction.getSelledId();
-
                 session.setAttribute("isSeller", sid == sid_link);
+
+                request.setAttribute("categoryLst", categoryLst);
+
+//                Set <CategoryEntity> cats = auction.getCategories();
+//                if (cats != null)
+//                    for (CategoryEntity c : cats)
+//                        System.out.println(c.getCategoryId()+" " +c.getCategoryName());
+//                else
+//                    System.out.println("dsakdjaskljdjasldejlask");
+//                request.setAttribute("usedCategories", auction.getCategories());
+
 
                 request.setAttribute("auction", auction);
                 next_page = "/auctionInfo.jsp";
