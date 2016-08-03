@@ -54,7 +54,7 @@ CREATE TABLE IF NOT EXISTS `auctionwebsite`.`auction` (
   `LowestBid` DOUBLE NOT NULL,
   `CurrentBid` DOUBLE NOT NULL,
   `FinalPrice` DOUBLE NOT NULL,
-  `StartingDate` DATE NOT NULL,
+  `StartingDate` DATE NULL,
   `EndingDate` DATE NULL DEFAULT NULL,
   `Country` VARCHAR(45) NOT NULL,
   `City` VARCHAR(45) NOT NULL,
