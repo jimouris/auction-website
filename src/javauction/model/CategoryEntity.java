@@ -11,6 +11,14 @@ public class CategoryEntity {
     private int categoryId;
     private String categoryName;
 
+    public CategoryEntity(int categoryId, String categoryName) {
+        this.categoryId = categoryId;
+        this.categoryName = categoryName;
+    }
+
+    public CategoryEntity() {
+    }
+
     @Id
     @Column(name = "CategoryID")
     public int getCategoryId() {

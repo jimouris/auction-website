@@ -95,6 +95,8 @@ public class AuctionService {
             tx = session.beginTransaction();
             Criteria criteria = session.createCriteria(AuctionEntity.class);
             criteria.add(Restrictions.like("name", name, MatchMode.ANYWHERE));
+
+            criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
             auctions = criteria.list();
             tx.commit();
         } catch (HibernateException e) {

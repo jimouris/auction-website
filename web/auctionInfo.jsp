@@ -40,7 +40,7 @@
                     <label>Name</label>
                     <input class="u-full-width" type="text" name="name" minlength="2" required disabled value="${auction.name}">
 
-                    <label for="categories">Categories selected:</label>
+                    <label for="categories">All Categories (select to update):</label>
                     <jsp:useBean id="categoryLst" class="java.util.ArrayList" scope="request" />
                     <select class="a-select--multiple" id="categories" name="categories" multiple disabled size=${categoryLst.size()}>
                         <c:forEach var="category" items="${categoryLst}">
@@ -67,14 +67,14 @@
 
                 <div class="one-half column">
 
-                    <%--<label for="usedCategories">Used Categories:</label>--%>
-                    <%--<jsp:useBean id="usedCategories" class="java.util.ArrayList" scope="request" />--%>
-                    <%--<select class="a-select--multiple" id="categories" name="categories" multiple disabled readonly size=${categoryLst.size()}>--%>
-                        <%--<c:forEach var="category" items="${usedCategories}">--%>
-                            <%--<option value=${category.categoryId}>${category.categoryName}</option>--%>
-                        <%--</c:forEach>--%>
-                    <%--</select>--%>
-                    <%--<br>--%>
+                    <label for="categories">Selected Categories:</label>
+                    <jsp:useBean id="usedCategories" class="java.util.ArrayList" scope="request" />
+                    <select class="a-select--multiple" id="categories" name="categories" multiple disabled readonly size=${categoryLst.size()}>
+                        <c:forEach var="category" items="${usedCategories}">
+                            <option value=${category.categoryId}>${category.categoryName}</option>
+                        </c:forEach>
+                    </select>
+                    <br>
 
                     <label>City</label>
                     <input class="u-full-width" type="text" name="city" minlength="2" required disabled value="${auction.city}">
