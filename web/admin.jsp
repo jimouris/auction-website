@@ -11,7 +11,16 @@
 <body>
 
 <c:if test="${isAdmin}">
-    <h1>This is the main page of admin.</h1>
+    <div class="row">
+        <div class="one-half column">
+            <h1>This is the main page of admin.</h1>
+        </div>
+
+        <div class="one-half column">
+            <h5><a href="logout.do" class="button-primary">Logout</a></h5>
+        </div>
+    </div>
+
     <p>Γεια σου ρε χοντρέ!</p>
     <a href="user.do?action=getAllUsers">View all users my nigga</a>
 </c:if>
