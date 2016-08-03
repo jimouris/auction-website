@@ -163,7 +163,6 @@ public class auction extends HttpServlet {
         HttpSession session = request.getSession();
         CategoryService categoryService = new CategoryService();
         List categoryLst = categoryService.getAllCategories();
-        System.out.println("dsadasda"+categoryLst);
         switch (param) {
             case "getAllAuctions": /* get all actions with sellerId = uid (from session) */
                 long userID = (long) session.getAttribute("uid");
