@@ -1,5 +1,6 @@
 package javauction.service;
 
+import javauction.model.CategoryEntity;
 import javauction.util.HibernateUtil;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -23,4 +24,24 @@ public class CategoryService {
         }
         return null;
     }
+
+    public CategoryEntity getCategory(int id){
+        Session session = HibernateUtil.getSession();
+        try {
+            CategoryEntity category = null;
+                Query query = session.createQuery("from CategoryEntity where categoryId=" + id);
+                List results = query.list();
+                if (results.size() > 0) {
+                    category = (CategoryEntity) results.get(0);
+                }
+            return category;
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+        return null;
+    }
+
+
 }

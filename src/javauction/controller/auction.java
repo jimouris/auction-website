@@ -1,6 +1,7 @@
 package javauction.controller;
 
 import javauction.model.AuctionEntity;
+import javauction.model.CategoryEntity;
 import javauction.service.AuctionService;
 import javauction.service.CategoryService;
 
@@ -16,7 +17,9 @@ import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by gpelelis on 4/7/2016.
@@ -26,7 +29,8 @@ public class auction extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         AuctionService auctionService = new AuctionService();
-        String next_page = null;
+        CategoryService categoryService = new CategoryService();
+        String next_page = "index.jsp";
 
         if (request.getParameter("action").equals("addNew")){
             // get the user input
@@ -38,7 +42,7 @@ public class auction extends HttpServlet {
             String Country = request.getParameter("country");
             String City = request.getParameter("city");
             String instantBuy = request.getParameter("instantBuy");
-// TODO: Get categories!
+            String[] categoriesParam = request.getParameterValues("categories");
             /* get userid from session. userid will be sellerid for this specific auction! */
             HttpSession session = request.getSession();
             long userId = (long) session.getAttribute("uid");
@@ -72,14 +76,22 @@ public class auction extends HttpServlet {
             AuctionEntity auction = new AuctionEntity(Name, Description, LowestBid, Country, City, buyPrice, startDate, isStarted, endDate, userId);
             // tell the service to add a new auction
             try {
+                // map the auction with the specified categories
+                CategoryEntity category = null;
+                Set<CategoryEntity> categories = new HashSet<>();
+                for (String cid : categoriesParam){
+                    category = categoryService.getCategory(Integer.parseInt(cid));
+                    categories.add(category);
+                }
+                auction.setCategories(categories);
+
+
                 /* if auction submitted successfully */
                 if (auctionService.addAuction(auction)) {
                     request.setAttribute("aid", auction.getAuctionId());
                     next_page = "/auctionSubmit.jsp";
                 } else {
-
                     System.out.println("failure: " + auction);
-
                 }
 
             } catch (Exception e) {

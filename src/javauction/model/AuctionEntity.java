@@ -2,6 +2,7 @@ package javauction.model;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.util.Set;
 
 /**
  * Created by jimouris on 7/2/16.
@@ -30,6 +31,22 @@ public class AuctionEntity {
     private double latitude;
     private Byte isStarted;
     private double buyPrice;
+
+
+
+    @ManyToMany(targetEntity = CategoryEntity.class, cascade = CascadeType.ALL)
+    @JoinTable(name = "auction_has_category",
+            joinColumns = { @JoinColumn(name = "auction_AuctionID") },
+            inverseJoinColumns = { @JoinColumn(name = "category_CategoryID") })
+    private Set<CategoryEntity> categories;
+
+    public Set<CategoryEntity> getCategories(){
+        return categories;
+    }
+
+    public void setCategories(Set<CategoryEntity> categories) {
+        this.categories = categories;
+    }
 
     // used for the javabean
     public AuctionEntity() {
