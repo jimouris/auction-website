@@ -23,6 +23,7 @@
         <form action="auction.do" method="post">
             <input type="hidden" value=${auction.auctionId} name="aid">
             <c:if test="${auction.isStarted == 0}">
+                <h2>The auction is inactive</h2>
                 <input type=submit value=activateAuction name="action">
             </c:if>
         </form>
@@ -92,6 +93,7 @@
                 </div>
             </div>
             <button class="button-primary" type="submit" name="action" value="updateAuction" disabled>Edit/Update</button>
+            <button class="button" type="submit" name="action" value="deleteAuction" disabled>Delete Auction</button>
         </form>
     </div>
 

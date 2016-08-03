@@ -8,6 +8,7 @@ import org.hibernate.criterion.*;
 
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Set;
 
@@ -169,6 +170,10 @@ public class AuctionService {
             session.beginTransaction();
             AuctionEntity auction = (AuctionEntity) session.get(AuctionEntity.class, aid);
             auction.setIsStarted((byte) 1);
+
+            java.sql.Date timeNow = new Date(Calendar.getInstance().getTimeInMillis());
+            auction.setStartingDate(timeNow);
+
             session.update(auction);
             session.getTransaction().commit();
         } catch (HibernateException e) {
@@ -190,7 +195,9 @@ public class AuctionService {
         AuctionEntity auction = getAuction(aid);
         try {
             tx = session.beginTransaction();
-            auction.setCategories(categories);
+            if (categories != null) {
+                auction.setCategories(categories);
+            }
             auction.setName(name);
             auction.setDescription(desc);
             auction.setLowestBid(lowestBid);
@@ -215,5 +222,25 @@ public class AuctionService {
             }
         }
     }
+
+    public void deleteAuction(long aid) {
+        Session session = HibernateUtil.getSession();
+        try {
+            session.beginTransaction();
+            AuctionEntity auction = (AuctionEntity) session.get(AuctionEntity.class, aid);
+            session.delete(auction);
+            session.flush() ;
+
+        } catch (HibernateException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (session != null) session.close();
+            } catch (Exception e) {
+                // ignore
+            }
+        }
+    }
+
 
 }

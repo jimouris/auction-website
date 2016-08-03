@@ -103,6 +103,18 @@ public class auction extends HttpServlet {
             try {
                 auctionService.activateAuction(aid);
                 auction = auctionService.getAuction(aid);
+
+                /* all categories */
+                List categoryLst = categoryService.getAllCategories();
+                request.setAttribute("categoryLst", categoryLst);
+                /* Auctions selected categories*/
+                Set <CategoryEntity> cats = auction.getCategories();
+                List<CategoryEntity> usedCategories = new ArrayList<>();
+                for (CategoryEntity c : cats){
+                    usedCategories.add(new CategoryEntity(c.getCategoryId(), c.getCategoryName()));
+                }
+                request.setAttribute("usedCategories", usedCategories);
+
                 request.setAttribute("auction", auction);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -124,11 +136,14 @@ public class auction extends HttpServlet {
 
             try {
                 // map the auction with the specified categories
-                CategoryEntity category;
-                Set<CategoryEntity> categories = new HashSet<>();
-                for (String cid : categoriesParam){
-                    category = categoryService.getCategory(Integer.parseInt(cid));
-                    categories.add(category);
+                Set<CategoryEntity> categories = null;
+                if (categoriesParam != null) {
+                    CategoryEntity category;
+                    categories = new HashSet<>();
+                    for (String cid : categoriesParam) {
+                        category = categoryService.getCategory(Integer.parseInt(cid));
+                        categories.add(category);
+                    }
                 }
                 auctionService.updateAuction(categories, aid, name, desc, lowestBid, currentBid, finalPrice, buyPrice, city, country, startingDate, endingDate);
 
@@ -149,7 +164,17 @@ public class auction extends HttpServlet {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        } else if (request.getParameter("action").equals("deleteAuction")) {
+            response.setContentType("text/html");
 
+            try {
+                long aid = Long.parseLong(request.getParameter("aid"));
+                auctionService.deleteAuction(aid);
+
+                next_page = "/homepage.jsp";
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         RequestDispatcher view = request.getRequestDispatcher(next_page);
