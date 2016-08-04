@@ -1,6 +1,7 @@
 package javauction.controller;
 
 import javauction.model.AuctionEntity;
+import javauction.model.BidEntity;
 import javauction.model.CategoryEntity;
 import javauction.service.AuctionService;
 import javauction.service.CategoryService;
@@ -124,7 +125,6 @@ public class auction extends HttpServlet {
             String name = request.getParameter("name");
             String desc = request.getParameter("description");
             float lowestBid = Float.parseFloat(request.getParameter("lowestBid"));
-            float currentBid = Float.parseFloat(request.getParameter("currentBid"));
             float finalPrice = Float.parseFloat(request.getParameter("finalPrice"));
             float buyPrice = Float.parseFloat(request.getParameter("buyPrice"));
             String city = request.getParameter("city");
@@ -145,7 +145,7 @@ public class auction extends HttpServlet {
                         categories.add(category);
                     }
                 }
-                auctionService.updateAuction(categories, aid, name, desc, lowestBid, currentBid, finalPrice, buyPrice, city, country, startingDate, endingDate);
+                auctionService.updateAuction(categories, aid, name, desc, lowestBid, finalPrice, buyPrice, city, country, startingDate, endingDate);
 
                 AuctionEntity auction = auctionService.getAuction(aid);
                 request.setAttribute("auction", auction);
@@ -159,6 +159,13 @@ public class auction extends HttpServlet {
                     usedCategories.add(new CategoryEntity(c.getCategoryId(), c.getCategoryName()));
                 }
                 request.setAttribute("usedCategories", usedCategories);
+                /* get the highest bid */
+                Set <BidEntity> allBids = auction.getBids();
+                List<Float> bids = new ArrayList<>();
+                for (BidEntity b : allBids){
+                    bids.add(b.getAmount());
+                }
+                request.setAttribute("bids", bids);
 
                 next_page = "/auctionInfo.jsp";
             } catch (Exception e) {
@@ -170,11 +177,40 @@ public class auction extends HttpServlet {
             try {
                 long aid = Long.parseLong(request.getParameter("aid"));
                 auctionService.deleteAuction(aid);
+                
+//                TODO: FIX DELETE, doesn't delete from database!
 
                 next_page = "/homepage.jsp";
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        } else if (request.getParameter("action").equals("bidAuction")) {
+            float amount = Float.parseFloat(request.getParameter("bid"));
+            long aid = Long.parseLong(request.getParameter("aid"));
+            HttpSession session = request.getSession();
+            long uid = (long) session.getAttribute("uid");
+
+            BidEntity bid = new BidEntity(uid, aid, amount);
+            auctionService.bidAuction(bid);
+
+            AuctionEntity auction = auctionService.getAuction(aid);
+            request.setAttribute("auction", auction);
+            /* Auctions selected categories*/
+            Set <CategoryEntity> cats = auction.getCategories();
+            List<CategoryEntity> usedCategories = new ArrayList<>();
+            for (CategoryEntity c : cats){
+                usedCategories.add(new CategoryEntity(c.getCategoryId(), c.getCategoryName()));
+            }
+            request.setAttribute("usedCategories", usedCategories);
+            /* get the highest bid */
+            Set <BidEntity> allBids = auction.getBids();
+            List<Float> bids = new ArrayList<>();
+            for (BidEntity b : allBids){
+                bids.add(b.getAmount());
+            }
+            request.setAttribute("bids", bids);
+
+            next_page = "/auctionInfo.jsp";
         }
 
         RequestDispatcher view = request.getRequestDispatcher(next_page);
@@ -222,6 +258,13 @@ public class auction extends HttpServlet {
                     usedCategories.add(new CategoryEntity(c.getCategoryId(), c.getCategoryName()));
                 }
                 request.setAttribute("usedCategories", usedCategories);
+                /* get the highest bid */
+                Set <BidEntity> allBids = auction.getBids();
+                List<Float> bids = new ArrayList<>();
+                for (BidEntity b : allBids){
+                    bids.add(b.getAmount());
+                }
+                request.setAttribute("bids", bids);
 
                 request.setAttribute("auction", auction);
                 next_page = "/auctionInfo.jsp";

@@ -1,21 +1,47 @@
 package javauction.model;
 
 import javax.persistence.*;
-import java.sql.Date;
+import java.sql.Timestamp;
+import java.util.Calendar;
 
 /**
  * Created by jimouris on 7/2/16.
  */
+
 @Entity
-@Table(name = "bid", schema = "auctionwebsite", catalog = "")
-@IdClass(BidEntityPK.class)
+@Table(name = "bid", schema = "auctionwebsite")
 public class BidEntity {
+    private long bidid;
     private long bidderId;
+    private Timestamp bidTime;
+    private float amount;
     private long auctionId;
-    private Date bidTime;
-    private int amount;
+    private AuctionEntity auction;
+
+    public BidEntity(long bidderId, long auctionId, float amount) {
+        this.bidderId = bidderId;
+        this.auctionId = auctionId;
+        this.amount = amount;
+        Calendar cal = Calendar.getInstance();
+        java.sql.Timestamp timestamp = new java.sql.Timestamp(cal.getTimeInMillis());
+        this.bidTime = timestamp;
+    }
+
+    public BidEntity() {
+    }
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "Bid")
+    public long getBidid() {
+        return bidid;
+    }
+
+    public void setBidid(long bidid) {
+        this.bidid = bidid;
+    }
+
+    @Basic
     @Column(name = "BidderID")
     public long getBidderId() {
         return bidderId;
@@ -25,7 +51,7 @@ public class BidEntity {
         this.bidderId = bidderId;
     }
 
-    @Id
+    @Basic
     @Column(name = "AuctionID")
     public long getAuctionId() {
         return auctionId;
@@ -37,22 +63,32 @@ public class BidEntity {
 
     @Basic
     @Column(name = "BidTime")
-    public Date getBidTime() {
+    public Timestamp getBidTime() {
         return bidTime;
     }
 
-    public void setBidTime(Date bidTime) {
+    public void setBidTime(Timestamp bidTime) {
         this.bidTime = bidTime;
     }
 
     @Basic
     @Column(name = "Amount")
-    public int getAmount() {
+    public float getAmount() {
         return amount;
     }
 
-    public void setAmount(int amount) {
+    public void setAmount(float amount) {
         this.amount = amount;
+    }
+
+    @ManyToOne
+    @JoinColumn(name="AuctionID", nullable = false, insertable = false, updatable = false)
+    public AuctionEntity getAuction() {
+        return auction;
+    }
+
+    public void setAuction(AuctionEntity auction) {
+        this.auction = auction;
     }
 
     @Override
@@ -75,7 +111,7 @@ public class BidEntity {
         int result = (int) (bidderId ^ (bidderId >>> 32));
         result = 31 * result + (int) (auctionId ^ (auctionId >>> 32));
         result = 31 * result + (bidTime != null ? bidTime.hashCode() : 0);
-        result = 31 * result + amount;
+        result = 31 * result + (int) amount;
         return result;
     }
 }

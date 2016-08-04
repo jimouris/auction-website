@@ -1,6 +1,7 @@
 package javauction.service;
 
 import javauction.model.AuctionEntity;
+import javauction.model.BidEntity;
 import javauction.model.CategoryEntity;
 import javauction.util.HibernateUtil;
 import org.hibernate.*;
@@ -187,7 +188,7 @@ public class AuctionService {
         }
     }
 
-    public void updateAuction(Set<CategoryEntity> categories, long aid, String name, String desc, double lowestBid, double currentBid, double finalPrice,
+    public void updateAuction(Set<CategoryEntity> categories, long aid, String name, String desc, double lowestBid, double finalPrice,
                               double buyPrice, String city, String country, Date startingDate, Date endingDate) {
 
         Session session = HibernateUtil.getSession();
@@ -201,7 +202,6 @@ public class AuctionService {
             auction.setName(name);
             auction.setDescription(desc);
             auction.setLowestBid(lowestBid);
-            auction.setCurrentBid(currentBid);
             auction.setFinalPrice(finalPrice);
             auction.setBuyPrice(buyPrice);
             auction.setBuyPrice(buyPrice);
@@ -242,5 +242,21 @@ public class AuctionService {
         }
     }
 
+    public void bidAuction(BidEntity bid) {
+        Session session = HibernateUtil.getSession();
+        try {
+            session.beginTransaction();
+            session.save(bid);
+            session.getTransaction().commit();
+        } catch (HibernateException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (session != null) session.close();
+            } catch (Exception e) {
+                // ignore
+            }
+        }
+    }
 
 }

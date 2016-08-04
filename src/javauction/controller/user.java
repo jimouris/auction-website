@@ -85,7 +85,6 @@ public class user extends HttpServlet {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
             } else {
                 System.out.println("Passwords must match");
                 request.setAttribute("regStatus", "Passwords must match");

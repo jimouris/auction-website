@@ -20,7 +20,6 @@ public class AuctionEntity {
     private String name;
     private String description;
     private double lowestBid;
-    private double currentBid;
     private double finalPrice;
     private Date startingDate;
     private Date endingDate;
@@ -32,23 +31,16 @@ public class AuctionEntity {
     private Byte isStarted;
     private double buyPrice;
 
-
-
     @ManyToMany(targetEntity = CategoryEntity.class, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "auction_has_category",
             joinColumns = { @JoinColumn(name = "auction_AuctionID") },
             inverseJoinColumns = { @JoinColumn(name = "category_CategoryID") })
     private Set<CategoryEntity> categories;
 
-    public Set<CategoryEntity> getCategories(){
-        return categories;
-    }
+    @OneToMany(targetEntity = BidEntity.class, mappedBy = "auction", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OrderBy("amount DESC")
+    private Set<BidEntity> bids;
 
-    public void setCategories(Set<CategoryEntity> categories) {
-        this.categories = categories;
-    }
-
-    // used for the javabean
     public AuctionEntity() {
     }
 
@@ -62,11 +54,8 @@ public class AuctionEntity {
         this.endingDate = endDate;
         this.isStarted = isStarted;
         this.buyPrice = buyPrice;
-
-        // todo: get the real id of seller
         this.sellerId = sellerId;
     }
-
 
     public long getAuctionId() {
         return auctionId;
@@ -114,16 +103,6 @@ public class AuctionEntity {
 
     public void setLowestBid(double lowestBid) {
         this.lowestBid = lowestBid;
-    }
-
-    @Basic
-    @Column(name = "CurrentBid")
-    public double getCurrentBid() {
-        return currentBid;
-    }
-
-    public void setCurrentBid(double currentBid) {
-        this.currentBid = currentBid;
     }
 
     @Basic
@@ -224,6 +203,22 @@ public class AuctionEntity {
 
     public void setBuyPrice(double buyPrice) { this.buyPrice = buyPrice; }
 
+    public Set<CategoryEntity> getCategories(){
+        return categories;
+    }
+
+    public void setCategories(Set<CategoryEntity> categories) {
+        this.categories = categories;
+    }
+
+    public Set<BidEntity> getBids() {
+        return bids;
+    }
+
+    public void setBids(Set<BidEntity> bids) {
+        this.bids = bids;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -233,7 +228,6 @@ public class AuctionEntity {
 
         if (auctionId != that.auctionId) return false;
         if (Double.compare(that.lowestBid, lowestBid) != 0) return false;
-        if (Double.compare(that.currentBid, currentBid) != 0) return false;
         if (Double.compare(that.finalPrice, finalPrice) != 0) return false;
         if (Double.compare(that.latitude, latitude) != 0) return false;
         if (Double.compare(that.buyPrice, buyPrice) != 0) return false;
@@ -258,7 +252,6 @@ public class AuctionEntity {
         result = 31 * result + (description != null ? description.hashCode() : 0);
         temp = Double.doubleToLongBits(lowestBid);
         result = 31 * result + (int) (temp ^ (temp >>> 32));
-        temp = Double.doubleToLongBits(currentBid);
         result = 31 * result + (int) (temp ^ (temp >>> 32));
         temp = Double.doubleToLongBits(finalPrice);
         result = 31 * result + (int) (temp ^ (temp >>> 32));
@@ -283,7 +276,6 @@ public class AuctionEntity {
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", lowestBid=" + lowestBid +
-                ", currentBid=" + currentBid +
                 ", finalPrice=" + finalPrice +
                 ", startingDate=" + startingDate +
                 ", endingDate=" + endingDate +
