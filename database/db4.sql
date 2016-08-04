@@ -52,7 +52,6 @@ CREATE TABLE IF NOT EXISTS `auctionwebsite`.`auction` (
   `Name` VARCHAR(150) NOT NULL,
   `Description` VARCHAR(1500) NULL DEFAULT NULL,
   `LowestBid` DOUBLE NOT NULL,
-  `CurrentBid` DOUBLE NOT NULL,
   `FinalPrice` DOUBLE NOT NULL,
   `StartingDate` DATE NULL,
   `EndingDate` DATE NULL DEFAULT NULL,
@@ -86,8 +85,8 @@ DEFAULT CHARACTER SET = utf8;
 CREATE TABLE IF NOT EXISTS `auctionwebsite`.`bid` (
   `BidderID` BIGINT(20) NOT NULL,
   `AuctionID` BIGINT(20) NOT NULL,
-  `BidTime` DATE NOT NULL,
-  `Amount` INT(11) NOT NULL,
+  `BidTime` DATETIME NOT NULL,
+  `Amount` FLOAT NOT NULL,
   PRIMARY KEY (`BidderID`, `AuctionID`),
   INDEX `fk_bid_auction1_idx` (`AuctionID` ASC),
   INDEX `fk_bid_user1_idx` (`BidderID` ASC),
