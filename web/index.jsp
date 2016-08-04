@@ -41,31 +41,28 @@
   <!-- SEARCH ROW -->
   <div class="row">
     <section class="search">
-      <h1>Search something buddy</h1>
-      <form action="#" method="POST">
-        <div class="nine columns">
-          <input class="u-full-width" type="text" name="searchTetxt">
-        </div>
-        <div class="three columns">
-          <input class="u-full-width button-primary" type="submit" value="Search">
-        </div>
+      <h1><span class="look">></span>Search for a product</h1>
+      <form action="search.do" method="POST">
+        <input class="eight columns" type="text" name="name">
+        <button class="button-primary four columns" type="submit" name="action" value="doSimpleSearch">Search</button>
       </form>
+      <a class="button" href="search.do?action=advancedSearch">Advanced Search</a>
     </section>
   </div>
   <!-- end of search row -->
-
+  <br>
   <!-- REGISTER && SIGNUP ROW -->
   <div class="row">
     <div class="two-thirds column">
 
-      <h1>register at our eshop</h1>
+      <h1>>Register at our eshop</h1>
       <button class="button-primary" onclick="location.href='register.jsp'" >register</button>
 
     </div>
     <!-- end of register column -->
     <div class="one-third column">
       <section class="login u-full-width">
-        <h1>Login</h1>
+        <h1>>Login</h1>
         <form action="login.do" method="POST" id="loginForm">
           <label> username </label>
           <input class="u-full-width" type="text" id="username" name="username"  autofocus>
@@ -77,13 +74,6 @@
       </section>
     </div>
     <!-- end of login column -->
-  </div>
-
-  <!-- CATEGORIES ROW -->
-  <div class="row u-full-width u-cf">
-    <h1>Navigate based on the categories</h1>
-    <section class="categories">
-    </section>
   </div>
 
 </div>
