@@ -163,11 +163,18 @@ public class auction extends HttpServlet {
                 request.setAttribute("usedCategories", usedCategories);
                 /* get the highest bid */
                 Set <BidEntity> allBids = auction.getBids();
-                List<Float> bids = new ArrayList<>();
+                List<BidEntity> bidLst = new ArrayList<>();
+                List<UserEntity> biddersLst = new ArrayList<>();
+                UserService userService = new UserService();
                 for (BidEntity b : allBids){
-                    bids.add(b.getAmount());
+                    bidLst.add(b);
+                    biddersLst.add(userService.getUser(b.getBidderId()));
                 }
-                request.setAttribute("bids", bids);
+                request.setAttribute("bidLst", bidLst);
+                request.setAttribute("biddersLst", biddersLst);
+                /* if auction has ended */
+                Date currentDate = new Date(System.currentTimeMillis());
+                request.setAttribute("isEnded", auction.getEndingDate().before(currentDate));
 
                 next_page = "/auctionInfo.jsp";
             } catch (Exception e) {
@@ -207,11 +214,17 @@ public class auction extends HttpServlet {
             /* get the highest bid */
             Set <BidEntity> allBids = auction.getBids();
             List<BidEntity> bidLst = new ArrayList<>();
+            List<UserEntity> biddersLst = new ArrayList<>();
+            UserService userService = new UserService();
             for (BidEntity b : allBids){
                 bidLst.add(b);
+                biddersLst.add(userService.getUser(b.getBidderId()));
             }
             request.setAttribute("bidLst", bidLst);
-
+            request.setAttribute("biddersLst", biddersLst);
+            /* if auction has ended */
+            Date currentDate = new Date(System.currentTimeMillis());
+            request.setAttribute("isEnded", auction.getEndingDate().before(currentDate));
             next_page = "/auctionInfo.jsp";
         }
 
@@ -271,7 +284,9 @@ public class auction extends HttpServlet {
                 }
                 request.setAttribute("bidLst", bidLst);
                 request.setAttribute("biddersLst", biddersLst);
-
+                /* if auction has ended */
+                Date currentDate = new Date(System.currentTimeMillis());
+                request.setAttribute("isEnded", auction.getEndingDate().before(currentDate));
                 request.setAttribute("auction", auction);
                 next_page = "/auctionInfo.jsp";
                 break;

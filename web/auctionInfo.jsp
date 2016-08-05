@@ -5,6 +5,10 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Auction Info</title>
+    <jsp:useBean id="auction" class="javauction.model.AuctionEntity" scope="request" />
+    <jsp:useBean id="categoryLst" class="java.util.ArrayList" scope="request" />
+    <jsp:useBean id="usedCategories" class="java.util.ArrayList" scope="request" />
+    <jsp:useBean id="bidLst" class="java.util.ArrayList" scope="request" />
 
     <link href="./css/skeleton.css" rel="stylesheet">
     <link href="./css/custom.css" rel="stylesheet">
@@ -16,10 +20,8 @@
     <!-- end of header row -->
 
     <c:if test ="${not empty auction}">
-        <jsp:useBean id="auction" class="javauction.model.AuctionEntity" scope="request" />
 
         <div class="custom-container">
-
             <form action="auction.do" method="post">
                 <input type="hidden" value=${auction.auctionId} name="aid">
                 <c:if test="${auction.isStarted == 0}">
@@ -43,7 +45,6 @@
 
                         <c:if test="${isSeller}">
                             <label for="categories">All Categories (select to update):</label>
-                            <jsp:useBean id="categoryLst" class="java.util.ArrayList" scope="request" />
                             <select class="a-select--multiple" id="categories" name="categories" multiple disabled size=${categoryLst.size()}>
                                 <c:forEach var="category" items="${categoryLst}">
                                 <option value=${category.categoryId}>${category.categoryName}</option>
@@ -68,9 +69,7 @@
                     </div>
 
                     <div class="one-half column">
-
                         <label for="categories">Selected Categories:</label>
-                        <jsp:useBean id="usedCategories" class="java.util.ArrayList" scope="request" />
                         <select class="a-select--multiple" id="categories" name="categories" multiple disabled readonly size=${categoryLst.size()}>
                             <c:forEach var="category" items="${usedCategories}">
                                 <option value=${category.categoryId}>${category.categoryName}</option>
@@ -101,37 +100,59 @@
                 </c:if>
             </form>
         </div>
-
-
         <div class="custom-container">
-            <c:if test="${not empty bidLst}">
-                <h5>Current bid: <span>${bidLst[0].amount} &euro;</span></h5>
-                <c:if test="${not isSeller}">
-                    <form action="auction.do" method="post">
-                        <input type="number" min="${bidLst[0].amount +1}" value="${bidLst[0].amount +1}" name="bid">
-                        <input type="hidden" name="aid" value="${auction.auctionId}">
-                        <button class="button-primary" type="submit" name="action" value="bidAuction">Bid for this item</button>
-                    </form>
+            <c:if test="${isEnded}">
+                <h5>The auction has ended. (Ending date ${auction.endingDate})</h5>
+                <c:if test="${not empty bidLst}">
+                    <h5>Final bid: <span>${bidLst[0].amount} &euro;</span></h5>
+                    <c:if test="${not isSeller}">
+                        <form action="message.do" method="post">
+                            <button class="button-primary" type="submit" name="action" value="messageSeller">Contact the seller</button>
+                        </form>
+                    </c:if>
+                    <c:if test="${isSeller}">
+                        <h5>All submitted bids:</h5>
+                        <c:forEach var="bid" items="${bidLst}" varStatus="status">
+                            <h6>${biddersLst[status.index].firstname} ${biddersLst[status.index].lastname} ${bid.amount}&euro; ${bid.bidTime}</h6>
+                        </c:forEach>
+                        <form action="message.do" method="post">
+                            <button class="button-primary" type="submit" name="action" value="messageBuyer">Contact the buyer</button>
+                        </form>
+                    </c:if>
                 </c:if>
-                <c:if test="${isSeller}">
-                    <h5>All submitted bids:</h5>
-                    <jsp:useBean id="bidLst" class="java.util.ArrayList" scope="request" />
-                    <c:forEach var="bid" items="${bidLst}" varStatus="status">
-                        <h6>${biddersLst[status.index].firstname} ${biddersLst[status.index].lastname} ${bid.amount}&euro; ${bid.bidTime}</h6>
-                    </c:forEach>
+                <c:if test="${empty bidLst}">
+                    <h5>No bids placed for this auction.</h5>
                 </c:if>
             </c:if>
-            <c:if test="${empty bidLst}">
-                <c:if test="${not isSeller}">
-                    <h5>No bids placed yet.</h5>
-                    <form action="auction.do" method="post">
-                        <input type="number" min="${auction.lowestBid}" value="${auction.lowestBid}" name="bid">
-                        <input type="hidden" name="aid" value="${auction.auctionId}">
-                        <button class="button-primary" type="submit" name="action" value="bidAuction">Make the first bid</button>
-                    </form>
+            <c:if test="${not isEnded}">
+                <c:if test="${not empty bidLst}">
+                    <h5>Current bid: <span>${bidLst[0].amount} &euro;</span></h5>
+                    <c:if test="${not isSeller}">
+                        <form action="auction.do" method="post">
+                            <input type="number" min="${bidLst[0].amount +1}" value="${bidLst[0].amount +1}" name="bid">
+                            <input type="hidden" name="aid" value="${auction.auctionId}">
+                            <button class="button-primary" type="submit" name="action" value="bidAuction">Bid for this item</button>
+                        </form>
+                    </c:if>
+                    <c:if test="${isSeller}">
+                        <h5>All submitted bids:</h5>
+                        <c:forEach var="bid" items="${bidLst}" varStatus="status">
+                            <h6>${biddersLst[status.index].firstname} ${biddersLst[status.index].lastname} ${bid.amount}&euro; ${bid.bidTime}</h6>
+                        </c:forEach>
+                    </c:if>
                 </c:if>
-                <c:if test="${isSeller}">
-                    <h5>Your auction has no bids yet.</h5>
+                <c:if test="${empty bidLst}">
+                    <c:if test="${not isSeller}">
+                        <h5>No bids placed yet.</h5>
+                        <form action="auction.do" method="post">
+                            <input type="number" min="${auction.lowestBid}" value="${auction.lowestBid}" name="bid">
+                            <input type="hidden" name="aid" value="${auction.auctionId}">
+                            <button class="button-primary" type="submit" name="action" value="bidAuction">Make the first bid</button>
+                        </form>
+                    </c:if>
+                    <c:if test="${isSeller}">
+                        <h5>Your auction has no bids yet.</h5>
+                    </c:if>
                 </c:if>
             </c:if>
         </div>
