@@ -104,7 +104,7 @@ public class auction extends HttpServlet {
 
             // retrieve auction's info
             try {
-                auctionService.activateAuction(aid);
+                auctionService.activateAuction(aid, true);
                 auction = auctionService.getAuction(aid);
 
                 /* all categories */
@@ -173,8 +173,7 @@ public class auction extends HttpServlet {
                 request.setAttribute("bidLst", bidLst);
                 request.setAttribute("biddersLst", biddersLst);
                 /* if auction has ended */
-                Date currentDate = new Date(System.currentTimeMillis());
-                request.setAttribute("isEnded", auction.getEndingDate().before(currentDate));
+                auction = checkDate(request, auction, aid,auctionService);
 
                 next_page = "/auctionInfo.jsp";
             } catch (Exception e) {
@@ -223,8 +222,8 @@ public class auction extends HttpServlet {
             request.setAttribute("bidLst", bidLst);
             request.setAttribute("biddersLst", biddersLst);
             /* if auction has ended */
-            Date currentDate = new Date(System.currentTimeMillis());
-            request.setAttribute("isEnded", auction.getEndingDate().before(currentDate));
+            auction = checkDate(request, auction, aid, auctionService);
+
             next_page = "/auctionInfo.jsp";
         }
 
@@ -285,8 +284,8 @@ public class auction extends HttpServlet {
                 request.setAttribute("bidLst", bidLst);
                 request.setAttribute("biddersLst", biddersLst);
                 /* if auction has ended */
-                Date currentDate = new Date(System.currentTimeMillis());
-                request.setAttribute("isEnded", auction.getEndingDate().before(currentDate));
+                auction = checkDate(request, auction, aid, auctionService);
+                System.out.println("out "+auction.getIsStarted());
                 request.setAttribute("auction", auction);
                 next_page = "/auctionInfo.jsp";
                 break;
@@ -294,6 +293,20 @@ public class auction extends HttpServlet {
 
         RequestDispatcher view = request.getRequestDispatcher(next_page);
         view.forward(request, response);
+    }
+
+    /* check if auction has ended and set the related fields */
+    private AuctionEntity checkDate(HttpServletRequest request, AuctionEntity auction, long aid, AuctionService auctionService) {
+        Date currentDate = new Date(System.currentTimeMillis());
+        if (auction.getEndingDate().before(currentDate)) {
+            request.setAttribute("isEnded", true);
+            auctionService.activateAuction(aid, false);
+            auction.setIsStarted((byte) 0);
+        } else {
+            request.setAttribute("isEnded", false);
+        }
+        System.out.println("in "+auction.getIsStarted());
+        return auction;
     }
 
 }

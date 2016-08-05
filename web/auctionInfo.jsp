@@ -24,16 +24,21 @@
         <div class="custom-container">
             <form action="auction.do" method="post">
                 <input type="hidden" value=${auction.auctionId} name="aid">
-                <c:if test="${auction.isStarted == 0}">
-                    <h2>The auction is inactive</h2>
-                    <input type=submit value=activateAuction name="action">
+                <c:if test="${auction.isStarted == 0}" >
+                    <c:if test="${isEnded}" >
+                        <h2>The auction has ended</h2>
+                    </c:if>
+                    <c:if test="${not isEnded}" >
+                        <h2>The auction is inactive</h2>
+                        <input type=submit value=activateAuction name="action">
+                    </c:if>
                 </c:if>
             </form>
             <c:if test="${auction.isStarted == 1}">
                 <h2>The auction is started-active</h2>
             </c:if>
 
-            <c:if test="${isSeller}">
+            <c:if test="${isSeller and not isEnded}">
                 <a class="js-make-writable button">edit some fields</a>
             </c:if>
 

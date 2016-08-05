@@ -165,13 +165,16 @@ public class AuctionService {
         return auctions;
     }
 
-    public void activateAuction(long aid) {
+    public void activateAuction(long aid, boolean activate) {
         Session session = HibernateUtil.getSession();
         try {
             session.beginTransaction();
             AuctionEntity auction = (AuctionEntity) session.get(AuctionEntity.class, aid);
-            auction.setIsStarted((byte) 1);
-
+            if (activate) {
+                auction.setIsStarted((byte) 1);
+            } else {
+                auction.setIsStarted((byte) 0);
+            }
             java.sql.Date timeNow = new Date(Calendar.getInstance().getTimeInMillis());
             auction.setStartingDate(timeNow);
 
