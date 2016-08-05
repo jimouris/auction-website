@@ -5,6 +5,9 @@ SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
 
 -- -----------------------------------------------------
+-- Schema mydb
+-- -----------------------------------------------------
+-- -----------------------------------------------------
 -- Schema auctionwebsite
 -- -----------------------------------------------------
 
@@ -32,13 +35,13 @@ CREATE TABLE IF NOT EXISTS `auctionwebsite`.`user` (
   `City` VARCHAR(60) NOT NULL,
   `Country` VARCHAR(45) NOT NULL,
   `SignUpDate` DATE NOT NULL,
-  `IsAdmin` TINYINT(1) NOT NULL DEFAULT 0,
-  `isApproved` TINYINT(1) NOT NULL DEFAULT 0,
+  `IsAdmin` TINYINT(1) NOT NULL DEFAULT '0',
+  `isApproved` TINYINT(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`UserID`),
   UNIQUE INDEX `Id_UNIQUE` (`UserID` ASC),
   UNIQUE INDEX `Username_UNIQUE` (`Username` ASC))
 ENGINE = InnoDB
-AUTO_INCREMENT = 32
+AUTO_INCREMENT = 34
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -53,14 +56,14 @@ CREATE TABLE IF NOT EXISTS `auctionwebsite`.`auction` (
   `Description` VARCHAR(1500) NULL DEFAULT NULL,
   `LowestBid` DOUBLE NOT NULL,
   `FinalPrice` DOUBLE NOT NULL,
-  `StartingDate` DATE NULL,
+  `StartingDate` DATE NULL DEFAULT NULL,
   `EndingDate` DATE NULL DEFAULT NULL,
   `Country` VARCHAR(45) NOT NULL,
   `City` VARCHAR(45) NOT NULL,
   `NumOfBids` INT(11) NULL DEFAULT NULL,
   `Longtitude` FLOAT NULL DEFAULT NULL,
   `Latitude` FLOAT NULL DEFAULT NULL,
-  `IsStarted` TINYINT(1) NULL DEFAULT 0,
+  `IsStarted` TINYINT(1) NULL DEFAULT '0',
   `BuyPrice` INT(11) NULL DEFAULT NULL,
   PRIMARY KEY (`AuctionID`),
   INDEX `fk_auction_user_idx` (`SellerID` ASC),
@@ -76,6 +79,42 @@ CREATE TABLE IF NOT EXISTS `auctionwebsite`.`auction` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
+AUTO_INCREMENT = 5
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `auctionwebsite`.`category`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `auctionwebsite`.`category` (
+  `CategoryID` INT(11) NOT NULL AUTO_INCREMENT,
+  `CategoryName` VARCHAR(100) NULL DEFAULT NULL,
+  PRIMARY KEY (`CategoryID`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 5
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `auctionwebsite`.`auction_has_category`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `auctionwebsite`.`auction_has_category` (
+  `auction_AuctionID` BIGINT(20) NOT NULL,
+  `category_CategoryID` INT(11) NOT NULL,
+  PRIMARY KEY (`auction_AuctionID`, `category_CategoryID`),
+  INDEX `fk_auction_has_category_category1_idx` (`category_CategoryID` ASC),
+  INDEX `fk_auction_has_category_auction1_idx` (`auction_AuctionID` ASC),
+  CONSTRAINT `fk_auction_has_category_auction1`
+    FOREIGN KEY (`auction_AuctionID`)
+    REFERENCES `auctionwebsite`.`auction` (`AuctionID`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  CONSTRAINT `fk_auction_has_category_category1`
+    FOREIGN KEY (`category_CategoryID`)
+    REFERENCES `auctionwebsite`.`category` (`CategoryID`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
+ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -83,11 +122,13 @@ DEFAULT CHARACTER SET = utf8;
 -- Table `auctionwebsite`.`bid`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `auctionwebsite`.`bid` (
+  `Bid` BIGINT(20) NOT NULL AUTO_INCREMENT,
   `BidderID` BIGINT(20) NOT NULL,
   `AuctionID` BIGINT(20) NOT NULL,
   `BidTime` DATETIME NOT NULL,
   `Amount` FLOAT NOT NULL,
-  PRIMARY KEY (`BidderID`, `AuctionID`),
+  PRIMARY KEY (`Bid`),
+  UNIQUE INDEX `Bid_UNIQUE` (`Bid` ASC),
   INDEX `fk_bid_auction1_idx` (`AuctionID` ASC),
   INDEX `fk_bid_user1_idx` (`BidderID` ASC),
   CONSTRAINT `fk_bid_auction1`
@@ -101,17 +142,7 @@ CREATE TABLE IF NOT EXISTS `auctionwebsite`.`bid` (
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8;
-
-
--- -----------------------------------------------------
--- Table `auctionwebsite`.`category`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `auctionwebsite`.`category` (
-  `CategoryID` INT(11) NOT NULL AUTO_INCREMENT,
-  `CategoryName` VARCHAR(100) NULL DEFAULT NULL,
-  PRIMARY KEY (`CategoryID`))
-ENGINE = InnoDB
+AUTO_INCREMENT = 26
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -142,7 +173,7 @@ CREATE TABLE IF NOT EXISTS `auctionwebsite`.`messages` (
   `AuctionID` BIGINT(20) NOT NULL,
   `Message` VARCHAR(1000) NOT NULL,
   `ReceivedDate` DATE NOT NULL,
-  `IsRead` TINYINT(1) NOT NULL DEFAULT 0,
+  `IsRead` TINYINT(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`MessageID`),
   UNIQUE INDEX `MessageID_UNIQUE` (`MessageID` ASC),
   INDEX `fk_messages_user1_idx` (`SenderID` ASC),
@@ -185,29 +216,6 @@ CREATE TABLE IF NOT EXISTS `auctionwebsite`.`rating` (
   CONSTRAINT `fk_rating_user2`
     FOREIGN KEY (`ToID`)
     REFERENCES `auctionwebsite`.`user` (`UserID`)
-    ON DELETE CASCADE
-    ON UPDATE CASCADE)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8;
-
-
--- -----------------------------------------------------
--- Table `auctionwebsite`.`auction_has_category`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `auctionwebsite`.`auction_has_category` (
-  `auction_AuctionID` BIGINT(20) NOT NULL,
-  `category_CategoryID` INT(11) NOT NULL,
-  PRIMARY KEY (`auction_AuctionID`, `category_CategoryID`),
-  INDEX `fk_auction_has_category_category1_idx` (`category_CategoryID` ASC),
-  INDEX `fk_auction_has_category_auction1_idx` (`auction_AuctionID` ASC),
-  CONSTRAINT `fk_auction_has_category_auction1`
-    FOREIGN KEY (`auction_AuctionID`)
-    REFERENCES `auctionwebsite`.`auction` (`AuctionID`)
-    ON DELETE CASCADE
-    ON UPDATE CASCADE,
-  CONSTRAINT `fk_auction_has_category_category1`
-    FOREIGN KEY (`category_CategoryID`)
-    REFERENCES `auctionwebsite`.`category` (`CategoryID`)
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB
