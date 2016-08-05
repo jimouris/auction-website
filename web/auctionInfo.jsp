@@ -104,18 +104,35 @@
 
 
         <div class="custom-container">
-            <c:if test="${not empty bids}">
-                <h5>current bid: <span>${bids[0]} &euro;</span></h5>
+            <c:if test="${not empty bidLst}">
+                <h5>Current bid: <span>${bidLst[0].amount} &euro;</span></h5>
                 <c:if test="${not isSeller}">
                     <form action="auction.do" method="post">
-                        <input type="number" min="${bids[0]+1}" value="${bids[0]+1}" name="bid">
+                        <input type="number" min="${bidLst[0].amount +1}" value="${bidLst[0].amount +1}" name="bid">
                         <input type="hidden" name="aid" value="${auction.auctionId}">
                         <button class="button-primary" type="submit" name="action" value="bidAuction">Bid for this item</button>
                     </form>
                 </c:if>
+                <c:if test="${isSeller}">
+                    <h5>All submitted bids:</h5>
+                    <jsp:useBean id="bidLst" class="java.util.ArrayList" scope="request" />
+                    <c:forEach var="bid" items="${bidLst}" varStatus="status">
+                        <h6>${biddersLst[status.index].firstname} ${biddersLst[status.index].lastname} ${bid.amount}&euro; ${bid.bidTime}</h6>
+                    </c:forEach>
+                </c:if>
             </c:if>
-            <c:if test="${empty bids}">
-                <h5>No bids placed yet.</h5>
+            <c:if test="${empty bidLst}">
+                <c:if test="${not isSeller}">
+                    <h5>No bids placed yet.</h5>
+                    <form action="auction.do" method="post">
+                        <input type="number" min="${auction.lowestBid}" value="${auction.lowestBid}" name="bid">
+                        <input type="hidden" name="aid" value="${auction.auctionId}">
+                        <button class="button-primary" type="submit" name="action" value="bidAuction">Make the first bid</button>
+                    </form>
+                </c:if>
+                <c:if test="${isSeller}">
+                    <h5>Your auction has no bids yet.</h5>
+                </c:if>
             </c:if>
         </div>
     </c:if>

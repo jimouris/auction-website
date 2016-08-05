@@ -3,8 +3,10 @@ package javauction.controller;
 import javauction.model.AuctionEntity;
 import javauction.model.BidEntity;
 import javauction.model.CategoryEntity;
+import javauction.model.UserEntity;
 import javauction.service.AuctionService;
 import javauction.service.CategoryService;
+import javauction.service.UserService;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -204,11 +206,11 @@ public class auction extends HttpServlet {
             request.setAttribute("usedCategories", usedCategories);
             /* get the highest bid */
             Set <BidEntity> allBids = auction.getBids();
-            List<Float> bids = new ArrayList<>();
+            List<BidEntity> bidLst = new ArrayList<>();
             for (BidEntity b : allBids){
-                bids.add(b.getAmount());
+                bidLst.add(b);
             }
-            request.setAttribute("bids", bids);
+            request.setAttribute("bidLst", bidLst);
 
             next_page = "/auctionInfo.jsp";
         }
@@ -260,11 +262,15 @@ public class auction extends HttpServlet {
                 request.setAttribute("usedCategories", usedCategories);
                 /* get the highest bid */
                 Set <BidEntity> allBids = auction.getBids();
-                List<Float> bids = new ArrayList<>();
+                List<BidEntity> bidLst = new ArrayList<>();
+                List<UserEntity> biddersLst = new ArrayList<>();
+                UserService userService = new UserService();
                 for (BidEntity b : allBids){
-                    bids.add(b.getAmount());
+                    bidLst.add(b);
+                    biddersLst.add(userService.getUser(b.getBidderId()));
                 }
-                request.setAttribute("bids", bids);
+                request.setAttribute("bidLst", bidLst);
+                request.setAttribute("biddersLst", biddersLst);
 
                 request.setAttribute("auction", auction);
                 next_page = "/auctionInfo.jsp";
