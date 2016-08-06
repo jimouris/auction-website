@@ -189,27 +189,25 @@ public class AuctionService {
         }
     }
 
-    public void updateAuction(Set<CategoryEntity> categories, long aid, String name, String desc, double lowestBid, double finalPrice,
-                              double buyPrice, String city, String country, Date startingDate, Date endingDate) {
+    public void updateAuction(Set<CategoryEntity> categories, Long aid, String name, String desc, Double lowestBid, Double finalPrice,
+                              Double buyPrice, String city, String country, Date startingDate, Date endingDate, Long buyerid) {
 
         Session session = HibernateUtil.getSession();
         Transaction tx = null;
         AuctionEntity auction = getAuction(aid);
         try {
             tx = session.beginTransaction();
-            if (categories != null) {
-                auction.setCategories(categories);
-            }
-            auction.setName(name);
-            auction.setDescription(desc);
-            auction.setLowestBid(lowestBid);
-            auction.setFinalPrice(finalPrice);
-            auction.setBuyPrice(buyPrice);
-            auction.setBuyPrice(buyPrice);
-            auction.setCity(city);
-            auction.setCountry(country);
-            auction.setStartingDate(startingDate);
-            auction.setEndingDate(endingDate);
+            if (categories != null) { auction.setCategories(categories); }
+            if (name != null) { auction.setName(name); }
+            if (desc != null) { auction.setDescription(desc); }
+            if (lowestBid != null) { auction.setLowestBid(lowestBid); }
+            if (finalPrice != null) { auction.setFinalPrice(finalPrice); }
+            if (buyPrice != null) { auction.setBuyPrice(buyPrice); }
+            if (city != null) { auction.setCity(city); }
+            if (country != null) { auction.setCountry(country); }
+            if (startingDate != null) { auction.setStartingDate(startingDate); }
+            if (endingDate != null) { auction.setEndingDate(endingDate);}
+            if (buyerid != null) { auction.setBuyerId(buyerid); }
             session.update(auction);
             tx.commit();
         } catch (HibernateException e) {

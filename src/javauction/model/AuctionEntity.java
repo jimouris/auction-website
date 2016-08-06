@@ -15,8 +15,8 @@ public class AuctionEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "AuctionID")
     private long auctionId;
-
-    private long sellerId;
+    private Long sellerId;
+    private Long buyerId;
     private String name;
     private String description;
     private double lowestBid;
@@ -67,12 +67,22 @@ public class AuctionEntity {
 
     @Basic
     @Column(name = "SellerID")
-    public long getSelledId() {
+    public long getSellerId() {
         return sellerId;
     }
 
-    public void setSelledId(long selledId) {
-        this.sellerId = selledId;
+    public void setSellerId(long sellerId) {
+        this.sellerId = sellerId;
+    }
+
+    @Basic
+    @Column(name = "BuyerID")
+    public long getBuyerId() {
+        return buyerId;
+    }
+
+    public void setBuyerId(long buyerId) {
+        this.buyerId = buyerId;
     }
 
     @Basic

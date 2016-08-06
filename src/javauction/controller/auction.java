@@ -123,9 +123,9 @@ public class auction extends HttpServlet {
         } else if (request.getParameter("action").equals("updateAuction")) {
             String name = request.getParameter("name");
             String desc = request.getParameter("description");
-            float lowestBid = Float.parseFloat(request.getParameter("lowestBid"));
-            float finalPrice = Float.parseFloat(request.getParameter("finalPrice"));
-            float buyPrice = Float.parseFloat(request.getParameter("buyPrice"));
+            Double lowestBid = Double.parseDouble(request.getParameter("lowestBid"));
+            Double finalPrice = Double.parseDouble(request.getParameter("finalPrice"));
+            Double buyPrice = Double.parseDouble(request.getParameter("buyPrice"));
             String city = request.getParameter("city");
             String country = request.getParameter("country");
             Date startingDate = Date.valueOf(request.getParameter("startingDate"));
@@ -144,7 +144,7 @@ public class auction extends HttpServlet {
                         categories.add(category);
                     }
                 }
-                auctionService.updateAuction(categories, aid, name, desc, lowestBid, finalPrice, buyPrice, city, country, startingDate, endingDate);
+                auctionService.updateAuction(categories, aid, name, desc, lowestBid, finalPrice, buyPrice, city, country, startingDate, endingDate, null);
 
                 AuctionEntity auction = auctionService.getAuction(aid);
                 request.setAttribute("auction", auction);
@@ -170,7 +170,12 @@ public class auction extends HttpServlet {
                 request.setAttribute("bidLst", bidLst);
                 request.setAttribute("biddersLst", biddersLst);
                 /* if auction has ended */
-                auction = checkDate(request, auction, aid,auctionService);
+
+                Long buyerid = null;
+                if (biddersLst.size() > 0) {
+                    buyerid = (Long) biddersLst.get(0).getUserId();
+                }
+                auction = checkDateAndSetBuyer(request, auction, aid, buyerid, auctionService);
 
                 next_page = "/auctionInfo.jsp";
             } catch (Exception e) {
@@ -219,7 +224,11 @@ public class auction extends HttpServlet {
             request.setAttribute("bidLst", bidLst);
             request.setAttribute("biddersLst", biddersLst);
             /* if auction has ended */
-            auction = checkDate(request, auction, aid, auctionService);
+            Long buyerid = null;
+            if (biddersLst.size() > 0) {
+                buyerid = (Long) biddersLst.get(0).getUserId();
+            }
+            auction = checkDateAndSetBuyer(request, auction, aid, buyerid, auctionService);
 
             next_page = "/auctionInfo.jsp";
         }
@@ -255,7 +264,7 @@ public class auction extends HttpServlet {
                 AuctionEntity auction = auctionService.getAuction(aid);
                 long uid = (long) session.getAttribute("uid");
                 /* get seller id for the auction */
-                long sid = auction.getSelledId();
+                long sid = auction.getSellerId();
                 session.setAttribute("isSeller", sid == uid);
                 /* all categories */
                 request.setAttribute("categoryLst", categoryLst);
@@ -278,7 +287,12 @@ public class auction extends HttpServlet {
                 request.setAttribute("bidLst", bidLst);
                 request.setAttribute("biddersLst", biddersLst);
                 /* if auction has ended */
-                auction = checkDate(request, auction, aid, auctionService);
+                Long buyerid = null;
+                if (biddersLst.size() > 0) {
+                    buyerid = (Long) biddersLst.get(0).getUserId();
+                }
+                auction = checkDateAndSetBuyer(request, auction, aid, buyerid, auctionService);
+
                 request.setAttribute("auction", auction);
                 next_page = "/auctionInfo.jsp";
                 break;
@@ -289,12 +303,15 @@ public class auction extends HttpServlet {
     }
 
     /* check if auction has ended and set the related fields */
-    private AuctionEntity checkDate(HttpServletRequest request, AuctionEntity auction, long aid, AuctionService auctionService) {
+    private AuctionEntity checkDateAndSetBuyer(HttpServletRequest request, AuctionEntity auction, long aid, Long buyerId, AuctionService auctionService) {
         Date currentDate = new Date(System.currentTimeMillis());
         if (auction.getEndingDate().before(currentDate)) {
             request.setAttribute("isEnded", true);
             auctionService.activateAuction(aid, false);
             auction.setIsStarted((byte) 0);
+            if (buyerId != null) {
+                auctionService.updateAuction(null, aid, null, null, null, null, null, null, null, null, null, buyerId);
+            }
         } else {
             request.setAttribute("isEnded", false);
         }
