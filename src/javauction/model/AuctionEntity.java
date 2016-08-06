@@ -284,6 +284,7 @@ public class AuctionEntity {
         return "AuctionEntity{" +
                 "auctionId=" + auctionId +
                 ", name='" + name + '\'' +
+                ", buyerID='" + buyerId + '\'' +
                 ", description='" + description + '\'' +
                 ", lowestBid=" + lowestBid +
                 ", finalPrice=" + finalPrice +

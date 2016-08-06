@@ -177,6 +177,7 @@ public class auction extends HttpServlet {
                 }
                 auction = checkDateAndSetBuyer(request, auction, aid, buyerid, auctionService);
 
+                request.setAttribute("auction", auction);
                 next_page = "/auctionInfo.jsp";
             } catch (Exception e) {
                 e.printStackTrace();
@@ -230,6 +231,7 @@ public class auction extends HttpServlet {
             }
             auction = checkDateAndSetBuyer(request, auction, aid, buyerid, auctionService);
 
+            request.setAttribute("auction", auction);
             next_page = "/auctionInfo.jsp";
         }
 
@@ -293,6 +295,8 @@ public class auction extends HttpServlet {
                 }
                 auction = checkDateAndSetBuyer(request, auction, aid, buyerid, auctionService);
 
+                System.out.println(auction.toString());
+
                 request.setAttribute("auction", auction);
                 next_page = "/auctionInfo.jsp";
                 break;
@@ -311,6 +315,7 @@ public class auction extends HttpServlet {
             auction.setIsStarted((byte) 0);
             if (buyerId != null) {
                 auctionService.updateAuction(null, aid, null, null, null, null, null, null, null, null, null, buyerId);
+                auction.setBuyerId(buyerId);
             }
         } else {
             request.setAttribute("isEnded", false);
