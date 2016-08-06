@@ -86,12 +86,9 @@ public class auction extends HttpServlet {
                 auction.setCategories(categories);
 
                 /* if auction submitted successfully */
-                if (auctionService.addAuction(auction)) {
-                    request.setAttribute("aid", auction.getAuctionId());
-                    next_page = "/auctionSubmit.jsp";
-                } else {
-                    System.out.println("failure: " + auction);
-                }
+                auctionService.addAuction(auction);
+                request.setAttribute("aid", auction.getAuctionId());
+                next_page = "/auctionSubmit.jsp";
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -285,7 +282,6 @@ public class auction extends HttpServlet {
                 request.setAttribute("biddersLst", biddersLst);
                 /* if auction has ended */
                 auction = checkDate(request, auction, aid, auctionService);
-                System.out.println("out "+auction.getIsStarted());
                 request.setAttribute("auction", auction);
                 next_page = "/auctionInfo.jsp";
                 break;
@@ -305,7 +301,6 @@ public class auction extends HttpServlet {
         } else {
             request.setAttribute("isEnded", false);
         }
-        System.out.println("in "+auction.getIsStarted());
         return auction;
     }
 

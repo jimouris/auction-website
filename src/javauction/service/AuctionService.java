@@ -18,13 +18,12 @@ import java.util.Set;
  */
 public class AuctionService {
 
-    public boolean addAuction(AuctionEntity auction) {
+    public void addAuction(AuctionEntity auction) {
         Session session = HibernateUtil.getSession();
         try {
             session.beginTransaction();
             session.save(auction);
             session.getTransaction().commit();
-            return true;
         } catch (HibernateException e) {
             e.printStackTrace();
         } finally {
@@ -34,7 +33,6 @@ public class AuctionService {
                 // ignore
             }
         }
-        return false;
     }
 
     public AuctionEntity getAuction(Object obj) {

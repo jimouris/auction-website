@@ -111,18 +111,14 @@
                 <c:if test="${not empty bidLst}">
                     <h5>Final bid: <span>${bidLst[0].amount} &euro;</span></h5>
                     <c:if test="${not isSeller}">
-                        <form action="message.do" method="post">
-                            <button class="button-primary" type="submit" name="action" value="messageSeller">Contact the seller</button>
-                        </form>
+                        <a class="button-primary" href="message.do?action=getConversation&rid=${auction.selledId}&aid=${auction.auctionId}">Contact the seller</a>
                     </c:if>
                     <c:if test="${isSeller}">
                         <h5>All submitted bids:</h5>
                         <c:forEach var="bid" items="${bidLst}" varStatus="status">
                             <h6>${biddersLst[status.index].firstname} ${biddersLst[status.index].lastname} ${bid.amount}&euro; ${bid.bidTime}</h6>
                         </c:forEach>
-                        <form action="message.do" method="post">
-                            <button class="button-primary" type="submit" name="action" value="messageBuyer">Contact the buyer</button>
-                        </form>
+                            <a class="button-primary" href="messages.jsp?rid=">Contact the buyer</a>
                     </c:if>
                 </c:if>
                 <c:if test="${empty bidLst}">

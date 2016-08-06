@@ -41,7 +41,7 @@ CREATE TABLE IF NOT EXISTS `auctionwebsite`.`user` (
   UNIQUE INDEX `Id_UNIQUE` (`UserID` ASC),
   UNIQUE INDEX `Username_UNIQUE` (`Username` ASC))
 ENGINE = InnoDB
-AUTO_INCREMENT = 34
+AUTO_INCREMENT = 35
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -142,7 +142,7 @@ CREATE TABLE IF NOT EXISTS `auctionwebsite`.`bid` (
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB
-AUTO_INCREMENT = 26
+AUTO_INCREMENT = 43
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -167,12 +167,12 @@ DEFAULT CHARACTER SET = utf8;
 -- Table `auctionwebsite`.`messages`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `auctionwebsite`.`messages` (
-  `MessageID` BIGINT(20) NOT NULL,
+  `MessageID` BIGINT(20) NOT NULL AUTO_INCREMENT,
   `SenderID` BIGINT(20) NOT NULL,
   `ReceiverID` BIGINT(20) NOT NULL,
   `AuctionID` BIGINT(20) NOT NULL,
   `Message` VARCHAR(1000) NOT NULL,
-  `ReceivedDate` DATE NOT NULL,
+  `SendDate` DATETIME NOT NULL,
   `IsRead` TINYINT(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`MessageID`),
   UNIQUE INDEX `MessageID_UNIQUE` (`MessageID` ASC),
