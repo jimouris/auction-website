@@ -30,7 +30,7 @@ public class auction extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         AuctionService auctionService = new AuctionService();
         CategoryService categoryService = new CategoryService();
-        String next_page = "index.jsp";
+        String next_page = "/user/homepage.jsp";
 
         if (request.getParameter("action").equals("addNew")){
             // get the user input
@@ -88,7 +88,7 @@ public class auction extends HttpServlet {
                 /* if auction submitted successfully */
                 auctionService.addAuction(auction);
                 request.setAttribute("aid", auction.getAuctionId());
-                next_page = "/auctionSubmit.jsp";
+                next_page = "/user/auctionSubmit.jsp";
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -119,7 +119,7 @@ public class auction extends HttpServlet {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            next_page = "/auctionInfo.jsp";
+            next_page = "/public/auctionInfo.jsp";
         } else if (request.getParameter("action").equals("updateAuction")) {
             String name = request.getParameter("name");
             String desc = request.getParameter("description");
@@ -178,7 +178,7 @@ public class auction extends HttpServlet {
                 auction = checkDateAndSetBuyer(request, auction, aid, buyerid, auctionService);
 
                 request.setAttribute("auction", auction);
-                next_page = "/auctionInfo.jsp";
+                next_page = "/public/auctionInfo.jsp";
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -191,7 +191,7 @@ public class auction extends HttpServlet {
                 
 //                TODO: FIX DELETE, doesn't delete from database!
 
-                next_page = "/homepage.jsp";
+                next_page = "/user/homepage.jsp";
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -232,7 +232,7 @@ public class auction extends HttpServlet {
             auction = checkDateAndSetBuyer(request, auction, aid, buyerid, auctionService);
 
             request.setAttribute("auction", auction);
-            next_page = "/auctionInfo.jsp";
+            next_page = "/public/auctionInfo.jsp";
         }
 
         RequestDispatcher view = request.getRequestDispatcher(next_page);
@@ -251,15 +251,15 @@ public class auction extends HttpServlet {
                 long userID = (long) session.getAttribute("uid");
                 List auctionLst = auctionService.getAllAuctions(userID, false);
                 request.setAttribute("auctionLst", auctionLst);
-                next_page = "/listAuctions.jsp";
+                next_page = "/public/listAuctions.jsp";
                 break;
             case "getAllActiveAuctions": /* get all active auctions, all sellers */
                 request.setAttribute("auctionLst", auctionService.getAllAuctions(-1, true));
-                next_page = "/listAuctions.jsp";
+                next_page = "/public/listAuctions.jsp";
                 break;
             case "newAuction": /* gather all categories to display on jsp */
                 request.setAttribute("categoryLst", categoryLst);
-                next_page = "/newAuction.jsp";
+                next_page = "/user/newAuction.jsp";
                 break;
             case "getAnAuction": /* get an auction with auctionId = aid */
                 long aid = Long.parseLong(request.getParameter("aid"));
@@ -298,7 +298,7 @@ public class auction extends HttpServlet {
                 System.out.println(auction.toString());
 
                 request.setAttribute("auction", auction);
-                next_page = "/auctionInfo.jsp";
+                next_page = "/public/auctionInfo.jsp";
                 break;
         }
 

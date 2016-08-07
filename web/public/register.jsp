@@ -5,26 +5,22 @@
     <meta charset="utf-8">
     <title>Ted Project at DI</title>
 
-    <link href="./css/skeleton.css" rel="stylesheet">
-    <link href="./css/organism.css" rel="stylesheet">
+    <link href="/css/skeleton.css" rel="stylesheet">
+    <link href="/css/organism.css" rel="stylesheet">
 </head>
 <body>
+<!-- HEADER STUFF -->
+<a href="/public/">Homepage</a>
 
+<!-- end of header row -->
 <div class="container">
-    <%
-        String msg = (String)request.getAttribute("regStatus");
-        if(msg != null){
-            out.print(msg);
-        }
-
-    %>
     <!-- REGISTER ROW -->
     <div class="row">
         <div class="">
             <section class="register u-full-width">
                 <h1>register at our eshop</h1>
                 <!-- Restriction for validation are inserted on the end of input -->
-                <form action="user.do" method="POST" id="registerForm">
+                <form action="/user.do" method="POST" id="registerForm">
                     <input type="hidden" name="action" value="register">
                     <label for="username">Username</label>
                     <input class="u-full-width" type="text" id="username" name="username">

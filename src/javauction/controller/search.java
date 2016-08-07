@@ -18,7 +18,7 @@ import java.util.List;
 public class search extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String next_page = null;
+        String next_page = "/public";
         if (request.getParameter("action").equals("doAdvancedSearch")) {
             String[] categories = request.getParameterValues("categories");
             double minPrice = 0;
@@ -35,7 +35,7 @@ public class search extends HttpServlet {
             List <AuctionEntity> auctionsLst = auctionService.searchAuction(categories, description, minPrice, maxPrice, location);
 
             request.setAttribute("auctionsLst", auctionsLst);
-            next_page = "/searchResults.jsp";
+            next_page = "/public/searchResults.jsp";
         } else if (request.getParameter("action").equals("doSimpleSearch")) {
             String name = request.getParameter("name");
 
@@ -43,7 +43,7 @@ public class search extends HttpServlet {
             List <AuctionEntity> auctionsLst = auctionService.searchAuction(name);
 
             request.setAttribute("auctionsLst", auctionsLst);
-            next_page = "/searchResults.jsp";
+            next_page = "/public/searchResults.jsp";
         }
 
         RequestDispatcher view = request.getRequestDispatcher(next_page);
@@ -51,14 +51,14 @@ public class search extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String next_page = null;
+        String next_page = "/public";
         if (request.getParameter("action").equals("advancedSearch")) {
             /* gather all categories to display on jsp */
             CategoryService categoryService = new CategoryService();
             List categoryLst = categoryService.getAllCategories();
             request.setAttribute("categoriesLst", categoryLst);
 
-            next_page = "/customSearch.jsp";
+            next_page = "/public/customSearch.jsp";
         }
 
         RequestDispatcher view = request.getRequestDispatcher(next_page);

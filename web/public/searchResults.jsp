@@ -1,18 +1,26 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+
 <!DOCTYPE html>
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Search Results</title>
+    <jsp:useBean id="auctionsLst" class="java.util.ArrayList" scope="request" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css" rel="stylesheet">
 </head>
 <body>
 <div class="container">
-    <a href="/homepage.jsp">homepage</a>
-
+    <!-- HEADER STUFF -->
+    <c:if test="${not empty uid}">
+        <a href="/user/homepage.jsp">Homepage</a>
+        <a href="/auction.do?action=getAllAuctions">View All Auctions</a>
+    </c:if>
+    <c:if test="${empty uid}">
+        <a href="/public/">Guest, Homepage</a>
+    </c:if>
+    <!-- end of header row -->
     <h1>Search Results</h1>
-    <jsp:useBean id="auctionsLst" class="java.util.ArrayList" scope="request" />
 
     <table>
         <c:forEach var="auction" items="${auctionsLst}">

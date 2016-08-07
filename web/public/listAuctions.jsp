@@ -11,7 +11,15 @@
 </head>
 <body>
 <div class="container">
-    <a href="/homepage.jsp">homepage</a>
+    <!-- HEADER STUFF -->
+    <c:if test="${not empty uid}">
+        <a href="/user/homepage.jsp">Homepage</a>
+        <a href="/auction.do?action=getAllAuctions">View All Auctions</a>
+    </c:if>
+    <c:if test="${empty uid}">
+        <a href="/public/">Guest, Homepage</a>
+    </c:if>
+    <!-- end of header row -->
 
     <h1>List Auctions</h1>
     <jsp:useBean id="auctionLst" class="java.util.ArrayList" scope="request" />

@@ -27,7 +27,7 @@ public class login extends HttpServlet {
         String usr_type = request.getParameter("action");
 
         LoginService.LoginStatus result;
-        String next_page = "/";
+        String next_page = "/public/";
         HttpSession session = request.getSession();
 
         // check the credentials
@@ -38,9 +38,9 @@ public class login extends HttpServlet {
             String errorMsg;
             if (usr_type.equals("admin")) {
                 result = loginService.authenticateAdmin(username, password);
-                next_page = "backoffice.jsp";
+                next_page = "/public/backoffice.jsp";
                 if (result == LoginService.LoginStatus.LOGIN_SUCCESS) {
-                    next_page = "admin.jsp";
+                    next_page = "/admin/homepage.jsp";
                     session.setAttribute("isAdmin", true);
                 } else if (result == LoginService.LoginStatus.LOGIN_NOT_ADMIN) {
                     errorMsg = "You are not admin!";
@@ -59,7 +59,7 @@ public class login extends HttpServlet {
                     UserEntity user = userservice.getUser(username);
                     session.setAttribute("uid", user.getUserId());
                     session.setAttribute("isAdmin", false);
-                    next_page = "homepage.jsp";
+                    next_page = "/user/homepage.jsp";
                 } else if (result == LoginService.LoginStatus.LOGIN_NOT_APPROVED) {
                     errorMsg = "Be patient, wait for your approval";
                     request.setAttribute("errorMsg", errorMsg);

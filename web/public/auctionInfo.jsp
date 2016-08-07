@@ -10,19 +10,24 @@
     <jsp:useBean id="usedCategories" class="java.util.ArrayList" scope="request" />
     <jsp:useBean id="bidLst" class="java.util.ArrayList" scope="request" />
 
-    <link href="./css/skeleton.css" rel="stylesheet">
-    <link href="./css/custom.css" rel="stylesheet">
+    <link href="/css/skeleton.css" rel="stylesheet">
+    <link href="/css/custom.css" rel="stylesheet">
 </head>
 <body>
     <!-- HEADER STUFF -->
-    <a href="./homepage.jsp">Homepage</a>
-    <a href="auction.do?action=getAllAuctions">View All Auctions</a>
+    <c:if test="${not empty uid}">
+        <a href="/user/homepage.jsp">Homepage</a>
+        <a href="/auction.do?action=getAllAuctions">View All Auctions</a>
+    </c:if>
+    <c:if test="${empty uid}">
+        <a href="/public/">Guest, Homepage</a>
+    </c:if>
     <!-- end of header row -->
 
     <c:if test ="${not empty auction}">
 
         <div class="custom-container">
-            <form action="auction.do" method="post">
+            <form action="/auction.do" method="post">
                 <input type="hidden" value=${auction.auctionId} name="aid">
                 <c:if test="${auction.isStarted == 0}" >
                     <c:if test="${isEnded}" >
@@ -42,7 +47,7 @@
                 <a class="js-make-writable button">edit some fields</a>
             </c:if>
 
-            <form action="auction.do" method="POST" id="view_updateAuction">
+            <form action="/auction.do" method="POST" id="view_updateAuction">
                 <div class="row">
                     <div class="one-half column">
                         <label>Name</label>
@@ -111,14 +116,14 @@
                 <c:if test="${not empty bidLst}">
                     <h5>Final bid: <span>${bidLst[0].amount} &euro;</span></h5>
                     <c:if test="${not isSeller}">
-                        <a class="button-primary" href="message.do?action=getConversation&rid=${auction.sellerId}&aid=${auction.auctionId}">Contact the seller</a>
+                        <a class="button-primary" href="/message.do?action=getConversation&rid=${auction.sellerId}&aid=${auction.auctionId}">Contact the seller</a>
                     </c:if>
                     <c:if test="${isSeller}">
                         <h5>All submitted bids:</h5>
                         <c:forEach var="bid" items="${bidLst}" varStatus="status">
                             <h6>${biddersLst[status.index].firstname} ${biddersLst[status.index].lastname} ${bid.amount}&euro; ${bid.bidTime}</h6>
                         </c:forEach>
-                            <a class="button-primary" href="message.do?action=getConversation&rid=${auction.buyerId}&aid=${auction.auctionId}">Contact the buyer</a>
+                            <a class="button-primary" href="/message.do?action=getConversation&rid=${auction.buyerId}&aid=${auction.auctionId}">Contact the buyer</a>
                     </c:if>
                 </c:if>
                 <c:if test="${empty bidLst}">
@@ -129,7 +134,7 @@
                 <c:if test="${not empty bidLst}">
                     <h5>Current bid: <span>${bidLst[0].amount} &euro;</span></h5>
                     <c:if test="${not isSeller}">
-                        <form action="auction.do" method="post">
+                        <form action="/auction.do" method="post">
                             <input type="number" min="${bidLst[0].amount +1}" value="${bidLst[0].amount +1}" name="bid">
                             <input type="hidden" name="aid" value="${auction.auctionId}">
                             <button class="button-primary" type="submit" name="action" value="bidAuction">Bid for this item</button>
@@ -145,7 +150,7 @@
                 <c:if test="${empty bidLst}">
                     <c:if test="${not isSeller}">
                         <h5>No bids placed yet.</h5>
-                        <form action="auction.do" method="post">
+                        <form action="/auction.do" method="post">
                             <input type="number" min="${auction.lowestBid}" value="${auction.lowestBid}" name="bid">
                             <input type="hidden" name="aid" value="${auction.auctionId}">
                             <button class="button-primary" type="submit" name="action" value="bidAuction">Make the first bid</button>

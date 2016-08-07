@@ -12,7 +12,7 @@
 <body>
 <c:if test="${isAdmin}">
     <div class="container">
-        <a href="/admin.jsp">home</a>
+        <a href="/admin/homepage.jsp">home</a>
 
         <h1>List users</h1>
         <jsp:useBean id="userLst" class="java.util.ArrayList" scope="request" />
@@ -29,9 +29,9 @@
         </table>
     </div>
 </c:if>
-<c:if test="${not isAdmin}">
-    <h1>You are not admin. Go back to <a href="/" class="button-primary">homepage</a>.</h1>
-</c:if>
+<%--<c:if test="${not isAdmin}">--%>
+    <%--<h1>You are not admin. Go back to <a href="/" class="button-primary">homepage</a>.</h1>--%>
+<%--</c:if>--%>
 
 </body>
 </html>

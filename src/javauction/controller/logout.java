@@ -28,8 +28,8 @@ public class logout extends HttpServlet {
             response.setHeader("Pragma", "no-cache"); // HTTP 1.0.
             response.setDateHeader("Expires", 0);
         }
-
-        RequestDispatcher view = request.getRequestDispatcher("/index.jsp");
+        request.setAttribute("successMsg", "You successfully logged out");
+        RequestDispatcher view = request.getRequestDispatcher("/public/");
         view.forward(request, response);
     }
 }

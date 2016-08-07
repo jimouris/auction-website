@@ -27,7 +27,7 @@ public class message extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         MessagesService messagesService = new MessagesService();
-        String next_page = "index.jsp";
+        String next_page = "/user/homepage.jsp";
 
         if (request.getParameter("action").equals("addNewMessage")) {
             HttpSession session = request.getSession();
@@ -43,7 +43,7 @@ public class message extends HttpServlet {
             request.setAttribute("aid", aid);
             request.setAttribute("rid", rid);
 
-            next_page = "messages.jsp";
+            next_page = "/user/messages.jsp";
         }
 
         RequestDispatcher view = request.getRequestDispatcher(next_page);
@@ -67,7 +67,7 @@ public class message extends HttpServlet {
                 getConversation(messagesService, request, aid);
                 request.setAttribute("aid", aid);
                 request.setAttribute("rid", rid);
-                next_page = "/messages.jsp";
+                next_page = "/user/messages.jsp";
 
                 break;
             case "listInbox": /* get all messages from inbox */
@@ -85,7 +85,7 @@ public class message extends HttpServlet {
                 request.setAttribute("sendersLst", sendersLst);
                 request.setAttribute("auctionsLst", auctionsLst);
 
-                next_page = "/listInbox.jsp";
+                next_page = "/user/listInbox.jsp";
                 break;
             case "listSent": /* get all messages from inbox */
                 rid = (long) session.getAttribute("uid");
@@ -102,7 +102,7 @@ public class message extends HttpServlet {
                 request.setAttribute("receiversLst", receiversLst);
                 request.setAttribute("auctionsLst", auctionsLst);
 
-                next_page = "/listSent.jsp";
+                next_page = "/user/listSent.jsp";
                 break;
         }
 

@@ -19,13 +19,13 @@ import java.util.List;
 @WebServlet(name = "user")
 public class user extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+        String next_page = "/public";
         // the endpoint that admin can use to approve a user
         if (request.getParameter("action").equals("approveUser")){
             response.setContentType("text/html");
 
             UserEntity user;
-            String next_page = "/userInfo.jsp";
+            next_page = "/admin/userInfo.jsp";
             long uid = Long.parseLong(request.getParameter("uid"));
 
             // retrieve user's info
@@ -38,14 +38,11 @@ public class user extends HttpServlet {
                 e.printStackTrace();
             }
 
-            // then forward the request to userInfo.jsp with the information of status
-            RequestDispatcher view = request.getRequestDispatcher(next_page);
-            view.forward(request, response);
         } else if (request.getParameter("action").equals("register")){
             response.setContentType("text/html");
 
             // prepare variables
-            String next_page = "/register.jsp";
+            next_page = "/public/register.jsp";
 
             String password = request.getParameter("password");
             String repeat_password = request.getParameter("repeat_password");
@@ -78,7 +75,7 @@ public class user extends HttpServlet {
                     switch (result) {
                         case REG_SUCCESS:
                             request.setAttribute("regStatus", "Successfully registered");
-                            next_page = "/welcome.jsp"; break;
+                            next_page = "/user/welcome.jsp"; break;
                         case REG_UNAME_EXISTS:
                             System.out.println("Username exists"); break;
                         case REG_EMAIL_EXISTS:
@@ -94,20 +91,19 @@ public class user extends HttpServlet {
                 System.out.println("Passwords must match");
                 request.setAttribute("regStatus", "Passwords must match");
             }
-
-            // then forward the request to welcome.jsp with the information of status
-            RequestDispatcher view = request.getRequestDispatcher(next_page);
-            view.forward(request, response);
         }
+        // then forward the request to welcome.jsp with the information of status
+        RequestDispatcher view = request.getRequestDispatcher(next_page);
+        view.forward(request, response);
 
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+        String next_page = "/public";
         // pass a userEntity object that matches the uid
         if (request.getParameter("action").equals("getAUser")) {
             UserEntity user;
-            String next_page = "/userInfo.jsp";
+            next_page = "/admin/userInfo.jsp";
             long uid = Long.parseLong(request.getParameter("uid"));
 
             // retrieve user's info
@@ -118,21 +114,17 @@ public class user extends HttpServlet {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
-            // then forward the request to userInfo.jsp with the information of status
-            RequestDispatcher view = request.getRequestDispatcher(next_page);
-            view.forward(request, response);
         } else if (request.getParameter("action").equals("getAllUsers")){
             List userLst;
-            String next_page = "/listUsers.jsp";
+            next_page = "/admin/listUsers.jsp";
             UserService userService = new UserService();
             userLst = userService.getAllUsers();
 
             request.setAttribute("userLst", userLst);
-
-            // then forward the request to welcome.jsp with the information of status
-            RequestDispatcher view = request.getRequestDispatcher(next_page);
-            view.forward(request, response);
         }
+        // then forward the request to welcome.jsp with the information of status
+        RequestDispatcher view = request.getRequestDispatcher(next_page);
+        view.forward(request, response);
     }
+
 }

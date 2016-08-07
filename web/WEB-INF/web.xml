@@ -21,6 +21,24 @@
     </jsp-config>
 
     <servlet>
+        <servlet-name>ErrorHandler</servlet-name>
+        <servlet-class>javauction.controller.ErrorHandler</servlet-class>
+    </servlet>
+    <!-- servlet mappings -->
+    <servlet-mapping>
+        <servlet-name>ErrorHandler</servlet-name>
+        <url-pattern>/ErrorHandler.do</url-pattern>
+    </servlet-mapping>
+    <error-page>
+        <error-code>404</error-code>
+        <location>/ErrorHandler.do</location>
+    </error-page>
+    <error-page>
+        <exception-type>java.lang.Throwable</exception-type >
+        <location>/ErrorHandler.do</location>
+    </error-page>
+
+    <servlet>
         <servlet-name>login</servlet-name>
         <servlet-class>javauction.controller.login</servlet-class>
     </servlet>
@@ -79,6 +97,16 @@
         <servlet-name>message</servlet-name>
         <url-pattern>/message.do</url-pattern>
     </servlet-mapping>
+
+    <filter>
+        <filter-name>sessionFilter</filter-name>
+        <filter-class>javauction.controller.sessionFilter</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>sessionFilter</filter-name>
+        <url-pattern>*.jsp</url-pattern>
+    </filter-mapping>
 
     <security-constraint>
         <web-resource-collection>

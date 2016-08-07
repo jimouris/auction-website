@@ -6,8 +6,8 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Administrator login page</title>
-    <link href="css/skeleton.css" rel="stylesheet">
-    <link href="css/organism.css" rel="stylesheet">
+    <link href="/css/skeleton.css" rel="stylesheet">
+    <link href="/css/organism.css" rel="stylesheet">
 </head>
 <body>
 <div class="container">
@@ -15,7 +15,7 @@
     <h1 class="u-text-center">Administrator's Login</h1>
     <div class="four columns offset-by-four">
         <section class="login u-full-width row">
-            <form action="login.do" method="POST" id="loginForm">
+            <form action="/login.do" method="POST" id="loginForm">
                 <label for="username">Admin's username</label>
                 <input class="u-full-width" type="text" id="username" name="username" required autofocus>
                 <label for="password">password</label>
@@ -28,7 +28,7 @@
                 <input class="button-primary u-full-width u-pull-right" type="submit" value="Admin Login">
             </form>
         </section>
-        <a href="./index.jsp" class="u-text-center u-full-width">Back to startpage</a>
+        <a href="/public/" class="u-text-center u-full-width">Back to startpage</a>
     </div>
 </div>
 </body>

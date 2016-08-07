@@ -8,8 +8,8 @@
     <jsp:useBean id="messagesLst" class="java.util.ArrayList" scope="request" />
     <jsp:useBean id="sendersLst" class="java.util.ArrayList" scope="request" />
 
-    <link href="./css/skeleton.css" rel="stylesheet">
-    <link href="./css/organism.css" rel="stylesheet">
+    <link href="/css/skeleton.css" rel="stylesheet">
+    <link href="/css/organism.css" rel="stylesheet">
 </head>
 <body>
 <div class="container">
@@ -17,8 +17,8 @@
     <!-- HEADER STUFF -->
     <div class="row">
         <div class="one column">
-            <a href="#">
-                <img class="u-max-full-width" src="./images/logo.png">
+            <a href="/user/homepage.jsp">
+                <img class="u-max-full-width" src="/images/logo.png">
             </a>
         </div>
         <div class="offset-by-seven four columns">
@@ -31,8 +31,7 @@
                     </div>
                 </li>
                 <li class="one-third column">
-                    <a href="logout.do"><span class="delete">Logout</span></a>
-                        <%--<form action="logout.do" method="post"> <input type="submit" value="Logout"/></form>--%>
+                    <a href="/logout.do"><span class="delete">Logout</span></a>
                 </li>
             </ul>
         </div>
