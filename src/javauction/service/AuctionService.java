@@ -41,8 +41,8 @@ public class AuctionService {
             AuctionEntity auction = null;
             if (obj instanceof String) {
                 String auction_name = obj.toString();
-                Query query = session.createQuery("from AuctionEntity where name='"+auction_name+"'");
-                List results = query.list();
+                Query query = session.createQuery("from AuctionEntity where name = :auction_name");
+                List results = query.setParameter("auction_name", auction_name).list();
                 if (results.size() > 0) {
                     auction = (AuctionEntity) results.get(0);
                 }
@@ -69,9 +69,10 @@ public class AuctionService {
         try {
             Query query;
             if (getAllActive) {
-                query = session.createQuery("from AuctionEntity where isStarted=1");
+                query = session.createQuery("from AuctionEntity where isStarted = 1");
             } else {
-                query = session.createQuery("from AuctionEntity where sellerId =" + sid);
+                query = session.createQuery("from AuctionEntity where sellerId = :sid");
+                query.setParameter("sid", sid);
             }
             results = query.list();
         } catch (HibernateException e) {

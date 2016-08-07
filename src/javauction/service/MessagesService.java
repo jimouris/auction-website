@@ -68,17 +68,14 @@ public class MessagesService {
             Query query = null;
             switch (msg_t) {
                 case Inbox_t:
-                    query = session.createQuery("select m from MessagesEntity m where m.sendDate = " +
-                            "(select max(b.sendDate) from MessagesEntity b where b.auctionId = m.auctionId and b.receiverId =" + rid + ")");
+                    query = session.createQuery("select m from MessagesEntity m where m.sendDate = (select max(b.sendDate) from MessagesEntity b where b.auctionId = m.auctionId and b.receiverId = :rid)");
                     break;
                 case Sent_t:
-                    query = session.createQuery("select m from MessagesEntity m where m.sendDate = " +
-                            "(select max(b.sendDate) from MessagesEntity b where b.auctionId = m.auctionId and b.senderId =" + rid + ")");
+                    query = session.createQuery("select m from MessagesEntity m where m.sendDate = (select max(b.sendDate) from MessagesEntity b where b.auctionId = m.auctionId and b.senderId = :rid)");
                     break;
             }
-            List <MessagesEntity> messagesLst = query.list();
 
-            return messagesLst;
+            return query.setParameter("rid", rid).list();
         } catch (HibernateException e) {
             e.printStackTrace();
         } finally {

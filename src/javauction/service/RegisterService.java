@@ -22,14 +22,14 @@ public class RegisterService {
     public RegisterStatus register(UserEntity user){
         Session session = HibernateUtil.getSession();
         /*  if username exists */
-        Query query = session.createQuery("from UserEntity where username='"+user.getUsername()+"'");
-        List results = query.list();
+        Query query = session.createQuery("from UserEntity where username = :username");
+        List results = query.setParameter("username", user.getUsername()).list();
         if (results.size() > 0) {
             return RegisterStatus.REG_UNAME_EXISTS;
         }
         /*  if email exists */
-        query = session.createQuery("from UserEntity where email='"+user.getEmail()+"'");
-        results = query.list();
+        query = session.createQuery("from UserEntity where email = :email");
+        results =query.setParameter("email", user.getEmail()).list();
         if (results.size() > 0) {
             return RegisterStatus.REG_EMAIL_EXISTS;
         }

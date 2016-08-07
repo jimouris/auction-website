@@ -25,12 +25,13 @@ public class CategoryService {
         return null;
     }
 
-    public CategoryEntity getCategory(int id){
+    public CategoryEntity getCategory(int cid){
         Session session = HibernateUtil.getSession();
         try {
             CategoryEntity category = null;
-                Query query = session.createQuery("from CategoryEntity where categoryId=" + id);
-                List results = query.list();
+                Query query = session.createQuery("from CategoryEntity where categoryId = :cid");
+                List results = query.setParameter("cid", cid).list();
+
                 if (results.size() > 0) {
                     category = (CategoryEntity) results.get(0);
                 }

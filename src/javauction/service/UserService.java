@@ -18,8 +18,8 @@ public class UserService {
             UserEntity user = null;
             if (obj instanceof String) {
                 String username = obj.toString();
-                Query query = session.createQuery("from UserEntity where username='"+username+"' and isAdmin=0");
-                List results = query.list();
+                Query query = session.createQuery("from UserEntity where username = :username and isAdmin = 0");
+                List results = query.setParameter("username", username).list();
                 if (results.size() > 0) {
                     user = (UserEntity) results.get(0);
                 }
@@ -39,7 +39,7 @@ public class UserService {
     public List getAllUsers(){
         Session session = HibernateUtil.getSession();
         try {
-            Query query = session.createQuery("from UserEntity where isAdmin=0");
+            Query query = session.createQuery("from UserEntity where isAdmin = 0");
             List results = query.list();
             return results;
         } catch (Exception e) {

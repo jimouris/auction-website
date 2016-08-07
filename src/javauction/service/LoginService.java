@@ -26,8 +26,8 @@ public class LoginService {
     public LoginStatus authenticateAdmin(String username, String password) {
         Session session = HibernateUtil.getSession();
         try {
-            Query query = session.createQuery("from UserEntity where username = '" + username + "'");
-            List results = query.list();
+            Query query = session.createQuery("from UserEntity where username = :username");
+            List results = query.setParameter("username", username).list();
             if (results.size() == 0) {
                 /* Actually is wrong username but we dont want to give much information*/
                 return LoginStatus.LOGIN_WRONG_UNAME_PASSWD;
@@ -59,8 +59,8 @@ public class LoginService {
     public LoginStatus authenticateUser(String username, String password) {
         Session session = HibernateUtil.getSession();
         try {
-            Query query = session.createQuery("from UserEntity where username = '" + username + "' and isAdmin = 0");
-            List results = query.list();
+            Query query = session.createQuery("from UserEntity where username = :username and isAdmin = 0");
+            List results = query.setParameter("username", username).list();
             if (results.size() == 0) {
                 /* Actually is wrong username but we dont want to give much information*/
                 return LoginStatus.LOGIN_WRONG_UNAME_PASSWD;
