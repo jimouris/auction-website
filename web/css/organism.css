@@ -1,44 +1,60 @@
-/* message element */
-.message{
-  box-sizing: border-box;
-  text-align: left;
-  padding: 0.5rem;
-}
-
 #map{
     margin-bottom: 8px;
 }
 
-#pac-input{
-    top: 8px!important;
+#pac-input {
+    top: 8px !important;
 }
 
-.message__title{
-  font-size: 1.3em;
-  font-weight: bold;
-  line-height: 1.4;
-  margin: 0;
+
+/* message element */
+.message{
+    box-sizing: border-box;
+    text-align: left;
+    padding: 0.5rem;
 }
 
-.message__name,
-.message__time{
-  margin: 0;
-  line-height: 1.2;
+.message__name{
+    margin: 0;
+    line-height: 1.2;
 }
 
-.message__time{
-  font-size: 0.8em;
-  color: rgba(0,0,0,0.8);
-  margin-top: 15px;
+.message{
+    background: rgba(0,0,0,0.1);
+    border-radius: 2px;
+    box-sizing: border-box;
+    padding: 1rem;
+    width: 80%;
+    word-break: break-all;
+    margin-bottom: 10px;
+    display: block;
+    text-decoration: none;
+    transition: box-shadow 0.2s ease-in;
+    border-radius: 3px;
+}
+
+a.message:hover{
+    box-shadow: 0 2px 4px rgba(0,0,0,0.6);
+    transition: box-shadow 0.2s ease-in;
+}
+
+.message--you {
+    margin-left: 20%;
+}
+
+.message--other {
+    margin-right: 20%;
+}
+
+.message--inbox {
+    width: 100%;
+    margin-left: 0;
+    margin-right: 0;
 }
 
 .message__text{
-  background: rgba(0,0,0,0.05);
-  border-radius: 2px;
-  box-sizing: border-box;
-  padding: 1rem;
+    color: #222;
 }
-
 
 span.arrow {
     position: absolute;
@@ -46,4 +62,16 @@ span.arrow {
     top: -26px;
     font-size: 43px;
     font-weight: bold;
+}
+
+.message__time {
+    float: right;
+    font-size: 11px;
+    opacity: 0.5;
+    margin-top: 5px;
+    color: #222;
+}
+.message__composer {
+    color: #0FA0CE;
+    font-size: 0.9em;
 }

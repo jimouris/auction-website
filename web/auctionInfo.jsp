@@ -38,7 +38,7 @@
                 <h2>The auction is started-active</h2>
             </c:if>
 
-            <c:if test="${isSeller and not isEnded}">
+            <c:if test="${isSeller and not isEnded and empty bidLst}">
                 <a class="js-make-writable button">edit some fields</a>
             </c:if>
 

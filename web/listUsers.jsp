@@ -17,10 +17,6 @@
         <h1>List users</h1>
         <jsp:useBean id="userLst" class="java.util.ArrayList" scope="request" />
 
-            <%--<%--%>
-            <%--List userLst = (List) request.getAttribute("userLst");--%>
-            <%--out.print(userLst.get(0));--%>
-            <%--%>--%>
         <table>
             <c:forEach var="user" items="${userLst}">
                 <tr>

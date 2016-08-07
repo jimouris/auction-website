@@ -13,7 +13,7 @@
 <body>
 
 <c:if test ="${not empty uid}">
-    <div class="container">
+<div class="container">
     <!-- HEADER STUFF -->
     <div class="row">
         <div class="one column">
@@ -25,14 +25,13 @@
             <ul class="nav u-full-width row">
                 <li class="offset-by-one-third one-third column newMessage tooltip"><span class="tooltipFire">Messages</span>
                     <div class="tooltipText"><div class="tooltipMargin"></div>
-                    <a href="./messages_inbox.jsp">Inbox</a>
-                    <br/>
-                    <a href="./messages_sent.jsp">Sent</a>
+                        <a class="button" href="message.do?action=listInbox">Inbox</a>
+                        <a class="button" href="message.do?action=listSent">Sent</a>
                     </div>
                 </li>
                 <li class="one-third column">
                     <a href="logout.do"><span class="delete">Logout</span></a>
-                    <%--<form action="logout.do" method="post"> <input type="submit" value="Logout"/></form>--%>
+                        <%--<form action="logout.do" method="post"> <input type="submit" value="Logout"/></form>--%>
                 </li>
             </ul>
         </div>
@@ -59,11 +58,11 @@
         </section>
     </div>
     <!-- end of search row -->
-</c:if>
-<c:if test ="${empty uid}">
+    </c:if>
+    <c:if test ="${empty uid}">
     <h3>You are logged out</h3>
     <p>Please go to the <a href="/">start page</a> and login again.</p>
-</c:if>
+    </c:if>
 
 </body>
 </html>

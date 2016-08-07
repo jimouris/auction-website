@@ -1,7 +1,11 @@
 package javauction.controller;
 
+import javauction.model.AuctionEntity;
 import javauction.model.MessagesEntity;
+import javauction.model.UserEntity;
+import javauction.service.AuctionService;
 import javauction.service.MessagesService;
+import javauction.service.UserService;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -11,6 +15,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Created by jimouris on 8/5/16.
@@ -32,7 +39,7 @@ public class message extends HttpServlet {
             MessagesEntity messagesEntity = new MessagesEntity(sid, rid, aid, msg);
             messagesService.addMessage(messagesEntity);
 
-            getConversation(request, aid);
+            getConversation(messagesService, request, aid);
             request.setAttribute("aid", aid);
             request.setAttribute("rid", rid);
 
@@ -46,18 +53,56 @@ public class message extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String next_page = null;
         String param = request.getParameter("action");
+        MessagesService messagesService = new MessagesService();
+        HttpSession session = request.getSession();
+        UserService userService = new UserService();
+        AuctionService auctionService = new AuctionService();
 
+        long rid;
         switch (param) {
             case "getConversation": /* get all actions with sellerId = uid (from session) */
-                long rid = Long.parseLong(request.getParameter("rid"));
-                HttpSession session = request.getSession();
+                rid = Long.parseLong(request.getParameter("rid"));
                 long aid = Long.parseLong(request.getParameter("aid"));
 
-                getConversation(request, aid);
+                getConversation(messagesService, request, aid);
                 request.setAttribute("aid", aid);
                 request.setAttribute("rid", rid);
-
                 next_page = "/messages.jsp";
+
+                break;
+            case "listInbox": /* get all messages from inbox */
+                rid = (long) session.getAttribute("uid");
+                List<MessagesEntity> msgsLst = messagesService.getInbox(rid);
+
+                List<UserEntity> sendersLst = new ArrayList<>();
+                List<AuctionEntity> auctionsLst = new ArrayList<>();
+                for (MessagesEntity m : msgsLst) {
+                    sendersLst.add(userService.getUser(m.getSenderId()));
+                    auctionsLst.add(auctionService.getAuction(m.getAuctionId()));
+                }
+
+                request.setAttribute("messagesLst", msgsLst);
+                request.setAttribute("sendersLst", sendersLst);
+                request.setAttribute("auctionsLst", auctionsLst);
+
+                next_page = "/listInbox.jsp";
+                break;
+            case "listSent": /* get all messages from inbox */
+                rid = (long) session.getAttribute("uid");
+                msgsLst = messagesService.getInbox(rid);
+
+                List<UserEntity> receiversLst = new ArrayList<>();
+                auctionsLst = new ArrayList<>();
+                for (MessagesEntity m : msgsLst) {
+                    receiversLst.add(userService.getUser(m.getReceiverId()));
+                    auctionsLst.add(auctionService.getAuction(m.getAuctionId()));
+                }
+
+                request.setAttribute("messagesLst", msgsLst);
+                request.setAttribute("receiversLst", receiversLst);
+                request.setAttribute("auctionsLst", auctionsLst);
+
+                next_page = "/listSent.jsp";
                 break;
         }
 
@@ -65,12 +110,20 @@ public class message extends HttpServlet {
         view.forward(request, response);
     }
 
-    private void getConversation(HttpServletRequest request, long aid){
-        MessagesService messagesService = new MessagesService();
+    private void getConversation(MessagesService messagesService, HttpServletRequest request, long aid){
+        UserService userService = new UserService();
 
-        java.util.List messagesLst = messagesService.getAuctionConversation(aid);
-        request.setAttribute("messagesLst", messagesLst);
+        List<MessagesEntity> messagesLst = messagesService.getAuctionConversation(aid);
+        List<MessagesEntity> revMessagesLst = new ArrayList<>(messagesLst.subList(0, messagesLst.size()));
+        Collections.reverse(revMessagesLst);
 
+        List<UserEntity> sendersLst = new ArrayList<>();
+        for (MessagesEntity m : revMessagesLst) {
+            sendersLst.add(userService.getUser(m.getSenderId()));
+        }
+
+        request.setAttribute("messagesLst", revMessagesLst);
+        request.setAttribute("sendersLst", sendersLst);
     }
 
 }
