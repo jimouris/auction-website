@@ -5,6 +5,7 @@
     <meta charset="utf-8">
     <title>Ted Project at DI</title>
 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="/css/skeleton.css" rel="stylesheet">
     <link href="/css/organism.css" rel="stylesheet">
 </head>

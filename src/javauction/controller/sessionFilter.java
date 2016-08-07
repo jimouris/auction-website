@@ -33,12 +33,7 @@ public class sessionFilter implements Filter {
                 loggedIn = true;
             }
         }
-
         String requestPath = request.getRequestURI();
-        System.out.println(requestPath);
-        System.out.println(loggedIn);
-        System.out.println(isAdmin);
-
         if (loggedIn) {
             if (isAdmin) {
                 /* admin can't go to the following pages */

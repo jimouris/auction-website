@@ -3,6 +3,8 @@
 <head>
     <meta charset="utf-8">
     <title>Welcome Page</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="/css/skeleton.css" rel="stylesheet">
 </head>
 <body>

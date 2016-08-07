@@ -10,6 +10,7 @@
     <jsp:useBean id="usedCategories" class="java.util.ArrayList" scope="request" />
     <jsp:useBean id="bidLst" class="java.util.ArrayList" scope="request" />
 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="/css/skeleton.css" rel="stylesheet">
     <link href="/css/custom.css" rel="stylesheet">
 </head>
@@ -133,7 +134,7 @@
             <c:if test="${not isEnded}">
                 <c:if test="${not empty bidLst}">
                     <h5>Current bid: <span>${bidLst[0].amount} &euro;</span></h5>
-                    <c:if test="${not isSeller}">
+                    <c:if test="${not isSeller and not empty uid}">
                         <form action="/auction.do" method="post">
                             <input type="number" min="${bidLst[0].amount +1}" value="${bidLst[0].amount +1}" name="bid">
                             <input type="hidden" name="aid" value="${auction.auctionId}">
@@ -148,7 +149,7 @@
                     </c:if>
                 </c:if>
                 <c:if test="${empty bidLst}">
-                    <c:if test="${not isSeller}">
+                    <c:if test="${not isSeller and not empty uid}">
                         <h5>No bids placed yet.</h5>
                         <form action="/auction.do" method="post">
                             <input type="number" min="${auction.lowestBid}" value="${auction.lowestBid}" name="bid">

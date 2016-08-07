@@ -6,6 +6,8 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Search Results</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <jsp:useBean id="auctionsLst" class="java.util.ArrayList" scope="request" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css" rel="stylesheet">
 </head>

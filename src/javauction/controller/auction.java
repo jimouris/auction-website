@@ -264,10 +264,16 @@ public class auction extends HttpServlet {
             case "getAnAuction": /* get an auction with auctionId = aid */
                 long aid = Long.parseLong(request.getParameter("aid"));
                 AuctionEntity auction = auctionService.getAuction(aid);
-                long uid = (long) session.getAttribute("uid");
-                /* get seller id for the auction */
-                long sid = auction.getSellerId();
-                session.setAttribute("isSeller", sid == uid);
+                Long uid = (Long) session.getAttribute("uid");
+                /* Guest session */
+                if (uid == null) {
+                    session.setAttribute("isSeller", false);
+                } else {
+                    /* get seller id for the auction */
+                    long sid = auction.getSellerId();
+                    session.setAttribute("isSeller", sid == uid);
+                }
+
                 /* all categories */
                 request.setAttribute("categoryLst", categoryLst);
                 /* Auctions selected categories*/
@@ -294,8 +300,6 @@ public class auction extends HttpServlet {
                     buyerid = (Long) biddersLst.get(0).getUserId();
                 }
                 auction = checkDateAndSetBuyer(request, auction, aid, buyerid, auctionService);
-
-                System.out.println(auction.toString());
 
                 request.setAttribute("auction", auction);
                 next_page = "/public/auctionInfo.jsp";

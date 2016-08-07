@@ -61,11 +61,7 @@ public class user extends HttpServlet {
                 String city = request.getParameter("city");
                 String country = request.getParameter("country");
 
-                System.out.println(city + country);
-
                 UserEntity user = new UserEntity(username, password, name, lastname, email, phonenumber, vat, homeaddress, latitude, longitude, city, country);
-
-                System.out.println(user.toString());
 
                 // tell the customer to register a new user
                 try {
