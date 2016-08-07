@@ -18,6 +18,7 @@ import java.util.List;
  */
 @WebServlet(name = "user")
 public class user extends HttpServlet {
+
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String next_page = "/public";
         // the endpoint that admin can use to approve a user
@@ -47,7 +48,6 @@ public class user extends HttpServlet {
             String password = request.getParameter("password");
             String repeat_password = request.getParameter("repeat_password");
             if (password.equals(repeat_password)) { /* if passwords match*/
-
                 // get the user input
                 String username = request.getParameter("username");
                 String email = request.getParameter("email");
@@ -61,7 +61,10 @@ public class user extends HttpServlet {
                 String city = request.getParameter("city");
                 String country = request.getParameter("country");
 
-                UserEntity user = new UserEntity(username, password, name, lastname, email, phonenumber, vat, homeaddress, latitude, longitude, city, country);
+                byte[] salt = PasswordAuthentication.genSalt();
+                byte[] hash = PasswordAuthentication.hash(password.toCharArray(), salt);
+
+                UserEntity user = new UserEntity(username, hash, salt, name, lastname, email, phonenumber, vat, homeaddress, latitude, longitude, city, country);
 
                 // tell the customer to register a new user
                 try {

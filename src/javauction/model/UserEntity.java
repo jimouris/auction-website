@@ -13,7 +13,8 @@ public class UserEntity {
     private long userId;
 
     private String username;
-    private String password;
+    private byte[] hash;
+    private byte[] salt;
     private String firstname;
     private String lastname;
     private String email;
@@ -28,10 +29,11 @@ public class UserEntity {
     private byte isAdmin;
     private byte isApproved;
 
-    public UserEntity(String username, String password, String firstname, String lastname, String email, String phoneNumber, String vat,
+    public UserEntity(String username, byte[] hash, byte[] salt, String firstname, String lastname, String email, String phoneNumber, String vat,
                       String homeAddress, String latitude, String longitude, String city, String country) {
         this.username = username;
-        this.password = password;
+        this.hash = hash;
+        this.salt = salt;
         this.firstname = firstname;
         this.lastname = lastname;
         this.email = email;
@@ -57,7 +59,8 @@ public class UserEntity {
         return "UserEntity{" +
                 "userId=" + userId +
                 ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
+                ", hash='" + hash + '\'' +
+                ", salt='" + salt + '\'' +
                 ", firstname='" + firstname + '\'' +
                 ", lastname='" + lastname + '\'' +
                 ", email='" + email + '\'' +
@@ -96,13 +99,23 @@ public class UserEntity {
     }
 
     @Basic
-    @Column(name = "Password")
-    public String getPassword() {
-        return password;
+    @Column(name = "Hash")
+    public byte[] getHash() {
+        return hash;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setHash(byte[] hash) {
+        this.hash = hash;
+    }
+
+    @Basic
+    @Column(name = "Salt")
+    public byte[] getSalt() {
+        return salt;
+    }
+
+    public void setSalt(byte[] salt) {
+        this.salt = salt;
     }
 
     @Basic
@@ -246,7 +259,8 @@ public class UserEntity {
         if (isAdmin != that.isAdmin) return false;
         if (isApproved != that.isApproved) return false;
         if (username != null ? !username.equals(that.username) : that.username != null) return false;
-        if (password != null ? !password.equals(that.password) : that.password != null) return false;
+        if (hash != null ? !hash.equals(that.hash) : that.hash != null) return false;
+        if (salt != null ? !salt.equals(that.salt) : that.salt != null) return false;
         if (firstname != null ? !firstname.equals(that.firstname) : that.firstname != null) return false;
         if (lastname != null ? !lastname.equals(that.lastname) : that.lastname != null) return false;
         if (email != null ? !email.equals(that.email) : that.email != null) return false;
@@ -266,7 +280,8 @@ public class UserEntity {
     public int hashCode() {
         int result = (int) (userId ^ (userId >>> 32));
         result = 31 * result + (username != null ? username.hashCode() : 0);
-        result = 31 * result + (password != null ? password.hashCode() : 0);
+        result = 31 * result + (hash != null ? hash.hashCode() : 0);
+        result = 31 * result + (salt != null ? salt.hashCode() : 0);
         result = 31 * result + (firstname != null ? firstname.hashCode() : 0);
         result = 31 * result + (lastname != null ? lastname.hashCode() : 0);
         result = 31 * result + (email != null ? email.hashCode() : 0);
