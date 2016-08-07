@@ -4,13 +4,18 @@ import javauction.model.MessagesEntity;
 import javauction.util.HibernateUtil;
 import org.hibernate.*;
 import org.hibernate.criterion.Restrictions;
-
 import java.util.List;
+
 
 /**
  * Created by jimouris on 8/6/16.
  */
 public class MessagesService {
+
+    public enum Message_t {
+        Inbox_t,
+        Sent_t
+    }
 
     public void addMessage(MessagesEntity message) {
         Session session = HibernateUtil.getSession();
@@ -56,12 +61,21 @@ public class MessagesService {
         return messages;
     }
 
-    /* return messages where receiverId = rid grouped by senderId*/
-    public List getInbox(long rid) {
+    /* return messages where (receiverId = rid case inbox, or senderId = rid case sent) grouped by senderId*/
+    public List getInboxOrSent(long rid, Message_t msg_t) {
         Session session = HibernateUtil.getSession();
         try {
-            Query query = session.createQuery("select m from MessagesEntity m where m.sendDate = " +
-                    "(select max(b.sendDate) from MessagesEntity b where b.auctionId = m.auctionId and b.receiverId =" + rid + ")");
+            Query query = null;
+            switch (msg_t) {
+                case Inbox_t:
+                    query = session.createQuery("select m from MessagesEntity m where m.sendDate = " +
+                            "(select max(b.sendDate) from MessagesEntity b where b.auctionId = m.auctionId and b.receiverId =" + rid + ")");
+                    break;
+                case Sent_t:
+                    query = session.createQuery("select m from MessagesEntity m where m.sendDate = " +
+                            "(select max(b.sendDate) from MessagesEntity b where b.auctionId = m.auctionId and b.senderId =" + rid + ")");
+                    break;
+            }
             List <MessagesEntity> messagesLst = query.list();
 
             return messagesLst;

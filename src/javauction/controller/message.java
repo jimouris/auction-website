@@ -72,7 +72,7 @@ public class message extends HttpServlet {
                 break;
             case "listInbox": /* get all messages from inbox */
                 rid = (long) session.getAttribute("uid");
-                List<MessagesEntity> msgsLst = messagesService.getInbox(rid);
+                List<MessagesEntity> msgsLst = messagesService.getInboxOrSent(rid, MessagesService.Message_t.Inbox_t);
 
                 List<UserEntity> sendersLst = new ArrayList<>();
                 List<AuctionEntity> auctionsLst = new ArrayList<>();
@@ -89,7 +89,7 @@ public class message extends HttpServlet {
                 break;
             case "listSent": /* get all messages from inbox */
                 rid = (long) session.getAttribute("uid");
-                msgsLst = messagesService.getInbox(rid);
+                msgsLst = messagesService.getInboxOrSent(rid, MessagesService.Message_t.Sent_t);
 
                 List<UserEntity> receiversLst = new ArrayList<>();
                 auctionsLst = new ArrayList<>();
