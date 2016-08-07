@@ -35,38 +35,40 @@ public class login extends HttpServlet {
         try {
             LoginService loginService = new LoginService();
 
+            String errorMsg;
             if (usr_type.equals("admin")) {
                 result = loginService.authenticateAdmin(username, password);
+                next_page = "backoffice.jsp";
                 if (result == LoginService.LoginStatus.LOGIN_SUCCESS) {
-
-                    session.setAttribute("isAdmin", true);
-
                     next_page = "admin.jsp";
+                    session.setAttribute("isAdmin", true);
                 } else if (result == LoginService.LoginStatus.LOGIN_NOT_ADMIN) {
-                    next_page = "index.jsp";
-                    System.out.println("You are not admin!");
+                    errorMsg = "You are not admin!";
+                    request.setAttribute("errorMsg", errorMsg);
                 } else if (result == LoginService.LoginStatus.LOGIN_WRONG_UNAME_PASSWD) {
-                    System.out.println("Wrong username and password");
+                    errorMsg = "Wrong username and password";
+                    request.setAttribute("errorMsg", errorMsg);
                 } else {
-                    System.out.println("Login failed for some reason");
+                    errorMsg = "Login failed for some reason";
+                    request.setAttribute("errorMsg", errorMsg);
                 }
             } else if (usr_type.equals("user")){
                 result = loginService.authenticateUser(username, password);
                 if (result == LoginService.LoginStatus.LOGIN_SUCCESS) {
-
                     UserService userservice = new UserService();
                     UserEntity user = userservice.getUser(username);
                     session.setAttribute("uid", user.getUserId());
                     session.setAttribute("isAdmin", false);
-
                     next_page = "homepage.jsp";
                 } else if (result == LoginService.LoginStatus.LOGIN_NOT_APPROVED) {
-//                    next_page = "approvalerror.jsp";
-                    System.out.println("U r not approved my man:/");
+                    errorMsg = "Be patient, wait for your approval";
+                    request.setAttribute("errorMsg", errorMsg);
                 } else if (result == LoginService.LoginStatus.LOGIN_WRONG_UNAME_PASSWD) {
-                    System.out.println("Wrong username and password");
+                    errorMsg = "Wrong username and password";
+                    request.setAttribute("errorMsg", errorMsg);
                 } else {
-                    System.out.println("Login failed for some reason");
+                    errorMsg = "Login failed";
+                    request.setAttribute("errorMsg", errorMsg);
                 }
             }
         } catch (Exception e) {

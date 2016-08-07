@@ -71,7 +71,15 @@ span.arrow {
     margin-top: 5px;
     color: #222;
 }
+
 .message__composer {
     color: #0FA0CE;
     font-size: 0.9em;
+}
+
+.status--error {
+    color: #ab0022;
+    padding: 0.3em 0.6em;
+    border-radius: 3px;
+    background: rgba(230, 42, 50, 0.21);
 }
