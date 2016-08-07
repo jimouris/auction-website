@@ -13,6 +13,13 @@
         <tracking-mode>COOKIE</tracking-mode>
     </session-config>
 
+    <jsp-config>
+        <jsp-property-group>
+            <url-pattern>*.jsp</url-pattern>
+            <page-encoding>UTF-8</page-encoding>
+        </jsp-property-group>
+    </jsp-config>
+
     <servlet>
         <servlet-name>login</servlet-name>
         <servlet-class>javauction.controller.login</servlet-class>

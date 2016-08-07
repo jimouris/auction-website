@@ -9,7 +9,7 @@ import java.util.Calendar;
  * Created by jimouris on 7/2/16.
  */
 @Entity
-@Table(name = "messages", schema = "auctionwebsite", catalog = "")
+@Table(name = "messages", schema = "auctionwebsite")
 public class MessagesEntity {
     private long messageId;
     private long senderId;

@@ -5,6 +5,13 @@
   padding: 0.5rem;
 }
 
+#map{
+    margin-bottom: 8px;
+}
+
+#pac-input{
+    top: 8px!important;
+}
 
 .message__title{
   font-size: 1.3em;

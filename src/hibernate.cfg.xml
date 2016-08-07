@@ -13,6 +13,10 @@
 
         <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
 
+        <property name="hibernate.connection.CharSet">utf8</property>
+        <property name="hibernate.connection.characterEncoding">utf8</property>
+        <property name="hibernate.connection.useUnicode">true</property>
+
         <!--<property name="hibernate.show_sql">true</property>-->
 
         <mapping class="javauction.model.AuctionEntity"/>
@@ -25,5 +29,6 @@
         <mapping class="javauction.model.UserEntity"/>
         <!-- DB schema will be updated if needed -->
         <!-- <property name="hbm2ddl.auto">update</property> -->
+
     </session-factory>
 </hibernate-configuration>
