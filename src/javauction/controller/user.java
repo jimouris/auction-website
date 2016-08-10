@@ -1,7 +1,6 @@
 package javauction.controller;
 
 import javauction.model.UserEntity;
-import javauction.service.RegisterService;
 import javauction.service.UserService;
 
 import javax.servlet.RequestDispatcher;
@@ -69,8 +68,8 @@ public class user extends HttpServlet {
 
                 // tell the customer to register a new user
                 try {
-                    RegisterService registerService = new RegisterService();
-                    RegisterService.RegisterStatus result = registerService.register(user);
+                    UserService userService = new UserService();
+                    UserService.RegisterStatus result = userService.register(user);
                     switch (result) {
                         case REG_SUCCESS:
                             request.setAttribute("errorMsg", "Successfully registered");

@@ -1,7 +1,6 @@
 package javauction.controller;
 
 import javauction.model.UserEntity;
-import javauction.service.LoginService;
 import javauction.service.UserService;
 
 import javax.servlet.RequestDispatcher;
@@ -26,26 +25,26 @@ public class login extends HttpServlet {
         String password = request.getParameter("password");
         String usr_type = request.getParameter("action");
 
-        LoginService.LoginStatus result;
+        UserService.LoginStatus result;
         String next_page = "/public/";
         HttpSession session = request.getSession();
 
         // check the credentials
         // and forward to appropriate page if admin or user
         try {
-            LoginService loginService = new LoginService();
+            UserService userService = new UserService();
 
             String errorMsg;
             if (usr_type.equals("admin")) {
-                result = loginService.authenticateAdmin(username, password);
+                result = userService.authenticateAdmin(username, password);
                 next_page = "/public/backoffice.jsp";
-                if (result == LoginService.LoginStatus.LOGIN_SUCCESS) {
+                if (result == UserService.LoginStatus.LOGIN_SUCCESS) {
                     next_page = "/admin/homepage.jsp";
                     session.setAttribute("isAdmin", true);
-                } else if (result == LoginService.LoginStatus.LOGIN_NOT_ADMIN) {
+                } else if (result == UserService.LoginStatus.LOGIN_NOT_ADMIN) {
                     errorMsg = "You are not admin!";
                     request.setAttribute("errorMsg", errorMsg);
-                } else if (result == LoginService.LoginStatus.LOGIN_WRONG_UNAME_PASSWD) {
+                } else if (result == UserService.LoginStatus.LOGIN_WRONG_UNAME_PASSWD) {
                     errorMsg = "Wrong username and password";
                     request.setAttribute("errorMsg", errorMsg);
                 } else {
@@ -53,17 +52,16 @@ public class login extends HttpServlet {
                     request.setAttribute("errorMsg", errorMsg);
                 }
             } else if (usr_type.equals("user")){
-                result = loginService.authenticateUser(username, password);
-                if (result == LoginService.LoginStatus.LOGIN_SUCCESS) {
-                    UserService userservice = new UserService();
-                    UserEntity user = userservice.getUser(username);
+                result = userService.authenticateUser(username, password);
+                if (result == UserService.LoginStatus.LOGIN_SUCCESS) {
+                    UserEntity user = userService.getUser(username);
                     session.setAttribute("uid", user.getUserId());
                     session.setAttribute("isAdmin", false);
                     next_page = "/user/homepage.jsp";
-                } else if (result == LoginService.LoginStatus.LOGIN_NOT_APPROVED) {
+                } else if (result == UserService.LoginStatus.LOGIN_NOT_APPROVED) {
                     errorMsg = "Be patient, wait for your approval";
                     request.setAttribute("errorMsg", errorMsg);
-                } else if (result == LoginService.LoginStatus.LOGIN_WRONG_UNAME_PASSWD) {
+                } else if (result == UserService.LoginStatus.LOGIN_WRONG_UNAME_PASSWD) {
                     errorMsg = "Wrong username and password";
                     request.setAttribute("errorMsg", errorMsg);
                 } else {
