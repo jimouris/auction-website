@@ -1,4 +1,6 @@
-<%--suppress ALL --%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
 <!doctype html>
 <html>
 <head>
@@ -19,47 +21,50 @@
     <div class="row">
         <div class="">
             <section class="register u-full-width">
-                <h1>register at our eshop</h1>
+                <h1>Register at our eshop</h1>
+                <c:if test="${not empty errorMsg}">
+                    <p class="status--error">${errorMsg}</p>
+                </c:if>
                 <!-- Restriction for validation are inserted on the end of input -->
                 <form action="/user.do" method="POST" id="registerForm">
                     <input type="hidden" name="action" value="register">
                     <label for="username">Username</label>
-                    <input class="u-full-width" type="text" id="username" name="username">
+                    <input class="u-full-width" type="text" id="username" name="username" required autofocus>
 
-                    <label for="email">Email(this will be also your username):</label>
-                    <input class="u-full-width" type="email" id="email" name="email">
+                    <label for="email">Email:</label>
+                    <input class="u-full-width" type="email" id="email" name="email" required autofocus>
 
                     <label for="name">Name:</label>
                     <input class="u-full-width" type="text" id="name" name="name" minlength="2" required autofocus>
 
-                    <label for="lastname">lastname:</label>
-                    <input class="u-full-width" type="text" id="lastname" name="lastname" minlength="2" required>
+                    <label for="lastname">Lastname:</label>
+                    <input class="u-full-width" type="text" id="lastname" name="lastname" minlength="2" required autofocus>
 
 
                     <label for="password">Password:</label>
-                    <input class="u-full-width" type="password" id="password" name="password" minlength="3" required>
+                    <input class="u-full-width" type="password" id="password" name="password" minlength="3" required autofocus>
                     <label for="repeat_password">Verify Password:</label>
-                    <input class="u-full-width" type="password" id="repeat_password" name="repeat_password" equalTo="#regPassword" required>
+                    <input class="u-full-width" type="password" id="repeat_password" name="repeat_password" equalTo="#regPassword" required autofocus>
 
                     <label for="vat">VAT</label>
-                    <input class="u-full-width" type="number" id="vat" name="vat" minlength="2" required>
+                    <input class="u-full-width" type="number" id="vat" name="vat" minlength="2" required autofocus>
 
-                    <label for="phone">phone number:</label>
-                    <input class="u-full-width" type="text" id="phone" name="phone" minlength="2" required>
+                    <label for="phone">Phone number:</label>
+                    <input class="u-full-width" type="text" id="phone" name="phone" minlength="2" required autofocus>
 
                     <div class="row">
                         <div class="six columns">
                             <label for="address">Address</label>
-                            <input class="u-full-width" type="text" id="address" name="address" minlength="2" required>
+                            <input class="u-full-width" type="text" id="address" name="address" minlength="2" required autofocus>
 
                             <label for="city">City</label>
-                            <input class="u-full-width" type="text" id="city" name="city" minlength="2" required>
+                            <input class="u-full-width" type="text" id="city" name="city" minlength="2" required autofocus>
 
                             <label for="country">Country</label>
-                            <input class="u-full-width" type="text" id="country" name="country" minlength="2" required>
+                            <input class="u-full-width" type="text" id="country" name="country" minlength="2" required autofocus>
 
-                            <input type="hidden" name="latitude" id="latitude" value="23.728569442749">
-                            <input type="hidden" name="longitude" id="longitude" value="37.926358404059">
+                            <input type="hidden" name="longitude" id="longitude" value="23.728569442749">
+                            <input type="hidden" name="latitude" id="latitude" value="37.926358404059">
                         </div>
                         <div class="six columns">
                             <div id="map" style="height: 250px;"></div>

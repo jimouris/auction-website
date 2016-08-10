@@ -47,6 +47,7 @@ public class user extends HttpServlet {
 
             String password = request.getParameter("password");
             String repeat_password = request.getParameter("repeat_password");
+            String errorMsg;
             if (password.equals(repeat_password)) { /* if passwords match*/
                 // get the user input
                 String username = request.getParameter("username");
@@ -70,25 +71,30 @@ public class user extends HttpServlet {
                 try {
                     RegisterService registerService = new RegisterService();
                     RegisterService.RegisterStatus result = registerService.register(user);
-
                     switch (result) {
                         case REG_SUCCESS:
-                            request.setAttribute("regStatus", "Successfully registered");
-                            next_page = "/user/welcome.jsp"; break;
+                            request.setAttribute("errorMsg", "Successfully registered");
+                            next_page = "/user/welcome.jsp";
+                            break;
                         case REG_UNAME_EXISTS:
-                            System.out.println("Username exists"); break;
+                            errorMsg = "Try another username, " + username + " exists";
+                            request.setAttribute("errorMsg", errorMsg);
+                            break;
                         case REG_EMAIL_EXISTS:
-                            System.out.println("Email exists"); break;
+                            errorMsg = "Try another email, " + email + " exists";
+                            request.setAttribute("errorMsg", errorMsg);
+                            break;
                         case REG_FAIL: default:
-                            request.setAttribute("regStatus", "Registration Failed :/");
+                            errorMsg = "Registration failed";
+                            request.setAttribute("errorMsg", errorMsg);
                     }
 
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             } else {
-                System.out.println("Passwords must match");
-                request.setAttribute("regStatus", "Passwords must match");
+                errorMsg = "Passwords must match";
+                request.setAttribute("errorMsg", errorMsg);
             }
         }
         // then forward the request to welcome.jsp with the information of status
