@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
 
 /**
@@ -125,7 +126,27 @@ public class user extends HttpServlet {
             userLst = userService.getAllUsers();
 
             request.setAttribute("userLst", userLst);
+        } else if (request.getParameter("action").equals("unameExists")){
+            String uname = request.getParameter("uname");
+            response.setContentType("text/html");
+
+            UserService userService = new UserService();
+            PrintWriter out = response.getWriter();
+            if (userService.unameExist( uname))
+                out.println("exists");
+            return;
+        } else if (request.getParameter("action").equals("emailExists")){
+            String email = request.getParameter("email");
+            response.setContentType("text/html");
+
+            UserService userService = new UserService();
+            PrintWriter out = response.getWriter();
+            if (userService.emailExist(email))
+                out.println("exists");
+            return;
         }
+
+
         // then forward the request to welcome.jsp with the information of status
         RequestDispatcher view = request.getRequestDispatcher(next_page);
         view.forward(request, response);

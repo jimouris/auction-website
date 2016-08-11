@@ -66,6 +66,38 @@ public class UserService {
         return null;
     }
 
+    public Boolean unameExist(String uname){
+        Session session = HibernateUtil.getSession();
+        try{
+            Query query = session.createQuery("from UserEntity where username = :uname");
+            query.setParameter("uname", uname);
+            List results = query.list();
+            return results.size() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+        return true;
+    }
+
+
+    public boolean emailExist(String email) {
+        Session session = HibernateUtil.getSession();
+        try{
+            Query query = session.createQuery("from UserEntity where email = :email");
+            query.setParameter("email", email);
+            List results = query.list();
+            return results.size() > 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+        return true;
+    }
+
+
     public Boolean approveUser(long uid) {
         Session session = HibernateUtil.getSession();
         try {
