@@ -77,7 +77,8 @@ span.arrow {
     font-size: 0.9em;
 }
 
-[class^="status"]{
+.status--error,
+.status--success{
     padding: 0.3em 0.6em;
     border-radius: 3px;
 }
@@ -90,4 +91,10 @@ span.arrow {
 .status--success{
     color: #00ab63;
     background: rgba(42, 230, 64, 0.2);
+}
+
+.js-input-error {
+    margin-top: -13px;
+    display: block;
+    margin-bottom: 10px;
 }

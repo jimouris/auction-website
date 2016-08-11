@@ -29,10 +29,12 @@
                 <form action="/user.do" method="POST" id="registerForm">
                     <input type="hidden" name="action" value="register">
                     <label for="username">Username</label>
-                    <input class="u-full-width" type="text" id="username" name="username" required autofocus>
+                    <input class="u-full-width" type="text" id="username" name="username" required autofocus></input>
+                    <span class="js-input-error"></span>
 
                     <label for="email">Email:</label>
-                    <input class="u-full-width" type="email" id="email" name="email" required autofocus>
+                    <input class="u-full-width" type="email" id="email" name="email" required autofocus></input>
+                    <span class="js-input-error"></span>
 
                     <label for="name">Name:</label>
                     <input class="u-full-width" type="text" id="name" name="name" minlength="2" required autofocus>
@@ -80,7 +82,7 @@
     </div>
 
 </div>
-<script src="https://code.jquery.com/jquery-3.1.0.min.js" crossorigin="anonymous"></script>
+<script src="/js/jquery.min.js"></script>
 <script>
     lat = 0;
     lng = 0;
@@ -174,6 +176,58 @@
             marker.setVisible(true);
         });
     }
+
+    $(document).ready(function(){
+        // when the user clicks the button
+        $('#username').focusout(function(){
+            // get the data from input
+            var uname = $('#username').val();
+            // write the appropriate url
+            // note: an usernameExist should be implemented on user.do controller as a get action
+            var url = '/user.do?action=unameExists&uname=' + uname;
+
+            // the $.ajax(....) will send a get request to url
+            $.ajax({
+                url: url,
+                success: function(data){
+                    // this is the data returned by the controller
+                    if (data.indexOf('exists') >= 0 && uname.length > 0)
+                        $('#username + .js-input-error').removeClass('status--success').addClass('status--error').text('username already exists');
+                    else
+                        $('#username + .js-input-error').addClass('status--success').removeClass('status--error').text('username available');
+                } // end sucess function
+            });
+            if (uname.length > 0)
+                $('#username + .js-input-error').show();
+            else
+                $('#username + .js-input-error').hide();
+        });
+
+        // when the user clicks the button
+        $('#email').focusout(function(){
+            // get the data from input
+            var email = $('#email').val();
+            // write the appropriate url
+            // note: an emailExist should be implemented on user.do controller as a get action
+            var url = '/user.do?action=emailExists&email=' + email;
+
+            // the $.ajax(....) will send a get request to url
+            $.ajax({
+                url: url,
+                success: function(data){
+                    // this is the data returned by the controller
+                    if (data.indexOf('exists') >= 0)
+                        $('#email + .js-input-error').removeClass('status--success').addClass('status--error').text('email already exists');
+                    else
+                        $('#email + .js-input-error').addClass('status--success').removeClass('status--error').text('email available');
+                } // end sucess function
+            });
+            if (email.length > 0)
+                $('#email + .js-input-error').show();
+            else
+                $('#email + .js-input-error').hide();
+        });
+    });
 
 </script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA7om9lzVVpATrE6I8ceaK9vMyE6Bi2KSw&callback=initMap&libraries=places" async defer></script>
