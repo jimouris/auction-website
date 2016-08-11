@@ -63,6 +63,41 @@ public class AuctionService {
         return null;
     }
 
+    public List getAllEndedAuctions(Long sid) {
+        Session session = HibernateUtil.getSession();
+        Transaction tx = null;
+        List auctions = null;
+        try {
+            tx = session.beginTransaction();
+            Criteria criteria = session.createCriteria(AuctionEntity.class);
+            /* get all inactive */
+            criteria.add(Restrictions.eq("isStarted", (byte) 0));
+            /* get all those that are really ended */
+            java.sql.Date currentDate = new Date(Calendar.getInstance().getTimeInMillis());
+            criteria.add(Restrictions.lt("endingDate", currentDate));
+
+            if (sid != null) {
+                criteria.add(Restrictions.eq("sellerId", sid));
+            }
+
+            criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+            auctions = criteria.list();
+            tx.commit();
+        } catch (HibernateException e) {
+            if (tx != null) {
+                tx.rollback();
+            }
+            e.printStackTrace();
+        } finally {
+            try {
+                if (session != null) session.close();
+            } catch (Exception e) {
+                // ignore
+            }
+        }
+        return auctions;
+    }
+
     public List getAllAuctions(long sid, boolean getAllActive) {
         Session session = HibernateUtil.getSession();
         List results = null;

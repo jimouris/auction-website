@@ -304,6 +304,17 @@ public class auction extends HttpServlet {
                 request.setAttribute("auction", auction);
                 next_page = "/public/auctionInfo.jsp";
                 break;
+            case "getAllYourEndedAuctions":
+                uid = (Long) session.getAttribute("uid");
+                auctionLst = auctionService.getAllEndedAuctions(uid);
+                request.setAttribute("auctionLst", auctionLst);
+                next_page = "/public/listAuctions.jsp";
+                break;
+            case "getAllEndedAuctions":
+                auctionLst = auctionService.getAllEndedAuctions(null);
+                request.setAttribute("auctionLst", auctionLst);
+                next_page = "/public/listAuctions.jsp";
+                break;
         }
 
         RequestDispatcher view = request.getRequestDispatcher(next_page);
