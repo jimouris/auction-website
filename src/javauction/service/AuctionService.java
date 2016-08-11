@@ -75,11 +75,10 @@ public class AuctionService {
             /* get all those that are really ended */
             java.sql.Date currentDate = new Date(Calendar.getInstance().getTimeInMillis());
             criteria.add(Restrictions.lt("endingDate", currentDate));
-
+            /* where seller id == sid */
             if (sid != null) {
                 criteria.add(Restrictions.eq("sellerId", sid));
             }
-
             criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
             auctions = criteria.list();
             tx.commit();
@@ -131,6 +130,11 @@ public class AuctionService {
             tx = session.beginTransaction();
             Criteria criteria = session.createCriteria(AuctionEntity.class);
             criteria.add(Restrictions.like("name", name, MatchMode.ANYWHERE));
+            /* only active */
+            criteria.add(Restrictions.eq("isStarted", (byte) 1));
+            /* get all those that are really not ended */
+            java.sql.Date currentDate = new Date(Calendar.getInstance().getTimeInMillis());
+            criteria.add(Restrictions.gt("endingDate", currentDate));
 
             criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
             auctions = criteria.list();
@@ -158,6 +162,11 @@ public class AuctionService {
         try {
             tx = session.beginTransaction();
             Criteria criteria = session.createCriteria(AuctionEntity.class);
+            /* only active */
+            criteria.add(Restrictions.eq("isStarted", (byte) 1));
+            /* get all those that are really not ended */
+            java.sql.Date currentDate = new Date(Calendar.getInstance().getTimeInMillis());
+            criteria.add(Restrictions.gt("endingDate", currentDate));
             /* category search */
             if (categories != null) {
                 /* convert list of strings to list of integers */
