@@ -25,10 +25,16 @@
         </div>
         <div class="offset-by-seven four columns">
             <ul class="nav u-full-width row">
-                <li class="offset-by-one-third one-third column newMessage tooltip"><span class="tooltipFire">Messages</span>
+                <li class="one-third column newMessage tooltip"><span class="tooltipFire">Messages</span>
                     <div class="tooltipText"><div class="tooltipMargin"></div>
                         <a class="button" href="/message.do?action=listInbox">Inbox</a>
                         <a class="button" href="/message.do?action=listSent">Sent</a>
+                    </div>
+                </li>
+                <li class="one-third column newRating tooltip"><span class="tooltipFire">Ratings</span>
+                    <div class="tooltipText"><div class="tooltipMargin"></div>
+                        <a class="button" href="/rate.do?action=listFrom">From</a>
+                        <a class="button" href="/rate.do?action=listTo">To</a>
                     </div>
                 </li>
                 <li class="one-third column">

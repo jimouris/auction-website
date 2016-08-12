@@ -43,12 +43,23 @@
         <div class="row">
             <main class="u-full-width ">
                 <div class="row u-full-width">
-                    <form action="/rate.do" method="POST">
-                        <input type="hidden" name="to_id" value=${to_id} />
-                        <input type="hidden" name="aid" value=${aid} />
-                        <input type="number" min="0" max="10" value=${rating} name="rating" required>
-                        <button class="button-primary" type="submit" name="action" value="addRating">Rate</button>
-                    </form>
+                    <c:if test="${not empty rating}">
+                        <h6>You have already rated with ${rating}.</h6>
+                        <form action="/rate.do" method="POST">
+                            <input type="hidden" name="to_id" value=${to_id} />
+                            <input type="hidden" name="aid" value=${aid} />
+                            <input type="number" min="0" max="10" value=${rating} name="rating" required>
+                            <button class="button-primary" type="submit" name="action" value="updateRating">Update rating</button>
+                        </form>
+                    </c:if>
+                    <c:if test="${empty rating}">
+                        <form action="/rate.do" method="POST">
+                            <input type="hidden" name="to_id" value=${to_id} />
+                            <input type="hidden" name="aid" value=${aid} />
+                            <input type="number" min="0" max="10" name="rating" required>
+                            <button class="button-primary" type="submit" name="action" value="addRating">Rate</button>
+                        </form>
+                    </c:if>
                 </div>
             </main>
         </div>
