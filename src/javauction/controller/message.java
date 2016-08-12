@@ -37,7 +37,7 @@ public class message extends HttpServlet {
             String msg = request.getParameter("message_text");
 
             MessagesEntity messagesEntity = new MessagesEntity(sid, rid, aid, msg);
-            messagesService.addMessage(messagesEntity);
+            messagesService.addEntity(messagesEntity);
 
             getConversation(messagesService, request, aid);
             request.setAttribute("aid", aid);

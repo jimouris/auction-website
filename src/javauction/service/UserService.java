@@ -81,7 +81,6 @@ public class UserService {
         return true;
     }
 
-
     public boolean emailExist(String email) {
         Session session = HibernateUtil.getSession();
         try{
@@ -96,7 +95,6 @@ public class UserService {
         }
         return true;
     }
-
 
     public Boolean approveUser(long uid) {
         Session session = HibernateUtil.getSession();

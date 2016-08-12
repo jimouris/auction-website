@@ -86,7 +86,7 @@ public class auction extends HttpServlet {
                 auction.setCategories(categories);
 
                 /* if auction submitted successfully */
-                auctionService.addAuction(auction);
+                auctionService.addEntity(auction);
                 request.setAttribute("aid", auction.getAuctionId());
                 next_page = "/user/auctionSubmit.jsp";
 
@@ -202,7 +202,7 @@ public class auction extends HttpServlet {
             long uid = (long) session.getAttribute("uid");
 
             BidEntity bid = new BidEntity(uid, aid, amount);
-            auctionService.bidAuction(bid);
+            auctionService.addEntity(bid);
 
             AuctionEntity auction = auctionService.getAuction(aid);
             request.setAttribute("auction", auction);

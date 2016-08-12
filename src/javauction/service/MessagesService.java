@@ -10,29 +10,29 @@ import java.util.List;
 /**
  * Created by jimouris on 8/6/16.
  */
-public class MessagesService {
+public class MessagesService extends Service {
 
     public enum Message_t {
         Inbox_t,
         Sent_t
     }
 
-    public void addMessage(MessagesEntity message) {
-        Session session = HibernateUtil.getSession();
-        try {
-            session.beginTransaction();
-            session.save(message);
-            session.getTransaction().commit();
-        } catch (HibernateException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (session != null) session.close();
-            } catch (Exception e) {
-                // ignore
-            }
-        }
-    }
+//    public void addMessage(MessagesEntity message) {
+//        Session session = HibernateUtil.getSession();
+//        try {
+//            session.beginTransaction();
+//            session.save(message);
+//            session.getTransaction().commit();
+//        } catch (HibernateException e) {
+//            e.printStackTrace();
+//        } finally {
+//            try {
+//                if (session != null) session.close();
+//            } catch (Exception e) {
+//                // ignore
+//            }
+//        }
+//    }
 
     /* simple search: search for auctions whose names contain string name */
     public List getAuctionConversation(long aid) {

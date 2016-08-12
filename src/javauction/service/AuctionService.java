@@ -6,34 +6,32 @@ import javauction.model.CategoryEntity;
 import javauction.util.HibernateUtil;
 import org.hibernate.*;
 import org.hibernate.criterion.*;
+import org.hibernate.engine.jdbc.SerializableBlobProxy;
 
 import java.sql.Date;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by gpelelis on 5/7/2016.
  */
-public class AuctionService {
+public class AuctionService extends Service {
 
-    public void addAuction(AuctionEntity auction) {
-        Session session = HibernateUtil.getSession();
-        try {
-            session.beginTransaction();
-            session.save(auction);
-            session.getTransaction().commit();
-        } catch (HibernateException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (session != null) session.close();
-            } catch (Exception e) {
-                // ignore
-            }
-        }
-    }
+//    public void addAuction(AuctionEntity auction) {
+//        Session session = HibernateUtil.getSession();
+//        try {
+//            session.beginTransaction();
+//            session.save(auction);
+//            session.getTransaction().commit();
+//        } catch (HibernateException e) {
+//            e.printStackTrace();
+//        } finally {
+//            try {
+//                if (session != null) session.close();
+//            } catch (Exception e) {
+//                // ignore
+//            }
+//        }
+//    }
 
     public AuctionEntity getAuction(Object obj) {
         Session session = HibernateUtil.getSession();
@@ -286,21 +284,21 @@ public class AuctionService {
         }
     }
 
-    public void bidAuction(BidEntity bid) {
-        Session session = HibernateUtil.getSession();
-        try {
-            session.beginTransaction();
-            session.save(bid);
-            session.getTransaction().commit();
-        } catch (HibernateException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (session != null) session.close();
-            } catch (Exception e) {
-                // ignore
-            }
-        }
-    }
+//    public void bidAuction(BidEntity bid) {
+//        Session session = HibernateUtil.getSession();
+//        try {
+//            session.beginTransaction();
+//            session.save(bid);
+//            session.getTransaction().commit();
+//        } catch (HibernateException e) {
+//            e.printStackTrace();
+//        } finally {
+//            try {
+//                if (session != null) session.close();
+//            } catch (Exception e) {
+//                // ignore
+//            }
+//        }
+//    }
 
 }
