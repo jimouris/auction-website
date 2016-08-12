@@ -27,7 +27,7 @@
                 <li class="offset-by-one-third one-third column newMessage tooltip">
                     Messages
                     <a href="/user/listInbox.jsp">Inbox</a><br />
-                    <a href="/user/listSent.jspt">Sent</a></div>
+                    <a href="/user/listSent.jspt">Sent</a>
                 </li>
                 <li class="one-third column">
                     <a href="/logout.do"><span class="delete">Logout</span></a>

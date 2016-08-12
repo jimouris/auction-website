@@ -111,6 +111,7 @@
             </c:if>
         </form>
     </div>
+
     <div class="custom-container">
         <c:if test="${isEnded}">
             <h5>The auction has ended. (Ending date ${auction.endingDate})</h5>
@@ -136,10 +137,10 @@
             <c:if test="${not empty bidLst}">
                 <h5>Current bid: <span>${bidLst[0].amount} &euro;</span></h5>
                 <c:if test="${not isSeller and not empty uid}">
-                    <form action="/auction.do" method="post">
+                    <form action="/auction.do" method="post" id="bidAuction">
                         <input type="number" min="${bidLst[0].amount +1}" value="${bidLst[0].amount +1}" name="bid">
                         <input type="hidden" name="aid" value="${auction.auctionId}">
-                        <button class="button-primary" type="submit" name="action" value="bidAuction">Bid for this item</button>
+                        <button class="button-primary" type="submit" name="action" id="bidAuction" value="bidAuction">Bid for this item</button>
                     </form>
                 </c:if>
                 <c:if test="${isSeller}">
@@ -152,7 +153,7 @@
             <c:if test="${empty bidLst}">
                 <c:if test="${not isSeller and not empty uid}">
                     <h5>No bids placed yet.</h5>
-                    <form action="/auction.do" method="post">
+                    <form action="/auction.do" method="post" id="firstBid">
                         <input type="number" min="${auction.lowestBid}" value="${auction.lowestBid}" name="bid">
                         <input type="hidden" name="aid" value="${auction.auctionId}">
                         <button class="button-primary" type="submit" name="action" value="bidAuction">Make the first bid</button>
@@ -165,23 +166,35 @@
         </c:if>
     </div>
 </c:if>
+
 <c:if test ="${empty auction}">
     <h3>The auction with id ${param.aid} does not exist!</h3>
 </c:if>
 
 <script src="https://code.jquery.com/jquery-2.2.4.min.js" type="text/javascript"></script>
 <script>
-    window.inputActive = false;
+    $(document).ready(function() {
+        window.inputActive = false;
 
-    $('.js-make-writable').on('click', function(){
-        if (window.inputActive){
-            $('input:not([readonly]), button').prop('disabled', true);
-            window.inputActive = false;
-        }
-        else{
-            $('[disabled]').prop('disabled', false);
-            window.inputActive = true;
-        }
+        $('#firstBid, #bidAuction').submit(function(event) {
+           var bidIt = confirm('Are you sure you want to bid?');
+            if (bidIt){
+                return true;
+            } else{
+                return false;
+            }
+        });
+
+        $('.js-make-writable').on('click', function () {
+            if (window.inputActive) {
+                $('input:not([readonly]), button').prop('disabled', true);
+                window.inputActive = false;
+            }
+            else {
+                $('[disabled]').prop('disabled', false);
+                window.inputActive = true;
+            }
+        });
     });
 </script>
 
