@@ -116,11 +116,15 @@
         <c:if test="${isEnded}">
             <h5>The auction has ended. (Ending date ${auction.endingDate})</h5>
             <c:if test="${not empty bidLst}">
-                <h5>Final bid: <span>${bidLst[0].amount} &euro;</span></h5>
                 <%-- if the final bidder is the current user show him a "message the seller" button --%>
                 <c:if test="${uid == biddersLst[0].userId}">
+                    <h5>You won the auction, final bid (<span>${bidLst[0].amount} &euro;</span>) was placed by you.</h5>
                     <a class="button" href="/message.do?action=getConversation&rid=${auction.sellerId}&aid=${auction.auctionId}">Contact the seller</a>
                 </c:if>
+                <c:if test="${uid != biddersLst[0].userId}">
+                    <h5>Final bid: <span>${bidLst[0].amount} &euro;</span></h5>
+                </c:if>
+
                 <c:if test="${isSeller}">
                     <h5>All submitted bids:</h5>
                     <c:forEach var="bid" items="${bidLst}" varStatus="status">
@@ -135,7 +139,13 @@
         </c:if>
         <c:if test="${not isEnded}">
             <c:if test="${not empty bidLst}">
-                <h5>Current bid: <span>${bidLst[0].amount} &euro;</span></h5>
+                <c:if test="${uid == biddersLst[0].userId}">
+                    <h5>Current bid (<span>${bidLst[0].amount} &euro;</span>) was placed by you.</h5>
+                </c:if>
+                <c:if test="${uid != biddersLst[0].userId}">
+                    <h5>Current bid: <span>${bidLst[0].amount} &euro;</span></h5>
+                </c:if>
+
                 <c:if test="${not isSeller and not empty uid}">
                     <form action="/auction.do" method="post" id="bidAuction">
                         <input type="number" min="${bidLst[0].amount +1}" value="${bidLst[0].amount +1}" name="bid">
