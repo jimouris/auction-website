@@ -41,17 +41,18 @@
 
     <!-- SEARCH ROW -->
     <div class="row ">
-        <section class="four columns">
+        <section class="five columns">
             <h1><span class="look">></span> Auctions</h1>
             <a class="button button-primary" href="/auction.do?action=newAuction">Create an auction</a>
-            <a class="button button u-top-10" href="/auction.do?action=getAllAuctions">View all your auctions</a>
-            <a class="button button u-top-10" href="/auction.do?action=getAllActiveAuctions">View all active auctions</a>
-            <a class="button button u-top-10" href="/auction.do?action=getAllYourEndedAuctions">View all your ended auctions</a>
-            <a class="button button u-top-10" href="/auction.do?action=getAllEndedAuctions">View all ended auctions</a>
+            <a class="button button" href="/auction.do?action=getAuctionsYouHaveBought">View all auctions you have bought</a>
+            <a class="button button" href="/auction.do?action=getAllAuctions">View all your auctions</a>
+            <a class="button button" href="/auction.do?action=getAllYourEndedAuctions">View all your ended auctions</a>
+            <a class="button button" href="/auction.do?action=getAllActiveAuctions">Browse to all active auctions</a>
+            <a class="button button" href="/auction.do?action=getAllEndedAuctions">Browse to all ended auctions</a>
         </section>
 
 
-        <section class="search eight columns">
+        <section class="search seven columns">
             <h1><span class="look">></span> Search for a product</h1>
             <form action="/search.do" method="POST">
                 <input class="u-full-width" type="text" name="name">

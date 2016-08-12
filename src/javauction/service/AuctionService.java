@@ -61,7 +61,7 @@ public class AuctionService extends Service {
         return null;
     }
 
-    public List getAllEndedAuctions(Long sid) {
+    public List getAllEndedAuctions(Long uid, boolean isSeller) {
         Session session = HibernateUtil.getSession();
         Transaction tx = null;
         List auctions = null;
@@ -74,8 +74,12 @@ public class AuctionService extends Service {
             java.sql.Date currentDate = new Date(Calendar.getInstance().getTimeInMillis());
             criteria.add(Restrictions.lt("endingDate", currentDate));
             /* where seller id == sid */
-            if (sid != null) {
-                criteria.add(Restrictions.eq("sellerId", sid));
+            if (uid != null) {
+                if (isSeller) {
+                    criteria.add(Restrictions.eq("sellerId", uid));
+                } else {
+                    criteria.add(Restrictions.eq("buyerId", uid));
+                }
             }
             criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
             auctions = criteria.list();

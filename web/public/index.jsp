@@ -45,31 +45,19 @@
         <p class="status--success">${successMsg}</p>
     </c:if>
 
-    <!-- SEARCH ROW -->
-    <div class="row">
-        <section class="search">
-            <h1><span class="look">></span>Search for a product</h1>
-            <form action="/search.do" method="POST">
-                <input class="eight columns" type="text" name="name">
-                <button class="button-primary four columns" type="submit" name="action" value="doSimpleSearch">Search</button>
-            </form>
-            <a class="button" href="/search.do?action=advancedSearch">Advanced Search</a>
-        </section>
-    </div>
-    <!-- end of search row -->
-    <br>
+
     <!-- REGISTER && SIGNUP ROW -->
     <div class="row">
+        <%-- register --%>
         <div class="two-thirds column">
-
-            <h1>>Register at our eshop</h1>
+            <h2><span class="look">> </span>Register at our eshop</h2>
             <a class="button button-primary" href="/public/register.jsp">register</a>
-
         </div>
         <!-- end of register column -->
+        <%-- login --%>
         <div class="one-third column">
             <section class="login u-full-width">
-                <h1>>Login</h1>
+                <h2><span class="look">> </span>Login</h2>
                 <form action="/login.do" method="POST" id="loginForm">
                     <label> username </label>
                     <input class="u-full-width" type="text" id="username" name="username"  autofocus>
@@ -85,6 +73,20 @@
         </div>
         <!-- end of login column -->
     </div>
+
+    <!-- SEARCH ROW -->
+    <div class="row">
+        <section class="search seven columns">
+            <h4><span class="look">> </span>Search for a product</h4>
+            <form action="/search.do" method="POST">
+                <input class="u-full-width" type="text" name="name">
+                <button class="button-primary" type="submit" name="action" value="doSimpleSearch">Search</button>
+            </form>
+            <h5><span class="look">> </span>Or perform an advanced search</h5>
+            <a class="button" href="/search.do?action=advancedSearch">Advanced Search</a>
+        </section>
+    </div>
+    <!-- end of search row -->
 
 </div>
 </body>
