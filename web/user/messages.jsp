@@ -43,7 +43,7 @@
     <div class="row">
         <main class="u-full-width ">
             <div class="row u-full-width">
-                <form action="message.do" method="POST">
+                <form action="/message.do" method="POST">
                     <input type="hidden" name="rid" value=${rid} />
                     <input type="hidden" name="aid" value=${aid} />
                     <input type="text" name="message_text" required class="u-full-width">

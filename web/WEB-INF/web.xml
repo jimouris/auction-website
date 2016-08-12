@@ -98,6 +98,16 @@
         <url-pattern>/message.do</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>rate</servlet-name>
+        <servlet-class>javauction.controller.rate</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>rate</servlet-name>
+        <url-pattern>/rate.do</url-pattern>
+    </servlet-mapping>
+
     <filter>
         <filter-name>sessionFilter</filter-name>
         <filter-class>javauction.controller.sessionFilter</filter-class>

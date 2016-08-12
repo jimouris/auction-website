@@ -206,10 +206,17 @@ DEFAULT CHARACTER SET = utf8;
 CREATE TABLE IF NOT EXISTS `auctionwebsite`.`rating` (
   `FromID` BIGINT(20) NOT NULL,
   `ToID` BIGINT(20) NOT NULL,
-  `Rate` INT(11) NOT NULL,
-  PRIMARY KEY (`FromID`, `ToID`),
+  `AuctionID` BIGINT(20) NOT NULL,
+  `Rating` INT(11) NOT NULL,
   INDEX `fk_rating_user1_idx` (`FromID` ASC),
   INDEX `fk_rating_user2_idx` (`ToID` ASC),
+  INDEX `fk_rating_auction1_idx` (`AuctionID` ASC),
+  PRIMARY KEY (`FromID`, `ToID`, `AuctionID`),
+  CONSTRAINT `fk_rating_auction1`
+    FOREIGN KEY (`AuctionID`)
+    REFERENCES `auctionwebsite`.`auction` (`AuctionID`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   CONSTRAINT `fk_rating_user1`
     FOREIGN KEY (`FromID`)
     REFERENCES `auctionwebsite`.`user` (`UserID`)
@@ -221,6 +228,7 @@ CREATE TABLE IF NOT EXISTS `auctionwebsite`.`rating` (
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB
+AUTO_INCREMENT = 10
 DEFAULT CHARACTER SET = utf8;
 
 

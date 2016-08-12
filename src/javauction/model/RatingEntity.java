@@ -1,17 +1,28 @@
 package javauction.model;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 /**
  * Created by jimouris on 7/2/16.
  */
 @Entity
-@Table(name = "rating", schema = "auctionwebsite", catalog = "")
-@IdClass(RatingEntityPK.class)
-public class RatingEntity {
+@Table(name = "rating", schema = "auctionwebsite")
+public class RatingEntity implements Serializable {
     private long fromId;
     private long toId;
-    private int rate;
+    private long auctionId;
+    private int rating;
+
+    public RatingEntity(long from_id, long to_id, long aid, int rating) {
+        this.fromId = from_id;
+        this.toId = to_id;
+        this.auctionId = aid;
+        this.rating = rating;
+    }
+
+    public RatingEntity() {
+    }
 
     @Id
     @Column(name = "FromID")
@@ -33,14 +44,24 @@ public class RatingEntity {
         this.toId = toId;
     }
 
-    @Basic
-    @Column(name = "Rate")
-    public int getRate() {
-        return rate;
+    @Id
+    @Column(name = "AuctionId")
+    public long getAuctionId() {
+        return auctionId;
     }
 
-    public void setRate(int rate) {
-        this.rate = rate;
+    public void setAuctionId(long auctionId) {
+        this.auctionId = auctionId;
+    }
+
+    @Basic
+    @Column(name = "Rating")
+    public int getRating() {
+        return rating;
+    }
+
+    public void setRating(int rating) {
+        this.rating = rating;
     }
 
     @Override
@@ -52,16 +73,28 @@ public class RatingEntity {
 
         if (fromId != that.fromId) return false;
         if (toId != that.toId) return false;
-        if (rate != that.rate) return false;
+        if (auctionId != that.auctionId) return false;
+        return rating == that.rating;
 
-        return true;
     }
 
     @Override
     public int hashCode() {
         int result = (int) (fromId ^ (fromId >>> 32));
         result = 31 * result + (int) (toId ^ (toId >>> 32));
-        result = 31 * result + rate;
+        result = 31 * result + (int) (auctionId ^ (auctionId >>> 32));
+        result = 31 * result + rating;
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "RatingEntity{" +
+                ", fromId=" + fromId +
+                ", toId=" + toId +
+                ", rating=" + rating +
+                ", auctionId=" + auctionId +
+                '}';
+    }
+
 }

@@ -120,6 +120,7 @@
                 <c:if test="${user.userId == biddersLst[0].userId}">
                     <h5>You won the auction, final bid (<span>${bidLst[0].amount} &euro;</span>) was placed by you.</h5>
                     <a class="button" href="/message.do?action=getConversation&rid=${auction.sellerId}&aid=${auction.auctionId}">Contact the seller</a>
+                    <a class="button" href="/rate.do?action=getRating&to_id=${auction.sellerId}&aid=${auction.auctionId}">Rate the seller</a>
                 </c:if>
                 <c:if test="${user.userId != biddersLst[0].userId}">
                     <h5>Final bid: <span>${bidLst[0].amount} &euro;</span></h5>
@@ -131,6 +132,7 @@
                         <h6>${biddersLst[status.index].firstname} ${biddersLst[status.index].lastname} ${bid.amount}&euro; ${bid.bidTime}</h6>
                     </c:forEach>
                     <a class="button" href="/message.do?action=getConversation&rid=${auction.buyerId}&aid=${auction.auctionId}">Contact the buyer</a>
+                    <a class="button" href="/rate.do?action=getRating&to_id=${auction.buyerId}&aid=${auction.auctionId}">Rate the buyer</a>
                 </c:if>
             </c:if>
             <c:if test="${empty bidLst}">

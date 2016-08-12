@@ -16,23 +16,6 @@ import java.util.*;
  */
 public class AuctionService extends Service {
 
-//    public void addAuction(AuctionEntity auction) {
-//        Session session = HibernateUtil.getSession();
-//        try {
-//            session.beginTransaction();
-//            session.save(auction);
-//            session.getTransaction().commit();
-//        } catch (HibernateException e) {
-//            e.printStackTrace();
-//        } finally {
-//            try {
-//                if (session != null) session.close();
-//            } catch (Exception e) {
-//                // ignore
-//            }
-//        }
-//    }
-
     public AuctionEntity getAuction(Object obj) {
         Session session = HibernateUtil.getSession();
         try {
@@ -288,21 +271,5 @@ public class AuctionService extends Service {
         }
     }
 
-//    public void bidAuction(BidEntity bid) {
-//        Session session = HibernateUtil.getSession();
-//        try {
-//            session.beginTransaction();
-//            session.save(bid);
-//            session.getTransaction().commit();
-//        } catch (HibernateException e) {
-//            e.printStackTrace();
-//        } finally {
-//            try {
-//                if (session != null) session.close();
-//            } catch (Exception e) {
-//                // ignore
-//            }
-//        }
-//    }
 
 }

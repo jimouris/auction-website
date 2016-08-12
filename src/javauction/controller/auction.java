@@ -201,7 +201,6 @@ public class auction extends HttpServlet {
             float amount = Float.parseFloat(request.getParameter("bid"));
             long aid = Long.parseLong(request.getParameter("aid"));
             HttpSession session = request.getSession();
-//            long uid = (long) session.getAttribute("uid");
             long uid = ((UserEntity) session.getAttribute("user")).getUserId();
 
             BidEntity bid = new BidEntity(uid, aid, amount);
