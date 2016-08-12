@@ -71,8 +71,12 @@ public class rate extends HttpServlet {
             case "getRating":
                 to_id = Long.parseLong(request.getParameter("to_id"));
                 aid = Long.parseLong(request.getParameter("aid"));
-                Integer rating = ratingService.getRating(from_id, to_id, aid).getRating();
 
+                Integer rating = null;
+                RatingEntity ratingEntity = ratingService.getRating(from_id, to_id, aid);
+                if (ratingEntity != null) {
+                    rating = ratingEntity.getRating();
+                }
                 request.setAttribute("aid", aid);
                 request.setAttribute("to_id", to_id);
                 request.setAttribute("from_id", from_id);
