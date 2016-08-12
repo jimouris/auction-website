@@ -14,7 +14,7 @@
 </head>
 <body>
 
-<c:if test ="${not empty uid}">
+<c:if test ="${not empty user.userId}">
 <div class="container">
     <!-- HEADER STUFF -->
     <div class="row">
@@ -63,7 +63,7 @@
     </div>
     <!-- end of search row -->
     </c:if>
-    <c:if test ="${empty uid}">
+    <c:if test ="${empty user.userId}">
     <h3>You are logged out</h3>
     <p>Please go to the <a href="/">start page</a> and login again.</p>
     </c:if>

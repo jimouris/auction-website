@@ -31,7 +31,9 @@ public class message extends HttpServlet {
 
         if (request.getParameter("action").equals("addNewMessage")) {
             HttpSession session = request.getSession();
-            long sid = (long) session.getAttribute("uid");
+//            long sid = (long) session.getAttribute("uid");
+            long sid = ((UserEntity) session.getAttribute("user")).getUserId();
+
             long rid = Long.parseLong(request.getParameter("rid"));
             long aid = Long.parseLong(request.getParameter("aid"));
             String msg = request.getParameter("message_text");
@@ -71,7 +73,9 @@ public class message extends HttpServlet {
 
                 break;
             case "listInbox": /* get all messages from inbox */
-                rid = (long) session.getAttribute("uid");
+//                rid = (long) session.getAttribute("uid");
+                rid = ((UserEntity) session.getAttribute("user")).getUserId();
+
                 List<MessagesEntity> msgsLst = messagesService.getInboxOrSent(rid, MessagesService.Message_t.Inbox_t);
 
                 List<UserEntity> sendersLst = new ArrayList<>();
@@ -88,7 +92,9 @@ public class message extends HttpServlet {
                 next_page = "/user/listInbox.jsp";
                 break;
             case "listSent": /* get all messages from inbox */
-                rid = (long) session.getAttribute("uid");
+//                rid = (long) session.getAttribute("uid");
+                rid = ((UserEntity) session.getAttribute("user")).getUserId();
+
                 msgsLst = messagesService.getInboxOrSent(rid, MessagesService.Message_t.Sent_t);
 
                 List<UserEntity> receiversLst = new ArrayList<>();

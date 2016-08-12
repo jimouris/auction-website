@@ -55,7 +55,7 @@ public class login extends HttpServlet {
                 result = userService.authenticateUser(username, password);
                 if (result == UserService.LoginStatus.LOGIN_SUCCESS) {
                     UserEntity user = userService.getUser(username);
-                    session.setAttribute("uid", user.getUserId());
+                    session.setAttribute("user", user);
                     session.setAttribute("isAdmin", false);
                     next_page = "/user/homepage.jsp";
                 } else if (result == UserService.LoginStatus.LOGIN_NOT_APPROVED) {

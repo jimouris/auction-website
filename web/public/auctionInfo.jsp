@@ -16,11 +16,11 @@
 </head>
 <body>
 <!-- HEADER STUFF -->
-<c:if test="${not empty uid}">
+<c:if test="${not empty user.userId}">
     <a href="/user/homepage.jsp">Homepage</a>
     <a href="/auction.do?action=getAllAuctions">View All Auctions</a>
 </c:if>
-<c:if test="${empty uid}">
+<c:if test="${empty user.userId}">
     <a href="/public/">Guest, Homepage</a>
 </c:if>
 <!-- end of header row -->
@@ -117,11 +117,11 @@
             <h5>The auction has ended. (Ending date ${auction.endingDate})</h5>
             <c:if test="${not empty bidLst}">
                 <%-- if the final bidder is the current user show him a "message the seller" button --%>
-                <c:if test="${uid == biddersLst[0].userId}">
+                <c:if test="${user.userId == biddersLst[0].userId}">
                     <h5>You won the auction, final bid (<span>${bidLst[0].amount} &euro;</span>) was placed by you.</h5>
                     <a class="button" href="/message.do?action=getConversation&rid=${auction.sellerId}&aid=${auction.auctionId}">Contact the seller</a>
                 </c:if>
-                <c:if test="${uid != biddersLst[0].userId}">
+                <c:if test="${user.userId != biddersLst[0].userId}">
                     <h5>Final bid: <span>${bidLst[0].amount} &euro;</span></h5>
                 </c:if>
 
@@ -139,14 +139,14 @@
         </c:if>
         <c:if test="${not isEnded}">
             <c:if test="${not empty bidLst}">
-                <c:if test="${uid == biddersLst[0].userId}">
+                <c:if test="${user.userId == biddersLst[0].userId}">
                     <h5>Current bid (<span>${bidLst[0].amount} &euro;</span>) was placed by you.</h5>
                 </c:if>
-                <c:if test="${uid != biddersLst[0].userId}">
+                <c:if test="${user.userId != biddersLst[0].userId}">
                     <h5>Current bid: <span>${bidLst[0].amount} &euro;</span></h5>
                 </c:if>
 
-                <c:if test="${not isSeller and not empty uid}">
+                <c:if test="${not isSeller and not empty user.userId}">
                     <form action="/auction.do" method="post" id="bidAuction">
                         <input type="number" min="${bidLst[0].amount +1}" value="${bidLst[0].amount +1}" name="bid">
                         <input type="hidden" name="aid" value="${auction.auctionId}">
@@ -161,7 +161,7 @@
                 </c:if>
             </c:if>
             <c:if test="${empty bidLst}">
-                <c:if test="${not isSeller and not empty uid}">
+                <c:if test="${not isSeller and not empty user.userId}">
                     <h5>No bids placed yet.</h5>
                     <form action="/auction.do" method="post" id="firstBid">
                         <input type="number" min="${auction.lowestBid}" value="${auction.lowestBid}" name="bid">

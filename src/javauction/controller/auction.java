@@ -45,7 +45,9 @@ public class auction extends HttpServlet {
             String[] categoriesParam = request.getParameterValues("categories");
             /* get userid from session. userid will be sellerid for this specific auction! */
             HttpSession session = request.getSession();
-            long userId = (long) session.getAttribute("uid");
+//            long userId = (long) session.getAttribute("uid");
+            long userId = ((UserEntity) session.getAttribute("user")).getUserId();
+
             // find out if we can sell this auction instantly
             float buyPrice = -1;
             if (instantBuy.equals("true")){
@@ -199,7 +201,8 @@ public class auction extends HttpServlet {
             float amount = Float.parseFloat(request.getParameter("bid"));
             long aid = Long.parseLong(request.getParameter("aid"));
             HttpSession session = request.getSession();
-            long uid = (long) session.getAttribute("uid");
+//            long uid = (long) session.getAttribute("uid");
+            long uid = ((UserEntity) session.getAttribute("user")).getUserId();
 
             BidEntity bid = new BidEntity(uid, aid, amount);
             auctionService.addEntity(bid);
@@ -248,8 +251,9 @@ public class auction extends HttpServlet {
         List categoryLst = categoryService.getAllCategories();
         switch (param) {
             case "getAllAuctions": /* get all actions with sellerId = uid (from session) */
-                long userID = (long) session.getAttribute("uid");
-                List auctionLst = auctionService.getAllAuctions(userID, false);
+                long uid = ((UserEntity) session.getAttribute("user")).getUserId();
+//                long userID = (long) session.getAttribute("uid");
+                List auctionLst = auctionService.getAllAuctions(uid, false);
                 request.setAttribute("auctionLst", auctionLst);
                 next_page = "/public/listAuctions.jsp";
                 break;
@@ -264,14 +268,16 @@ public class auction extends HttpServlet {
             case "getAnAuction": /* get an auction with auctionId = aid */
                 long aid = Long.parseLong(request.getParameter("aid"));
                 AuctionEntity auction = auctionService.getAuction(aid);
-                Long uid = (Long) session.getAttribute("uid");
+//                Long uid = (Long) session.getAttribute("uid");
+                UserEntity user = (UserEntity) session.getAttribute("user");
+
                 /* Guest session */
-                if (uid == null) {
+                if (user == null) {
                     session.setAttribute("isSeller", false);
                 } else {
                     /* get seller id for the auction */
                     long sid = auction.getSellerId();
-                    session.setAttribute("isSeller", sid == uid);
+                    session.setAttribute("isSeller", sid == user.getUserId());
                 }
 
                 /* all categories */
@@ -305,7 +311,9 @@ public class auction extends HttpServlet {
                 next_page = "/public/auctionInfo.jsp";
                 break;
             case "getAllYourEndedAuctions":
-                uid = (Long) session.getAttribute("uid");
+//                uid = (Long) session.getAttribute("uid");
+                uid = (Long) ((UserEntity) session.getAttribute("user")).getUserId();
+
                 auctionLst = auctionService.getAllEndedAuctions(uid, true);
                 request.setAttribute("auctionLst", auctionLst);
                 next_page = "/public/listAuctions.jsp";
@@ -316,7 +324,8 @@ public class auction extends HttpServlet {
                 next_page = "/public/listAuctions.jsp";
                 break;
             case "getAuctionsYouHaveBought":
-                uid = (Long) session.getAttribute("uid");
+//                uid = (Long) session.getAttribute("uid");
+                uid = (Long) ((UserEntity) session.getAttribute("user")).getUserId();
                 auctionLst = auctionService.getAllEndedAuctions(uid, false);
                 request.setAttribute("auctionLst", auctionLst);
                 next_page = "/public/listAuctions.jsp";

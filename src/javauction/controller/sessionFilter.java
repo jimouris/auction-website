@@ -1,5 +1,7 @@
 package javauction.controller;
 
+import javauction.model.UserEntity;
+
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -25,7 +27,9 @@ public class sessionFilter implements Filter {
         boolean loggedIn = false;
         Boolean isAdmin = (Boolean) session.getAttribute("isAdmin");
         if (session != null) {
-            loggedIn = session.getAttribute("uid") != null;
+            UserEntity user = (UserEntity) session.getAttribute("user");
+
+            loggedIn = user != null;
             if (isAdmin == null) {
                 isAdmin = false;
             }

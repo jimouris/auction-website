@@ -52,10 +52,10 @@
             </div>
             <c:if test="${not empty messagesLst}">
                 <c:forEach var="message" items="${messagesLst}" varStatus="status">
-                    <c:if test="${uid == sendersLst[status.index].userId}">
+                    <c:if test="${user.userId == sendersLst[status.index].userId}">
                         <p class="message message--you"><span class="message__composer">you:</span> <span class="message__text">${message.message}</span> <span class="message__time">${message.sendDate}</span></p>
                     </c:if>
-                    <c:if test="${uid != sendersLst[status.index].userId}">
+                    <c:if test="${user.userId != sendersLst[status.index].userId}">
                         <p class="message message--other"><span class="message__composer">${sendersLst[status.index].firstname} ${sendersLst[status.index].lastname}:</span> <span class="message__text">${message.message}</span> <span class="message__time">${message.sendDate}</span></p>
                     </c:if>
                 </c:forEach>
