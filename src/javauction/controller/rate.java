@@ -28,6 +28,7 @@ public class rate extends HttpServlet {
         RatingService ratingService = new RatingService();
         String next_page = "/user/homepage.jsp";
         HttpSession session = request.getSession();
+        UserService userService = new UserService();
 
         long from_id = ((UserEntity) session.getAttribute("user")).getUserId();
         long to_id = Long.parseLong(request.getParameter("to_id"));
@@ -37,9 +38,11 @@ public class rate extends HttpServlet {
 
             RatingEntity ratingEntity = new RatingEntity(from_id, to_id, aid, rating);
             ratingService.addEntity(ratingEntity);
+            UserEntity user = userService.getUser(to_id);
 
             request.setAttribute("aid", aid);
             request.setAttribute("to_id", to_id);
+            request.setAttribute("to_user", user);
             request.setAttribute("from_id", from_id);
             request.setAttribute("rating", rating);
             next_page = "/user/rating.jsp";
@@ -47,9 +50,10 @@ public class rate extends HttpServlet {
             int rating = Integer.parseInt(request.getParameter("rating"));
 
             ratingService.updateRating(from_id, to_id, aid, rating);
-
+            UserEntity user = userService.getUser(to_id);
             request.setAttribute("aid", aid);
             request.setAttribute("to_id", to_id);
+            request.setAttribute("to_user", user);
             request.setAttribute("from_id", from_id);
             request.setAttribute("rating", rating);
             next_page = "/user/rating.jsp";
@@ -64,6 +68,7 @@ public class rate extends HttpServlet {
         String param = request.getParameter("action");
         HttpSession session = request.getSession();
         RatingService ratingService = new RatingService();
+        UserService userService = new UserService();
 
         long to_id, from_id, aid;
         from_id = ((UserEntity) session.getAttribute("user")).getUserId();
@@ -77,8 +82,11 @@ public class rate extends HttpServlet {
                 if (ratingEntity != null) {
                     rating = ratingEntity.getRating();
                 }
+                UserEntity user = userService.getUser(to_id);
+
                 request.setAttribute("aid", aid);
                 request.setAttribute("to_id", to_id);
+                request.setAttribute("to_user", user);
                 request.setAttribute("from_id", from_id);
                 request.setAttribute("rating", rating);
                 next_page = "/user/rating.jsp";
@@ -87,7 +95,6 @@ public class rate extends HttpServlet {
                 List<RatingEntity> ratingsLst = ratingService.getFromOrToRatings(from_id, RatingService.Rating_t.From_t);
                 List<UserEntity> receiversLst = new ArrayList<>();
                 List<AuctionEntity> auctionsLst = new ArrayList<>();
-                UserService userService = new UserService();
                 AuctionService auctionService = new AuctionService();
 
                 for (RatingEntity r : ratingsLst) {
@@ -104,7 +111,6 @@ public class rate extends HttpServlet {
                 ratingsLst = ratingService.getFromOrToRatings(from_id, RatingService.Rating_t.To_t);
                 List<UserEntity> sendersLst = new ArrayList<>();
                 auctionsLst = new ArrayList<>();
-                userService = new UserService();
                 auctionService = new AuctionService();
 
                 for (RatingEntity r : ratingsLst) {

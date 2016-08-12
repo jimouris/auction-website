@@ -19,7 +19,6 @@
     <a href="/user/homepage.jsp">home</a>
     <h2>Your submitted ratings</h2>
 
-<%--TODO: Add css of rating list--%>
     <div>
         <c:if test="${not empty ratingsLst}">
             <c:forEach var="rating" items="${ratingsLst}" varStatus="status">
@@ -29,6 +28,7 @@
                     <span class="message__text">for</span>
                     <span class="message__composer">${auctionsLst[status.index].name}:</span>
                     <span class="message__text">${rating.rating}</span>
+                    <input type="hidden" name="to_user" value=${receiversLst[status.index]} />
                 </a>
             </c:forEach>
         </c:if>

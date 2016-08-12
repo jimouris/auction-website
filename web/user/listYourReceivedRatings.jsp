@@ -19,7 +19,6 @@
     <a href="/user/homepage.jsp">home</a>
     <h2>Your received ratings</h2>
 
-    <%--TODO: Add css of rating list--%>
     <div>
         <c:if test="${not empty ratingsLst}">
             <c:forEach var="rating" items="${ratingsLst}" varStatus="status">
