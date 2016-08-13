@@ -113,11 +113,15 @@
     </div>
 
     <jsp:useBean id="seller" scope="request" class="javauction.model.UserEntity"/>
-    <jsp:useBean id="avg_rating" scope="request" type="java.lang.Double"/>
     <c:if test="${not empty seller}">
         <div class="custom-container">
             <h5>Seller Info</h5>
-            <p>${seller.username} ${seller.firstname} ${seller.lastname} ${avg_rating}</p>
+            <c:if test="${not empty avg_rating}">
+                <p>${seller.username} ${seller.firstname} ${seller.lastname} ${avg_rating}</p>
+            </c:if>
+            <c:if test="${empty avg_rating}">
+                <p>The user ${seller.username} ${seller.firstname} ${seller.lastname} has no ratings yet.</p>
+            </c:if>
         </div>
     </c:if>
 

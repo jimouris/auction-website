@@ -83,12 +83,15 @@ public class RatingService extends Service {
         }
     }
 
-    public double calcAvgRating(long from_id, Rating_t rating_t) {
+    public Double calcAvgRating(long from_id, Rating_t rating_t) {
         RatingService ratingService = new RatingService();
         List<RatingEntity> ratingsLst = ratingService.getFromOrToRatings(from_id, rating_t);
         double avg_rating = 0;
         for (RatingEntity r : ratingsLst) {
             avg_rating += r.getRating();
+        }
+        if (ratingsLst.size() <= 0) {
+            return null;
         }
         avg_rating /= ratingsLst.size();
         DecimalFormat df = new DecimalFormat("0.0");

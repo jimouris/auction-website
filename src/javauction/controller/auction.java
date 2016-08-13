@@ -120,7 +120,7 @@ public class auction extends HttpServlet {
                 UserService userService = new UserService();
                 UserEntity seller = userService.getUser(sid);
                 RatingService ratingService = new RatingService();
-                double avg_rating = ratingService.calcAvgRating(sid, RatingService.Rating_t.To_t);
+                Double avg_rating = ratingService.calcAvgRating(sid, RatingService.Rating_t.To_t);
                 request.setAttribute("avg_rating", avg_rating);
                 request.setAttribute("seller", seller);
                 request.setAttribute("auction", auction);
@@ -188,7 +188,7 @@ public class auction extends HttpServlet {
                 UserEntity seller = userService.getUser(sid);
                 request.setAttribute("seller", seller);
                 RatingService ratingService = new RatingService();
-                double avg_rating = ratingService.calcAvgRating(sid, RatingService.Rating_t.To_t);
+                Double avg_rating = ratingService.calcAvgRating(sid, RatingService.Rating_t.To_t);
                 request.setAttribute("avg_rating", avg_rating);
                 request.setAttribute("auction", auction);
                 next_page = "/public/auctionInfo.jsp";
@@ -247,7 +247,7 @@ public class auction extends HttpServlet {
             UserEntity seller = userService.getUser(sid);
             request.setAttribute("seller", seller);
             RatingService ratingService = new RatingService();
-            double avg_rating = ratingService.calcAvgRating(sid, RatingService.Rating_t.To_t);
+            Double avg_rating = ratingService.calcAvgRating(sid, RatingService.Rating_t.To_t);
             request.setAttribute("avg_rating", avg_rating);
             request.setAttribute("auction", auction);
             next_page = "/public/auctionInfo.jsp";
@@ -321,7 +321,7 @@ public class auction extends HttpServlet {
                 auction = checkDateAndSetBuyer(request, auction, aid, buyerid, auctionService);
                 UserEntity seller = userService.getUser(sid);
                 RatingService ratingService = new RatingService();
-                double avg_rating = ratingService.calcAvgRating(sid, RatingService.Rating_t.To_t);
+                Double avg_rating = ratingService.calcAvgRating(sid, RatingService.Rating_t.To_t);
                 request.setAttribute("avg_rating", avg_rating);
                 request.setAttribute("seller", seller);
                 request.setAttribute("auction", auction);

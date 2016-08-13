@@ -111,10 +111,13 @@ public class rate extends HttpServlet {
                     }
                     auctionsLst.add(auctionService.getAuction(r.getAuctionId()));
                 }
-                avg_rating /= ratingsLst.size();
-                DecimalFormat df = new DecimalFormat("0.0");
-
-                request.setAttribute("avg_rating", Double.parseDouble(df.format(avg_rating)));
+                if (ratingsLst.size() > 0) {
+                    avg_rating /= ratingsLst.size();
+                    DecimalFormat df = new DecimalFormat("0.0");
+                    request.setAttribute("avg_rating", Double.parseDouble(df.format(avg_rating)));
+                } else {
+                    request.setAttribute("avg_rating", null);
+                }
                 request.setAttribute("ratingsLst", ratingsLst);
                 if (param.equals("listFrom")) {
                     request.setAttribute("sendersLst", sendersOrReceiversLst);
