@@ -1,6 +1,7 @@
 package javauction.model;
 
 import javax.persistence.*;
+import java.util.Set;
 
 /**
  * Created by jimouris on 7/2/16.
@@ -10,6 +11,7 @@ import javax.persistence.*;
 public class CategoryEntity {
     private int categoryId;
     private String categoryName;
+    private Set<AuctionEntity> auctions;
 
     public CategoryEntity(int categoryId, String categoryName) {
         this.categoryId = categoryId;
@@ -37,6 +39,13 @@ public class CategoryEntity {
 
     public void setCategoryName(String categoryName) {
         this.categoryName = categoryName;
+    }
+
+    @ManyToMany( fetch = FetchType.LAZY, mappedBy="categories", cascade = CascadeType.ALL)
+    public Set<AuctionEntity> getAuctions() { return auctions; }
+
+    public void setAuctions(Set<AuctionEntity> auctions){
+        this.auctions = auctions;
     }
 
     @Override

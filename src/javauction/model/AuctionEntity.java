@@ -31,7 +31,7 @@ public class AuctionEntity {
     private Byte isStarted;
     private double buyPrice;
 
-    @ManyToMany(targetEntity = CategoryEntity.class, fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToMany(targetEntity = CategoryEntity.class, fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name = "auction_has_category",
             joinColumns = { @JoinColumn(name = "auction_AuctionID") },
             inverseJoinColumns = { @JoinColumn(name = "category_CategoryID") })

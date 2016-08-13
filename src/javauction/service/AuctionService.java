@@ -1,15 +1,16 @@
 package javauction.service;
 
 import javauction.model.AuctionEntity;
-import javauction.model.BidEntity;
 import javauction.model.CategoryEntity;
 import javauction.util.HibernateUtil;
 import org.hibernate.*;
 import org.hibernate.criterion.*;
-import org.hibernate.engine.jdbc.SerializableBlobProxy;
 
 import java.sql.Date;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Created by gpelelis on 5/7/2016.
@@ -219,6 +220,28 @@ public class AuctionService extends Service {
         }
     }
 
+    // deletes an auction and all associated records of auction_has_category from db
+    // todo: when we add the images, check if it also delete those
+    public void deleteAuction(long aid) {
+        Session session = HibernateUtil.getSession();
+        Transaction transaction = null;
+        try {
+            transaction = session.beginTransaction();
+            AuctionEntity auction = (AuctionEntity) session.get(AuctionEntity.class, aid);
+            session.delete(auction);
+            transaction.commit();
+        } catch (HibernateException e) {
+            transaction.rollback();
+            e.printStackTrace();
+        } finally {
+            try {
+                if (session != null) session.close();
+            } catch (Exception e) {
+                // ignore
+            }
+        }
+    }
+
     public void updateAuction(Set<CategoryEntity> categories, Long aid, String name, String desc, Double lowestBid, Double finalPrice,
                               Double buyPrice, String city, String country, Date startingDate, Date endingDate, Long buyerid) {
 
@@ -251,25 +274,5 @@ public class AuctionService extends Service {
             }
         }
     }
-
-    public void deleteAuction(long aid) {
-        Session session = HibernateUtil.getSession();
-        try {
-            session.beginTransaction();
-            AuctionEntity auction = (AuctionEntity) session.get(AuctionEntity.class, aid);
-            session.delete(auction);
-            session.flush() ;
-
-        } catch (HibernateException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (session != null) session.close();
-            } catch (Exception e) {
-                // ignore
-            }
-        }
-    }
-
 
 }
