@@ -6,6 +6,7 @@ import javauction.model.CategoryEntity;
 import javauction.model.UserEntity;
 import javauction.service.AuctionService;
 import javauction.service.CategoryService;
+import javauction.service.RatingService;
 import javauction.service.UserService;
 
 import javax.servlet.RequestDispatcher;
@@ -45,7 +46,6 @@ public class auction extends HttpServlet {
             String[] categoriesParam = request.getParameterValues("categories");
             /* get userid from session. userid will be sellerid for this specific auction! */
             HttpSession session = request.getSession();
-//            long userId = (long) session.getAttribute("uid");
             long userId = ((UserEntity) session.getAttribute("user")).getUserId();
 
             // find out if we can sell this auction instantly
@@ -116,7 +116,13 @@ public class auction extends HttpServlet {
                     usedCategories.add(new CategoryEntity(c.getCategoryId(), c.getCategoryName()));
                 }
                 request.setAttribute("usedCategories", usedCategories);
-
+                long sid = auction.getSellerId();
+                UserService userService = new UserService();
+                UserEntity seller = userService.getUser(sid);
+                RatingService ratingService = new RatingService();
+                double avg_rating = ratingService.calcAvgRating(sid, RatingService.Rating_t.To_t);
+                request.setAttribute("avg_rating", avg_rating);
+                request.setAttribute("seller", seller);
                 request.setAttribute("auction", auction);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -178,7 +184,12 @@ public class auction extends HttpServlet {
                     buyerid = (Long) biddersLst.get(0).getUserId();
                 }
                 auction = checkDateAndSetBuyer(request, auction, aid, buyerid, auctionService);
-
+                long sid = auction.getSellerId();
+                UserEntity seller = userService.getUser(sid);
+                request.setAttribute("seller", seller);
+                RatingService ratingService = new RatingService();
+                double avg_rating = ratingService.calcAvgRating(sid, RatingService.Rating_t.To_t);
+                request.setAttribute("avg_rating", avg_rating);
                 request.setAttribute("auction", auction);
                 next_page = "/public/auctionInfo.jsp";
             } catch (Exception e) {
@@ -232,7 +243,12 @@ public class auction extends HttpServlet {
                 buyerid = (Long) biddersLst.get(0).getUserId();
             }
             auction = checkDateAndSetBuyer(request, auction, aid, buyerid, auctionService);
-
+            long sid = auction.getSellerId();
+            UserEntity seller = userService.getUser(sid);
+            request.setAttribute("seller", seller);
+            RatingService ratingService = new RatingService();
+            double avg_rating = ratingService.calcAvgRating(sid, RatingService.Rating_t.To_t);
+            request.setAttribute("avg_rating", avg_rating);
             request.setAttribute("auction", auction);
             next_page = "/public/auctionInfo.jsp";
         }
@@ -251,7 +267,6 @@ public class auction extends HttpServlet {
         switch (param) {
             case "getAllAuctions": /* get all actions with sellerId = uid (from session) */
                 long uid = ((UserEntity) session.getAttribute("user")).getUserId();
-//                long userID = (long) session.getAttribute("uid");
                 List auctionLst = auctionService.getAllAuctions(uid, false);
                 request.setAttribute("auctionLst", auctionLst);
                 next_page = "/public/listAuctions.jsp";
@@ -267,15 +282,14 @@ public class auction extends HttpServlet {
             case "getAnAuction": /* get an auction with auctionId = aid */
                 long aid = Long.parseLong(request.getParameter("aid"));
                 AuctionEntity auction = auctionService.getAuction(aid);
-//                Long uid = (Long) session.getAttribute("uid");
                 UserEntity user = (UserEntity) session.getAttribute("user");
 
+                /* get seller id for the auction */
+                long sid = auction.getSellerId();
                 /* Guest session */
                 if (user == null) {
                     session.setAttribute("isSeller", false);
                 } else {
-                    /* get seller id for the auction */
-                    long sid = auction.getSellerId();
                     session.setAttribute("isSeller", sid == user.getUserId());
                 }
 
@@ -305,14 +319,16 @@ public class auction extends HttpServlet {
                     buyerid = (Long) biddersLst.get(0).getUserId();
                 }
                 auction = checkDateAndSetBuyer(request, auction, aid, buyerid, auctionService);
-
+                UserEntity seller = userService.getUser(sid);
+                RatingService ratingService = new RatingService();
+                double avg_rating = ratingService.calcAvgRating(sid, RatingService.Rating_t.To_t);
+                request.setAttribute("avg_rating", avg_rating);
+                request.setAttribute("seller", seller);
                 request.setAttribute("auction", auction);
                 next_page = "/public/auctionInfo.jsp";
                 break;
             case "getAllYourEndedAuctions":
-//                uid = (Long) session.getAttribute("uid");
                 uid = (Long) ((UserEntity) session.getAttribute("user")).getUserId();
-
                 auctionLst = auctionService.getAllEndedAuctions(uid, true);
                 request.setAttribute("auctionLst", auctionLst);
                 next_page = "/public/listAuctions.jsp";
@@ -323,7 +339,6 @@ public class auction extends HttpServlet {
                 next_page = "/public/listAuctions.jsp";
                 break;
             case "getAuctionsYouHaveBought":
-//                uid = (Long) session.getAttribute("uid");
                 uid = (Long) ((UserEntity) session.getAttribute("user")).getUserId();
                 auctionLst = auctionService.getAllEndedAuctions(uid, false);
                 request.setAttribute("auctionLst", auctionLst);

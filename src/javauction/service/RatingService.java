@@ -6,6 +6,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 /**
@@ -80,6 +81,18 @@ public class RatingService extends Service {
                 // ignore
             }
         }
+    }
+
+    public double calcAvgRating(long from_id, Rating_t rating_t) {
+        RatingService ratingService = new RatingService();
+        List<RatingEntity> ratingsLst = ratingService.getFromOrToRatings(from_id, rating_t);
+        double avg_rating = 0;
+        for (RatingEntity r : ratingsLst) {
+            avg_rating += r.getRating();
+        }
+        avg_rating /= ratingsLst.size();
+        DecimalFormat df = new DecimalFormat("0.0");
+        return Double.parseDouble(df.format(avg_rating));
     }
 
 }
