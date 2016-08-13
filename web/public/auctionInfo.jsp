@@ -183,7 +183,7 @@
     <h3>The auction with id ${param.aid} does not exist!</h3>
 </c:if>
 
-<script src="https://code.jquery.com/jquery-2.2.4.min.js" type="text/javascript"></script>
+<script src="/js/jquery.min.js" type="text/javascript"></script>
 <script>
     $(document).ready(function() {
         window.inputActive = false;

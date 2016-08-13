@@ -190,9 +190,6 @@ public class auction extends HttpServlet {
             try {
                 long aid = Long.parseLong(request.getParameter("aid"));
                 auctionService.deleteAuction(aid);
-                
-//                TODO: FIX DELETE, doesn't delete from database!
-
                 next_page = "/user/homepage.jsp";
             } catch (Exception e) {
                 e.printStackTrace();
