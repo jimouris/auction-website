@@ -17,10 +17,11 @@
 
 <div class="container">
     <a href="/user/homepage.jsp">home</a>
-    <h2>Your submitted ratings</h2>
 
     <div>
         <c:if test="${not empty ratingsLst}">
+            <h2>Your submitted ratings</h2>
+            <h5>Average score ${avg_rating}</h5>
             <c:forEach var="rating" items="${ratingsLst}" varStatus="status">
                 <a href="/rate.do?action=getRating&to_id=${rating.toId}&aid=${rating.auctionId}" class="message message--inbox">
                     <span class="message__text">To</span>
@@ -31,6 +32,9 @@
                     <input type="hidden" name="to_user" value=${receiversLst[status.index]} />
                 </a>
             </c:forEach>
+        </c:if>
+        <c:if test="${empty ratingsLst}">
+            <h5>You have not submitted any ratings yet.</h5>
         </c:if>
     </div>
 </div>

@@ -112,6 +112,15 @@
         </form>
     </div>
 
+    <jsp:useBean id="seller" scope="request" class="javauction.model.UserEntity"/>
+    <jsp:useBean id="avg_rating" scope="request" type="java.lang.Double"/>
+    <c:if test="${not empty seller}">
+        <div class="custom-container">
+            <h5>Seller Info</h5>
+            <p>${seller.username} ${seller.firstname} ${seller.lastname} ${avg_rating}</p>
+        </div>
+    </c:if>
+
     <div class="custom-container">
         <c:if test="${isEnded}">
             <h5>The auction has ended. (Ending date ${auction.endingDate})</h5>
@@ -189,7 +198,7 @@
         window.inputActive = false;
 
         $('#firstBid, #bidAuction').submit(function(event) {
-           var bidIt = confirm('Are you sure you want to bid?');
+            var bidIt = confirm('Are you sure you want to bid?');
             if (bidIt){
                 return true;
             } else{

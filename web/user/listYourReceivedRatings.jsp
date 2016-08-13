@@ -17,10 +17,10 @@
 
 <div class="container">
     <a href="/user/homepage.jsp">home</a>
-    <h2>Your received ratings</h2>
-
     <div>
         <c:if test="${not empty ratingsLst}">
+            <h2>Your received ratings</h2>
+            <h5>Average score ${avg_rating}</h5>
             <c:forEach var="rating" items="${ratingsLst}" varStatus="status">
                 <a class="message message--inbox">
                     <span class="message__text">From</span>
@@ -30,6 +30,9 @@
                     <span class="message__text">${rating.rating}</span>
                 </a>
             </c:forEach>
+        </c:if>
+        <c:if test="${empty ratingsLst}">
+            <h5>You have not received any ratings yet.</h5>
         </c:if>
     </div>
 </div>

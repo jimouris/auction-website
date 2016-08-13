@@ -1,11 +1,9 @@
 package javauction.controller;
 
 import javauction.model.AuctionEntity;
-import javauction.model.MessagesEntity;
 import javauction.model.RatingEntity;
 import javauction.model.UserEntity;
 import javauction.service.AuctionService;
-import javauction.service.MessagesService;
 import javauction.service.RatingService;
 import javauction.service.UserService;
 
@@ -16,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -91,40 +90,42 @@ public class rate extends HttpServlet {
                 request.setAttribute("rating", rating);
                 next_page = "/user/rating.jsp";
                 break;
-            case "listTo":
-                List<RatingEntity> ratingsLst = ratingService.getFromOrToRatings(from_id, RatingService.Rating_t.From_t);
-                List<UserEntity> receiversLst = new ArrayList<>();
+            case "listFrom": case "listTo":
+                List<RatingEntity> ratingsLst;
+                if (param.equals("listFrom")) {
+                    ratingsLst = ratingService.getFromOrToRatings(from_id, RatingService.Rating_t.To_t);
+                } else {
+                    ratingsLst = ratingService.getFromOrToRatings(from_id, RatingService.Rating_t.From_t);
+                }
+                List<UserEntity> sendersOrReceiversLst = new ArrayList<>();
                 List<AuctionEntity> auctionsLst = new ArrayList<>();
                 AuctionService auctionService = new AuctionService();
 
+                double avg_rating = 0;
                 for (RatingEntity r : ratingsLst) {
-                    receiversLst.add(userService.getUser(r.getToId()));
+                    avg_rating += r.getRating();
+                    if (param.equals("listFrom")) {
+                        sendersOrReceiversLst.add(userService.getUser(r.getFromId()));
+                    } else {
+                        sendersOrReceiversLst.add(userService.getUser(r.getToId()));
+                    }
                     auctionsLst.add(auctionService.getAuction(r.getAuctionId()));
                 }
+                avg_rating /= ratingsLst.size();
+                DecimalFormat df = new DecimalFormat("0.0");
 
+                request.setAttribute("avg_rating", Double.parseDouble(df.format(avg_rating)));
                 request.setAttribute("ratingsLst", ratingsLst);
-                request.setAttribute("receiversLst", receiversLst);
-                request.setAttribute("auctionsLst", auctionsLst);
-                next_page = "/user/listYourSubmittedRatings.jsp";
-                break;
-            case "listFrom":
-                ratingsLst = ratingService.getFromOrToRatings(from_id, RatingService.Rating_t.To_t);
-                List<UserEntity> sendersLst = new ArrayList<>();
-                auctionsLst = new ArrayList<>();
-                auctionService = new AuctionService();
-
-                for (RatingEntity r : ratingsLst) {
-                    sendersLst.add(userService.getUser(r.getFromId()));
-                    auctionsLst.add(auctionService.getAuction(r.getAuctionId()));
+                if (param.equals("listFrom")) {
+                    request.setAttribute("sendersLst", sendersOrReceiversLst);
+                    next_page = "/user/listYourReceivedRatings.jsp";
+                } else {
+                    request.setAttribute("receiversLst", sendersOrReceiversLst);
+                    next_page = "/user/listYourSubmittedRatings.jsp";
                 }
-
-                request.setAttribute("ratingsLst", ratingsLst);
-                request.setAttribute("sendersLst", sendersLst);
                 request.setAttribute("auctionsLst", auctionsLst);
-                next_page = "/user/listYourReceivedRatings.jsp";
                 break;
         }
-
         RequestDispatcher view = request.getRequestDispatcher(next_page);
         view.forward(request, response);
     }
