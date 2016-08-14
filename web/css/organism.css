@@ -98,3 +98,9 @@ span.arrow {
     display: block;
     margin-bottom: 10px;
 }
+
+
+
+.js-date{
+    display: none;
+}

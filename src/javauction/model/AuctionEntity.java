@@ -23,11 +23,11 @@ public class AuctionEntity {
     private double finalPrice;
     private Date startingDate;
     private Date endingDate;
+    private String location;
     private String country;
-    private String city;
-    private Integer numOfBids;
-    private Double longtitude;
+    private double longitude;
     private double latitude;
+    private Integer numOfBids;
     private Byte isStarted;
     private double buyPrice;
 
@@ -44,17 +44,17 @@ public class AuctionEntity {
     public AuctionEntity() {
     }
 
-    public AuctionEntity(String name, String description, double lowestBid, String country, String city, double buyPrice, Date startingDate, Byte isStarted, Date endDate, long sellerId) {
+    public AuctionEntity(String name, long sellerId, String description, double lowestBid, String location, String country, double buyPrice, Date startingDate, Byte isStarted, Date endDate) {
         this.name = name;
+        this.sellerId = sellerId;
         this.description = description;
         this.lowestBid = lowestBid;
+        this.location = location;
         this.country = country;
-        this.city = city;
         this.startingDate = startingDate;
         this.endingDate = endDate;
         this.isStarted = isStarted;
         this.buyPrice = buyPrice;
-        this.sellerId = sellerId;
     }
 
     public long getAuctionId() {
@@ -156,13 +156,13 @@ public class AuctionEntity {
     }
 
     @Basic
-    @Column(name = "City")
-    public String getCity() {
-        return city;
+    @Column(name = "Location")
+    public String getLocation() {
+        return location;
     }
 
-    public void setCity(String location) {
-        this.city = location;
+    public void setLocation(String location) {
+        this.location = location;
     }
 
     @Basic
@@ -176,13 +176,13 @@ public class AuctionEntity {
     }
 
     @Basic
-    @Column(name = "Longtitude")
-    public Double getLongtitude() {
-        return longtitude;
+    @Column(name = "Longitude")
+    public double getLongitude() {
+        return longitude;
     }
 
-    public void setLongtitude(Double longtitude) {
-        this.longtitude = longtitude;
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
     }
 
     @Basic
@@ -239,17 +239,21 @@ public class AuctionEntity {
         if (auctionId != that.auctionId) return false;
         if (Double.compare(that.lowestBid, lowestBid) != 0) return false;
         if (Double.compare(that.finalPrice, finalPrice) != 0) return false;
+        if (Double.compare(that.longitude, longitude) != 0) return false;
         if (Double.compare(that.latitude, latitude) != 0) return false;
         if (Double.compare(that.buyPrice, buyPrice) != 0) return false;
+        if (sellerId != null ? !sellerId.equals(that.sellerId) : that.sellerId != null) return false;
+        if (buyerId != null ? !buyerId.equals(that.buyerId) : that.buyerId != null) return false;
         if (name != null ? !name.equals(that.name) : that.name != null) return false;
         if (description != null ? !description.equals(that.description) : that.description != null) return false;
         if (startingDate != null ? !startingDate.equals(that.startingDate) : that.startingDate != null) return false;
         if (endingDate != null ? !endingDate.equals(that.endingDate) : that.endingDate != null) return false;
+        if (location != null ? !location.equals(that.location) : that.location != null) return false;
         if (country != null ? !country.equals(that.country) : that.country != null) return false;
-        if (city != null ? !city.equals(that.city) : that.city != null) return false;
         if (numOfBids != null ? !numOfBids.equals(that.numOfBids) : that.numOfBids != null) return false;
-        if (longtitude != null ? !longtitude.equals(that.longtitude) : that.longtitude != null) return false;
-        return isStarted != null ? isStarted.equals(that.isStarted) : that.isStarted == null;
+        if (isStarted != null ? !isStarted.equals(that.isStarted) : that.isStarted != null) return false;
+        if (categories != null ? !categories.equals(that.categories) : that.categories != null) return false;
+        return bids != null ? bids.equals(that.bids) : that.bids == null;
 
     }
 
@@ -258,24 +262,28 @@ public class AuctionEntity {
         int result;
         long temp;
         result = (int) (auctionId ^ (auctionId >>> 32));
+        result = 31 * result + (sellerId != null ? sellerId.hashCode() : 0);
+        result = 31 * result + (buyerId != null ? buyerId.hashCode() : 0);
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (description != null ? description.hashCode() : 0);
         temp = Double.doubleToLongBits(lowestBid);
-        result = 31 * result + (int) (temp ^ (temp >>> 32));
         result = 31 * result + (int) (temp ^ (temp >>> 32));
         temp = Double.doubleToLongBits(finalPrice);
         result = 31 * result + (int) (temp ^ (temp >>> 32));
         result = 31 * result + (startingDate != null ? startingDate.hashCode() : 0);
         result = 31 * result + (endingDate != null ? endingDate.hashCode() : 0);
+        result = 31 * result + (location != null ? location.hashCode() : 0);
         result = 31 * result + (country != null ? country.hashCode() : 0);
-        result = 31 * result + (city != null ? city.hashCode() : 0);
-        result = 31 * result + (numOfBids != null ? numOfBids.hashCode() : 0);
-        result = 31 * result + (longtitude != null ? longtitude.hashCode() : 0);
+        temp = Double.doubleToLongBits(longitude);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
         temp = Double.doubleToLongBits(latitude);
         result = 31 * result + (int) (temp ^ (temp >>> 32));
+        result = 31 * result + (numOfBids != null ? numOfBids.hashCode() : 0);
         result = 31 * result + (isStarted != null ? isStarted.hashCode() : 0);
         temp = Double.doubleToLongBits(buyPrice);
         result = 31 * result + (int) (temp ^ (temp >>> 32));
+        result = 31 * result + (categories != null ? categories.hashCode() : 0);
+        result = 31 * result + (bids != null ? bids.hashCode() : 0);
         return result;
     }
 
@@ -283,20 +291,23 @@ public class AuctionEntity {
     public String toString() {
         return "AuctionEntity{" +
                 "auctionId=" + auctionId +
+                ", sellerId=" + sellerId +
+                ", buyerId=" + buyerId +
                 ", name='" + name + '\'' +
-                ", buyerID='" + buyerId + '\'' +
                 ", description='" + description + '\'' +
                 ", lowestBid=" + lowestBid +
                 ", finalPrice=" + finalPrice +
                 ", startingDate=" + startingDate +
                 ", endingDate=" + endingDate +
+                ", location='" + location + '\'' +
                 ", country='" + country + '\'' +
-                ", city='" + city + '\'' +
-                ", numOfBids=" + numOfBids +
-                ", longtitude=" + longtitude +
+                ", longitude=" + longitude +
                 ", latitude=" + latitude +
+                ", numOfBids=" + numOfBids +
                 ", isStarted=" + isStarted +
                 ", buyPrice=" + buyPrice +
+                ", categories=" + categories +
+                ", bids=" + bids +
                 '}';
     }
 }

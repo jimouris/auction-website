@@ -42,7 +42,7 @@ CREATE TABLE IF NOT EXISTS `auctionwebsite`.`user` (
   UNIQUE INDEX `Id_UNIQUE` (`UserID` ASC),
   UNIQUE INDEX `Username_UNIQUE` (`Username` ASC))
 ENGINE = InnoDB
-AUTO_INCREMENT = 5
+AUTO_INCREMENT = 7
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -60,10 +60,10 @@ CREATE TABLE IF NOT EXISTS `auctionwebsite`.`auction` (
   `StartingDate` DATE NULL DEFAULT NULL,
   `EndingDate` DATE NULL DEFAULT NULL,
   `Country` VARCHAR(45) NOT NULL,
-  `City` VARCHAR(45) NOT NULL,
-  `NumOfBids` INT(11) NULL DEFAULT NULL,
-  `Longtitude` FLOAT NULL DEFAULT NULL,
+  `Location` VARCHAR(45) NOT NULL,
+  `Longitude` FLOAT NULL DEFAULT NULL,
   `Latitude` FLOAT NULL DEFAULT NULL,
+  `NumOfBids` INT(11) NULL DEFAULT NULL,
   `IsStarted` TINYINT(1) NULL DEFAULT '0',
   `BuyPrice` INT(11) NULL DEFAULT NULL,
   PRIMARY KEY (`AuctionID`),
@@ -80,7 +80,7 @@ CREATE TABLE IF NOT EXISTS `auctionwebsite`.`auction` (
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB
-AUTO_INCREMENT = 10
+AUTO_INCREMENT = 21
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -92,7 +92,7 @@ CREATE TABLE IF NOT EXISTS `auctionwebsite`.`category` (
   `CategoryName` VARCHAR(100) NULL DEFAULT NULL,
   PRIMARY KEY (`CategoryID`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 10
+AUTO_INCREMENT = 14
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -143,7 +143,7 @@ CREATE TABLE IF NOT EXISTS `auctionwebsite`.`bid` (
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB
-AUTO_INCREMENT = 10
+AUTO_INCREMENT = 56
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -208,10 +208,10 @@ CREATE TABLE IF NOT EXISTS `auctionwebsite`.`rating` (
   `ToID` BIGINT(20) NOT NULL,
   `AuctionID` BIGINT(20) NOT NULL,
   `Rating` INT(11) NOT NULL,
+  PRIMARY KEY (`FromID`, `ToID`, `AuctionID`),
   INDEX `fk_rating_user1_idx` (`FromID` ASC),
   INDEX `fk_rating_user2_idx` (`ToID` ASC),
   INDEX `fk_rating_auction1_idx` (`AuctionID` ASC),
-  PRIMARY KEY (`FromID`, `ToID`, `AuctionID`),
   CONSTRAINT `fk_rating_auction1`
     FOREIGN KEY (`AuctionID`)
     REFERENCES `auctionwebsite`.`auction` (`AuctionID`)
@@ -228,7 +228,6 @@ CREATE TABLE IF NOT EXISTS `auctionwebsite`.`rating` (
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB
-AUTO_INCREMENT = 10
 DEFAULT CHARACTER SET = utf8;
 
 

@@ -194,13 +194,15 @@ public class AuctionService extends Service {
         return auctions;
     }
 
-    public void activateAuction(long aid, boolean activate) {
+    public void activateAuction(long aid, Date endingDate, boolean activate) {
         Session session = HibernateUtil.getSession();
         try {
             session.beginTransaction();
             AuctionEntity auction = (AuctionEntity) session.get(AuctionEntity.class, aid);
             if (activate) {
                 auction.setIsStarted((byte) 1);
+                /* when we activate the auction, we may pass the endingdate at this time */
+                if (endingDate != null) auction.setEndingDate(endingDate);
             } else {
                 auction.setIsStarted((byte) 0);
             }
@@ -215,10 +217,11 @@ public class AuctionService extends Service {
             try {
                 if (session != null) session.close();
             } catch (Exception e) {
-                // ignore
             }
         }
     }
+
+
 
     // deletes an auction and all associated records of auction_has_category from db
     // todo: when we add the images, check if it also delete those
@@ -242,8 +245,8 @@ public class AuctionService extends Service {
         }
     }
 
-    public void updateAuction(Set<CategoryEntity> categories, Long aid, String name, String desc, Double lowestBid, Double finalPrice,
-                              Double buyPrice, String city, String country, Date startingDate, Date endingDate, Long buyerid) {
+    public void updateAuction(Set<CategoryEntity> categories, Long aid, String name, String desc, Double lowestBid,
+                              Double buyPrice, String location, String country, Date startingDate, Date endingDate, Long buyerid, Double latitude, Double longitude) {
 
         Session session = HibernateUtil.getSession();
         Transaction tx = null;
@@ -254,10 +257,11 @@ public class AuctionService extends Service {
             if (name != null) { auction.setName(name); }
             if (desc != null) { auction.setDescription(desc); }
             if (lowestBid != null) { auction.setLowestBid(lowestBid); }
-            if (finalPrice != null) { auction.setFinalPrice(finalPrice); }
             if (buyPrice != null) { auction.setBuyPrice(buyPrice); }
-            if (city != null) { auction.setCity(city); }
             if (country != null) { auction.setCountry(country); }
+            if (location != null) { auction.setLocation(location); }
+            if (latitude != null) { auction.setLatitude(latitude); }
+            if (longitude != null) { auction.setLongitude(longitude); }
             if (startingDate != null) { auction.setStartingDate(startingDate); }
             if (endingDate != null) { auction.setEndingDate(endingDate);}
             if (buyerid != null) { auction.setBuyerId(buyerid); }

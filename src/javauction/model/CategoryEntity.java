@@ -7,7 +7,7 @@ import java.util.Set;
  * Created by jimouris on 7/2/16.
  */
 @Entity
-@Table(name = "category", schema = "auctionwebsite", catalog = "")
+@Table(name = "category", schema = "auctionwebsite")
 public class CategoryEntity {
     private int categoryId;
     private String categoryName;
@@ -39,13 +39,6 @@ public class CategoryEntity {
 
     public void setCategoryName(String categoryName) {
         this.categoryName = categoryName;
-    }
-
-    @ManyToMany( fetch = FetchType.LAZY, mappedBy="categories", cascade = CascadeType.ALL)
-    public Set<AuctionEntity> getAuctions() { return auctions; }
-
-    public void setAuctions(Set<AuctionEntity> auctions){
-        this.auctions = auctions;
     }
 
     @Override
