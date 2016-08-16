@@ -9,7 +9,8 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <jsp:useBean id="auctionsLst" class="java.util.ArrayList" scope="request" />
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css" rel="stylesheet">
+    <link href="/css/skeleton.css" rel="stylesheet">
+    <link href="/css/organism.css" rel="stylesheet">
 </head>
 <body>
 <div class="container">
@@ -33,13 +34,23 @@
                 <td><a class="button button-primary" href=auction.do?action=getAnAuction&aid=${auction.auctionId}>View Auction</a></td>
             </tr>
         </c:forEach>
-
         <c:if test="${auctionsLst.size() == 0}">
             <tr>
                 <td>No auctions found.</td>
             </tr>
         </c:if>
     </table>
+    <c:if test="${auctionsLst.size() != 0}">
+        <div class="row">
+            <c:if test="${empty previousPage}">
+                <span class="u-unvailable">previous page</span> |
+            </c:if>
+            <c:if test="${not empty previousPage}">
+                <a href="${previousPage}">previous page</a> |
+            </c:if>
+            <a href="${nextPage}">next page</a>
+        </div>
+    </c:if>
 </div>
 </body>
 </html>

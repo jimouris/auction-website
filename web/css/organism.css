@@ -104,3 +104,8 @@ span.arrow {
 .js-date{
     display: none;
 }
+
+.u-unvailable{
+    opacity: 0.4;
+    cursor: not-allowed;
+}

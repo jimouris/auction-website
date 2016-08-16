@@ -108,13 +108,23 @@ public class AuctionService extends Service {
     }
 
     /* simple search: search for auctions whose names contain string name */
-    public List searchAuction(String name) {
+    public List searchAuction(String name, int page) {
         Session session = HibernateUtil.getSession();
         Transaction tx = null;
         List auctions = null;
+        int pagesize = 2;
+        int start = pagesize*page;
+        System.out.println(pagesize + ", " + start);
         try {
             tx = session.beginTransaction();
             Criteria criteria = session.createCriteria(AuctionEntity.class);
+            /* stuff for pagination */
+            criteria.addOrder(Order.desc("name"));
+            criteria.setFirstResult(start); // 0, pagesize*1 + 1, pagesize*2 + 1, ...
+            criteria.setMaxResults(pagesize);
+            criteria.setFetchMode("categories", FetchMode.SELECT);  // disabling those two "fetch lines"
+            criteria.setFetchMode("bids", FetchMode.SELECT);        // will screw up everything.
+            /* based on name */
             criteria.add(Restrictions.like("name", name, MatchMode.ANYWHERE));
             /* only active */
             criteria.add(Restrictions.eq("isStarted", (byte) 1));
@@ -122,8 +132,10 @@ public class AuctionService extends Service {
             java.sql.Date currentDate = new Date(Calendar.getInstance().getTimeInMillis());
             criteria.add(Restrictions.gt("endingDate", currentDate));
 
+
             criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
             auctions = criteria.list();
+
             tx.commit();
         } catch (HibernateException e) {
             if (tx != null) {
@@ -141,13 +153,20 @@ public class AuctionService extends Service {
     }
 
     /* advanced search, using custom criteria! */
-    public List searchAuction(String[] categories, String desc, double minPrice, double maxPrice, String location) {
+    public List searchAuction(String[] categories, String desc, double minPrice, double maxPrice, String location, int page) {
         Session session = HibernateUtil.getSession();
         Transaction tx = null;
         List auctions = null;
+        int pagesize = 2;
+        int start = pagesize*page;
         try {
             tx = session.beginTransaction();
             Criteria criteria = session.createCriteria(AuctionEntity.class);
+            criteria.addOrder(Order.desc("name"));
+            criteria.setFirstResult(start); // 0, pagesize*1 + 1, pagesize*2 + 1, ...
+            criteria.setMaxResults(pagesize);
+            criteria.setFetchMode("categories", FetchMode.SELECT);  // disabling those fetch line
+            criteria.setFetchMode("bids", FetchMode.SELECT);        // will screw up everything.
             /* only active */
             criteria.add(Restrictions.eq("isStarted", (byte) 1));
             /* get all those that are really not ended */
@@ -167,14 +186,13 @@ public class AuctionService extends Service {
             /* description search */
             if (desc != "") criteria.add(Restrictions.like("description", desc, MatchMode.ANYWHERE));
             /* minPrice < price < maxPrice */
-            criteria.add(Restrictions.between("buyPrice", minPrice, maxPrice));
+            Criterion buyNow = Restrictions.between("buyPrice", minPrice, maxPrice);
+            Criterion bid = Restrictions.between("lowestBid", minPrice, maxPrice);
+            LogicalExpression bidOrBuy = Restrictions.or(buyNow, bid);
+            criteria.add(bidOrBuy);
+
             /* location search*/
-            if (location != "") {
-                Criterion city = Restrictions.like("city", location, MatchMode.EXACT);
-                Criterion country = Restrictions.like("country", location, MatchMode.EXACT);
-                LogicalExpression cityORcountry = Restrictions.or(city, country);
-                criteria.add(cityORcountry);
-            }
+            if (location != "") criteria.add(Restrictions.like("location", location, MatchMode.ANYWHERE));
 
             criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
             auctions = criteria.list();

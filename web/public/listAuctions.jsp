@@ -36,6 +36,7 @@
             </tr>
         </c:forEach>
 
+
         <c:if test="${auctionLst.size() == 0}">
             <tr>
                 <td>No auctions yet.</td>

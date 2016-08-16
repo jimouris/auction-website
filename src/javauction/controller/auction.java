@@ -75,7 +75,6 @@ public class auction extends HttpServlet {
 
             // create auction entity with the required value
             AuctionEntity auction = new AuctionEntity(name, sellerId, description, lowestBid, location, country, buyPrice, startDate, isStarted, endDate);
-            System.out.println(auction);
 
             /* if google maps returned precise location */
             if (request.getParameterMap().containsKey("longitude") && request.getParameterMap().containsKey("latitude")) {

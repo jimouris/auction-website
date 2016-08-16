@@ -18,6 +18,7 @@
         <property name="hibernate.connection.useUnicode">true</property>
 
         <!--<property name="hibernate.show_sql">true</property>-->
+        <!--<property name="hibernate.format_sql">true</property>-->
 
         <mapping class="javauction.model.AuctionEntity"/>
         <mapping class="javauction.model.AuctionCategoryEntity"/>
