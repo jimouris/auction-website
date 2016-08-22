@@ -114,7 +114,6 @@ public class AuctionService extends Service {
         List auctions = null;
         int pagesize = 2;
         int start = pagesize*page;
-        System.out.println(pagesize + ", " + start);
         try {
             tx = session.beginTransaction();
             Criteria criteria = session.createCriteria(AuctionEntity.class);
@@ -240,7 +239,6 @@ public class AuctionService extends Service {
     }
 
 
-
     // deletes an auction and all associated records of auction_has_category from db
     // todo: when we add the images, check if it also delete those
     public void deleteAuction(long aid) {
@@ -296,5 +294,4 @@ public class AuctionService extends Service {
             }
         }
     }
-
 }

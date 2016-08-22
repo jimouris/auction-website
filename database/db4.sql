@@ -80,7 +80,7 @@ CREATE TABLE IF NOT EXISTS `auctionwebsite`.`auction` (
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB
-AUTO_INCREMENT = 21
+AUTO_INCREMENT = 44
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -143,7 +143,7 @@ CREATE TABLE IF NOT EXISTS `auctionwebsite`.`bid` (
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB
-AUTO_INCREMENT = 56
+AUTO_INCREMENT = 58
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -153,14 +153,17 @@ DEFAULT CHARACTER SET = utf8;
 CREATE TABLE IF NOT EXISTS `auctionwebsite`.`itemimage` (
   `AuctionId` BIGINT(20) NOT NULL,
   `ImageFileName` VARCHAR(100) NOT NULL,
-  PRIMARY KEY (`ImageFileName`, `AuctionId`),
+  `ItemImageId` BIGINT(20) NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`ItemImageId`),
+  UNIQUE INDEX `ItemImageId_UNIQUE` (`ItemImageId` ASC),
   INDEX `fk_itemImage_auction1` (`AuctionId` ASC),
-  CONSTRAINT `fk_itemImage_auction1`
+  CONSTRAINT `fk_itemimage_auction1`
     FOREIGN KEY (`AuctionId`)
     REFERENCES `auctionwebsite`.`auction` (`AuctionID`)
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB
+AUTO_INCREMENT = 22
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -196,7 +199,6 @@ CREATE TABLE IF NOT EXISTS `auctionwebsite`.`messages` (
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB
-AUTO_INCREMENT = 10
 DEFAULT CHARACTER SET = utf8;
 
 

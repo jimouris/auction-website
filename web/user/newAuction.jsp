@@ -43,10 +43,14 @@
             <section class="register u-full-width">
                 <h1>Create a new auction</h1>
                 <!-- Restriction for validation are inserted on the end of input -->
-                <form action="/auction.do" method="POST" id="new_auction">
+                <form action="/auction.do" method="POST" id="new_auction" enctype="multipart/form-data">
 
                     <label for="name">Name of auctioned item:</label>
                     <input class="u-full-width" type="text" id="name" name="name" minlength="2" required autofocus>
+
+                    <label>Add some images:</label>
+                    <input type="file" name="fileName">
+
 
                     <label for="categories">Select at least one category:</label>
                     <select class="a-select--multiple" id="categories" name="categories" multiple size=${categoryLst.size()}>
@@ -201,6 +205,10 @@
             marker.setVisible(true);
         });
     }
+
+    $('form').delegate('input[type="file"]', 'change', function(){
+        $(this).after('<input type="file" name="fileName" >');
+    });
 </script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA7om9lzVVpATrE6I8ceaK9vMyE6Bi2KSw&callback=initMap&libraries=places" async defer></script>
 </body>

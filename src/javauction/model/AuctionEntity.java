@@ -41,6 +41,10 @@ public class AuctionEntity {
     @OrderBy("amount DESC")
     private Set<BidEntity> bids;
 
+
+    @OneToMany(targetEntity = ItemImageEntity.class, mappedBy = "auction",fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private Set<ItemImageEntity> images;
+
     public AuctionEntity() {
     }
 
@@ -227,6 +231,15 @@ public class AuctionEntity {
 
     public void setBids(Set<BidEntity> bids) {
         this.bids = bids;
+    }
+
+
+    public Set<ItemImageEntity> getImages() {
+        return images;
+    }
+
+    public void setImages(Set<ItemImageEntity> images) {
+        this.images = images;
     }
 
     @Override

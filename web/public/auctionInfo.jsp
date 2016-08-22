@@ -7,6 +7,7 @@
     <title>Auction Info</title>
     <jsp:useBean id="auction" class="javauction.model.AuctionEntity" scope="request" />
     <jsp:useBean id="usedCategories" class="java.util.ArrayList" scope="request" />
+    <jsp:useBean id="imageLst" class="java.util.ArrayList" scope="request" />
     <jsp:useBean id="bidLst" class="java.util.ArrayList" scope="request" />
     <jsp:useBean id="seller" class="javauction.model.UserEntity" scope="request"/>
 
@@ -77,6 +78,13 @@
                 <c:if test="${not empty auction.description}">
                     <h5>Description:</h5>
                     <p>${auction.description}</p>
+                </c:if>
+
+                <c:if test="${not empty imageLst}">
+                    <h5>Images:</h5>
+                    <c:forEach var="image" items="${imageLst}">
+                        <img src="image_auction/${image.imageFileName}" class="auction__img">
+                    </c:forEach>
                 </c:if>
 
                 <%-- a registered user should be able to see buy now button --%>
@@ -260,6 +268,9 @@
         });
     }
     </c:if>
+
+
+
 </script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA7om9lzVVpATrE6I8ceaK9vMyE6Bi2KSw&callback=initMap&libraries=places" async defer></script>
 

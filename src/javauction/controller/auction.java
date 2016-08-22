@@ -1,9 +1,6 @@
 package javauction.controller;
 
-import javauction.model.AuctionEntity;
-import javauction.model.BidEntity;
-import javauction.model.CategoryEntity;
-import javauction.model.UserEntity;
+import javauction.model.*;
 import javauction.service.AuctionService;
 import javauction.service.CategoryService;
 import javauction.service.RatingService;
@@ -11,11 +8,10 @@ import javauction.service.UserService;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.*;
+import java.io.File;
 import java.io.IOException;
 import java.sql.Date;
 import java.text.ParseException;
@@ -26,7 +22,16 @@ import java.util.*;
  * Created by gpelelis on 4/7/2016.
  */
 @WebServlet(name = "auction")
+@MultipartConfig(fileSizeThreshold=1024*1024*10, 	// 10 MB
+        maxFileSize=1024*1024*50,      	// 50 MB
+        maxRequestSize=1024*1024*100)   	// 100 MB
 public class auction extends HttpServlet {
+
+    /**
+     * Directory where uploaded files will be saved, its relative to
+     * the web application directory.
+     */
+    private static final String DIR_TO_UPLOAD = "image_auction";
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         AuctionService auctionService = new AuctionService();
@@ -99,6 +104,10 @@ public class auction extends HttpServlet {
             /* by now all the data should be ok */
             try {
                 auctionService.addEntity(auction);
+
+                // upload the images
+                uploadFiles(request, auction.getAuctionId());
+
                 request.setAttribute("aid", auction.getAuctionId());
                 next_page = "/user/auctionSubmit.jsp";
             } catch (Exception e) {
@@ -129,7 +138,6 @@ public class auction extends HttpServlet {
             Double buyPrice = null;
             if (request.getParameterMap().containsKey("buyPrice")) {
                 Boolean set_buyPrice = request.getParameter("buyPrice").isEmpty();
-                System.out.println(set_buyPrice + request.getParameter("buyPrice"));
                 buyPrice = set_buyPrice ? -1 : Double.parseDouble(request.getParameter("buyPrice"));
             }
             Double latitude = null;
@@ -245,16 +253,21 @@ public class auction extends HttpServlet {
                 for (CategoryEntity c : cats){
                     usedCategories.add(new CategoryEntity(c.getCategoryId(), c.getCategoryName()));
                 }
+                /* get all images */
+                Set <ItemImageEntity> allImages = auction.getImages();
+                List<ItemImageEntity> imageLst = new ArrayList<>();
+                for(ItemImageEntity img : allImages){
+                    imageLst.add(img);
+                }
                 /* get the highest bid */
                 Set <BidEntity> allBids = auction.getBids();
                 List<BidEntity> bidLst = new ArrayList<>();
                 List<UserEntity> biddersLst = new ArrayList<>();
                 UserService userService = new UserService();
-                for (BidEntity b : allBids){
+                for (BidEntity b : allBids) {
                     bidLst.add(b);
                     biddersLst.add(userService.getUser(b.getBidderId()));
                 }
-
                 /* if auction has ended */
                 Long buyerid = null;
                 if (biddersLst.size() > 0) {
@@ -265,8 +278,9 @@ public class auction extends HttpServlet {
                 RatingService ratingService = new RatingService();
                 Double avg_rating = ratingService.calcAvgRating(sid, RatingService.Rating_t.To_t);
 
-                request.setAttribute("usedCategories", usedCategories);
                 request.setAttribute("auction", auction);
+                request.setAttribute("usedCategories", usedCategories);
+                request.setAttribute("imageLst", imageLst);
                 request.setAttribute("seller", seller);
                 request.setAttribute("biddersLst", biddersLst);
                 request.setAttribute("bidLst", bidLst);
@@ -295,7 +309,6 @@ public class auction extends HttpServlet {
                 auction = auctionService.getAuction(aid);
                 uid = (Long) ((UserEntity) session.getAttribute("user")).getUserId();
                 if (auction.getSellerId() != uid) {
-                    System.out.println("someone tried to edit an auction without the right credentials");
                     next_page = "/user/homepage.jsp";
                 } else {
                     /* Auctions selected categories*/
@@ -316,6 +329,50 @@ public class auction extends HttpServlet {
         RequestDispatcher view = request.getRequestDispatcher(next_page);
         view.forward(request, response);
     }
+
+
+    private Boolean uploadFiles(HttpServletRequest request, long auctionId) throws IOException, ServletException {
+        // gets absolute path of the web application
+        String applicationPath = request.getServletContext().getRealPath("");
+        // constructs path of the directory to save uploaded file
+        String uploadFilePath = applicationPath + File.separator + DIR_TO_UPLOAD;
+
+        // creates the save directory if it does not exists
+        File fileSaveDir = new File(uploadFilePath);
+        if (!fileSaveDir.exists()) {
+            fileSaveDir.mkdirs();
+        }
+
+        String fileName = null;
+        ItemImageEntity image;
+        AuctionService auctionService = new AuctionService();
+        // map the auction with the specified categories
+        /* Get all the parts from request and write it to the file on server */
+        for (Part part : request.getParts()) {
+            if (part.getName().equals("fileName") && part.getContentType().contains("image")) {
+                fileName = getFileName(part);
+                part.write(uploadFilePath + File.separator + fileName);
+                image = new ItemImageEntity(fileName, auctionId);
+                auctionService.addEntity(image);
+            }
+        }
+        return true;
+    }
+
+    /**
+     * gets the filename from a part of multiform data
+     */
+    private String getFileName(Part part) {
+        String contentDisp = part.getHeader("content-disposition");
+        String[] tokens = contentDisp.split(";");
+        for (String token : tokens) {
+            if (token.trim().startsWith("filename")) {
+                return token.substring(token.indexOf("=") + 2, token.length()-1);
+            }
+        }
+        return "";
+    }
+
 
     /* Assigns successMsg or errorMsg on request object
      * if we know where the request came from and we have a status(true||false)

@@ -6,13 +6,33 @@ import javax.persistence.*;
  * Created by jimouris on 7/2/16.
  */
 @Entity
-@Table(name = "itemImage", schema = "auctionwebsite", catalog = "")
-@IdClass(ItemImageEntityPK.class)
+@Table(name = "itemImage", schema = "auctionwebsite")
 public class ItemImageEntity {
+    private long itemImageId;
     private long auctionId;
     private String imageFileName;
+    private AuctionEntity auction;
+
+    public ItemImageEntity(String fileName, long auctionId) {
+        this.imageFileName = fileName;
+        this.auctionId = auctionId;
+    }
+
+    public ItemImageEntity() {
+    }
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "ItemImageId")
+    public long getItemImageId() {
+        return itemImageId;
+    }
+
+    public void setItemImageId(long itemImageId) {
+        this.itemImageId = itemImageId;
+    }
+
+    @Basic
     @Column(name = "AuctionId")
     public long getAuctionId() {
         return auctionId;
@@ -22,7 +42,7 @@ public class ItemImageEntity {
         this.auctionId = auctionId;
     }
 
-    @Id
+    @Basic
     @Column(name = "ImageFileName")
     public String getImageFileName() {
         return imageFileName;
@@ -32,6 +52,16 @@ public class ItemImageEntity {
         this.imageFileName = imageFileName;
     }
 
+    @ManyToOne
+    @JoinColumn(name="AuctionID", nullable = false, insertable = false, updatable = false)
+    public AuctionEntity getAuction() {
+        return auction;
+    }
+
+    public void setAuction(AuctionEntity auction) {
+        this.auction = auction;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -39,16 +69,16 @@ public class ItemImageEntity {
 
         ItemImageEntity that = (ItemImageEntity) o;
 
+        if (itemImageId != that.itemImageId) return false;
         if (auctionId != that.auctionId) return false;
-        if (imageFileName != null ? !imageFileName.equals(that.imageFileName) : that.imageFileName != null)
-            return false;
+        return imageFileName != null ? imageFileName.equals(that.imageFileName) : that.imageFileName == null;
 
-        return true;
     }
 
     @Override
     public int hashCode() {
-        int result = (int) (auctionId ^ (auctionId >>> 32));
+        int result = (int) (itemImageId ^ (itemImageId >>> 32));
+        result = 31 * result + (int) (auctionId ^ (auctionId >>> 32));
         result = 31 * result + (imageFileName != null ? imageFileName.hashCode() : 0);
         return result;
     }
