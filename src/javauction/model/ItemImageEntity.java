@@ -6,7 +6,7 @@ import javax.persistence.*;
  * Created by jimouris on 7/2/16.
  */
 @Entity
-@Table(name = "itemImage", schema = "auctionwebsite")
+@Table(name = "itemimage", schema = "auctionwebsite")
 public class ItemImageEntity {
     private long itemImageId;
     private long auctionId;
