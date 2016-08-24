@@ -115,6 +115,7 @@
 
     <filter-mapping>
         <filter-name>sessionFilter</filter-name>
+        <url-pattern>*.do</url-pattern>
         <url-pattern>*.jsp</url-pattern>
     </filter-mapping>
 
