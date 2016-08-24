@@ -7,22 +7,16 @@
 }
 
 
-/* message element */
+
+
+
+/*------------------------------------*\
+  #MESSAGE
+\*------------------------------------*/
 .message{
     box-sizing: border-box;
     text-align: left;
-    padding: 0.5rem;
-}
-
-.message__name{
-    margin: 0;
-    line-height: 1.2;
-}
-
-.message{
     background: rgba(0,0,0,0.1);
-    border-radius: 2px;
-    box-sizing: border-box;
     padding: 1rem;
     width: 80%;
     word-break: break-all;
@@ -31,6 +25,7 @@
     text-decoration: none;
     transition: box-shadow 0.2s ease-in;
     border-radius: 3px;
+    position: relative;
 }
 
 a.message:hover{
@@ -77,6 +72,108 @@ span.arrow {
     font-size: 0.9em;
 }
 
+
+.message__delete{
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    width: 35%;
+}
+.c-delete__trigger:hover .message__delete{
+    background: #e6e6e6;
+}
+
+
+
+
+/*------------------------------------*\
+  #DELETE SOMETHING
+\*------------------------------------*/
+.c-delete__trigger:hover .c-delete__icon{
+    display: block;
+}
+.c-delete__icon{
+    cursor: pointer;
+    display: none;
+    top: 50%;
+    transform: translateY(-50%);
+    position: absolute;
+    width: 23px;
+    height: 23px;
+    right: 10px;
+    -webkit-backface-visibility: hidden;
+    transition: transform 0.2s ease-in-out;
+}
+.c-delete__icon:hover{
+    transform: translateY(-50%) scale(1.15);
+    transition: transform 0.2s ease-in-out;
+}
+.c-delete__icon:active{
+    transform: translateY(-50%) scale(1);
+}
+
+.c-delete__icon::before,
+.c-delete__icon::after{
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: block;
+    width: 30px;
+    height: 2px;
+    background-color: #e40f39;
+}
+
+.c-delete__icon::before{
+    transform: rotate(45deg);
+    transform-origin: top left;
+}
+
+.c-delete__icon::after{
+    transform: rotate(-45deg);
+    transform-origin: top right;
+    left: -9px;
+}
+
+.c-delete__cancel{
+    display: none;
+    color: #7a7a7a;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    margin: 0;
+    padding: 0 10px 0 0;
+    right: 100%;
+    width: 50px;
+    cursor: pointer;
+}
+
+.c-delete__cancel:hover{
+    color: #333;
+}
+
+.c-delete__confirm{
+    display: none;
+    color: white;
+    background-color: #e40f39;
+    border: none;
+}
+
+.c-delete__confirm:hover{
+    color: white;
+}
+
+.c-delete__confirm:active{
+    color: white;
+}
+
+
+
+
+/*------------------------------------*\
+  #STATUS
+\*------------------------------------*/
 .status--error,
 .status--success{
     padding: 0.3em 0.6em;
@@ -110,18 +207,42 @@ span.arrow {
     cursor: not-allowed;
 }
 
+.h-fillParent{
+    width: 100%;
+    height: 100%;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    margin: 0;
+    padding: 0;
+}
 
 
 
 
-
-/* ************************
- * #AUCTION
- * ************************
- * */
+/*------------------------------------*\
+  #AUCTION
+\*------------------------------------*/
 .auction__img{
     max-width: 200px;
     max-height: 200px;
     width: auto;
     height: auto;
 }
+
+
+
+
+.h-show{
+    display: block;
+}
+
+.h-showInline{
+    display: inline-block;
+}
+
+.h-forceHide{
+    display: none!important;
+}
+

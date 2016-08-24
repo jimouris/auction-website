@@ -19,33 +19,43 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * Created by jimouris on 8/5/16.
- */
 @WebServlet(name = "message")
 public class message extends HttpServlet {
 
+
+    // all actions of post follows a post/redirect/get pattern in order to avoid form resubmission
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         MessagesService messagesService = new MessagesService();
         String next_page = "/user/homepage.jsp";
+        String action = request.getParameter("action");
+        HttpSession session = request.getSession();
 
-        if (request.getParameter("action").equals("addNewMessage")) {
-            HttpSession session = request.getSession();
-
-            long sid = ((UserEntity) session.getAttribute("user")).getUserId();
-
-            long rid = Long.parseLong(request.getParameter("rid"));
-            long aid = Long.parseLong(request.getParameter("aid"));
+        long rid = Long.parseLong(request.getParameter("rid"));                 // the receiver of conversation
+        if (action.equals("addNewMessage")) {
+            long sid = ((UserEntity) session.getAttribute("user")).getUserId(); // the sender
+            long aid = Long.parseLong(request.getParameter("aid"));             // the auction id
             String msg = request.getParameter("message_text");
 
             MessagesEntity messagesEntity = new MessagesEntity(sid, rid, aid, msg);
             messagesService.addEntity(messagesEntity);
 
-            getConversation(messagesService, request, aid);
-            request.setAttribute("aid", aid);
-            request.setAttribute("rid", rid);
+            String url = "/message.do?action=getConversation&rid=" + rid + "&aid=" + aid;
+            response.sendRedirect(url);
+            return;
+        } else if (action.equals("deleteMessage")){
+            long uid = ((UserEntity) session.getAttribute("user")).getUserId(); // just for safety check
+            long mid = Long.parseLong(request.getParameter("mid"));             // message id to delete
+            long sender_id = Long.parseLong(request.getParameter("sid"));
+            long aid = Long.parseLong(request.getParameter("aid"));
 
-            next_page = "/user/messages.jsp";
+            // check if someone else tries to delete a message that he/she does not own
+            if (sender_id == uid){
+                messagesService.deleteMessage(mid);
+            }
+
+            String url = "/message.do?action=getConversation&rid=" + rid + "&aid=" + aid;
+            response.sendRedirect(url);
+            return;
         }
 
         RequestDispatcher view = request.getRequestDispatcher(next_page);
@@ -130,4 +140,19 @@ public class message extends HttpServlet {
         request.setAttribute("sendersLst", sendersLst);
     }
 
+    // i want to return something like auction.do?action=simpleSearch&name=&page=
+//    private String constructMessageURL(HttpServletRequest request){
+//        Map<String, String[]> params = request.getParameterMap();
+//        String url = "message.do?";
+//        for (Map.Entry<String, String[]> entry : params.entrySet()) {
+//            String[] values = entry.getValue();
+//            for (String value : values) {
+//                url = url + entry.getKey() + "=";
+//                url = url + value + "&";
+//            }
+//        }
+//        // cut the last & that iteration adds
+//        url = url.substring(0, url.length()-1);
+//        return url;
+//    }
 }

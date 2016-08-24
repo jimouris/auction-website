@@ -12,9 +12,31 @@ import java.util.List;
  */
 public class MessagesService extends Service {
 
+
     public enum Message_t {
         Inbox_t,
         Sent_t
+    }
+
+
+    public void deleteMessage(long mid) {
+        Session session = HibernateUtil.getSession();
+        Transaction tx = null;
+        try {
+            tx = session.beginTransaction();
+            MessagesEntity message = (MessagesEntity) session.get(MessagesEntity.class, mid);
+            session.delete(message);
+            tx.commit();
+        } catch (HibernateException e) {
+            tx.rollback();
+            e.printStackTrace();
+        } finally {
+            try {
+                if (session != null) session.close();
+            } catch (Exception e) {
+                // ignore
+            }
+        }
     }
 
     /* simple search: search for auctions whose names contain string name */
