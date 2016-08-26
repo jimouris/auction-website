@@ -7,9 +7,9 @@
 
         <!-- Database connection settings -->
         <property name="connection.url">jdbc:mysql://localhost:3306/auctionwebsite</property>
+        <property name="connection.username">root</property>
+        <property name="connection.password">root</property>
         <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
-        <property name="hibernate.connection.username">root</property>
-        <property name="hibernate.connection.password">root</property>
 
         <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
 
@@ -28,6 +28,7 @@
         <mapping class="javauction.model.MessagesEntity"/>
         <mapping class="javauction.model.RatingEntity"/>
         <mapping class="javauction.model.UserEntity"/>
+        <mapping class="javauction.model.NotificationEntity"/>
         <!-- DB schema will be updated if needed -->
         <!-- <property name="hbm2ddl.auto">update</property> -->
 
