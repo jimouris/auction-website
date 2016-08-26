@@ -13,7 +13,9 @@
     <link href="/css/organism.css" rel="stylesheet">
 </head>
 <body>
-
+<c:if test="${empty user}">
+    <c:redirect url="/"/>
+</c:if>
 <c:if test ="${not empty user.userId}">
 <div class="container">
     <!-- HEADER STUFF -->

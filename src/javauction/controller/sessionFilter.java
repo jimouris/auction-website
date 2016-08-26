@@ -56,7 +56,7 @@ public class sessionFilter implements Filter {
                 }
             }
         } else { /* if not logged in */
-            if (requestPath.contains("login.do") || requestPath.startsWith("/public") || requestPath.equals("/")) {
+            if (requestPath.startsWith("/public") || requestPath.equals("/")) {
                 filterChain.doFilter(request, response);
             } else {
                 response.sendRedirect("/public/");

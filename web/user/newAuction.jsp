@@ -14,7 +14,9 @@
 </head>
 <body>
 <div class="container">
-
+    <c:if test="${empty user}">
+        <c:redirect url="/"/>
+    </c:if>
     <!-- HEADER STUFF -->
     <div class="row">
         <div class="one column">

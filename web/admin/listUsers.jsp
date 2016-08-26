@@ -31,9 +31,9 @@
         </table>
     </div>
 </c:if>
-<%--<c:if test="${not isAdmin}">--%>
-    <%--<h1>You are not admin. Go back to <a href="/" class="button-primary">homepage</a>.</h1>--%>
-<%--</c:if>--%>
+<c:if test="${not isAdmin}">
+    <c:redirect url="/"/>
+</c:if>
 
 </body>
 </html>
