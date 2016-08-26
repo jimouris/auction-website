@@ -144,6 +144,8 @@ public class user extends HttpServlet {
             if (userService.emailExist(email))
                 out.println("exists");
             return;
+        } else if (request.getParameter("action").equals("home")){
+            next_page = "/user/homepage.jsp";
         }
 
 

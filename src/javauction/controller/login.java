@@ -57,7 +57,10 @@ public class login extends HttpServlet {
                     UserEntity user = userService.getUser(username);
                     session.setAttribute("user", user);
                     session.setAttribute("isAdmin", false);
+
+                    response.sendRedirect("/user.do?action=home");
                     next_page = "/user/homepage.jsp";
+                    return;
                 } else if (result == UserService.LoginStatus.LOGIN_NOT_APPROVED) {
                     errorMsg = "Be patient, wait for your approval";
                     request.setAttribute("errorMsg", errorMsg);
