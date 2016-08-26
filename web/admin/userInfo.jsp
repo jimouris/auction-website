@@ -10,7 +10,9 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css" rel="stylesheet">
 </head>
 <body>
-
+<c:if test="${not isAdmin}">
+    <c:redirect url="/"/>
+</c:if>
 <c:if test ="${not empty user}">
     <a href="/user.do?action=getAllUsers">view all users</a>
     <jsp:useBean id="user" class="javauction.model.UserEntity" scope="request" />

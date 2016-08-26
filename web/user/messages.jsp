@@ -14,6 +14,9 @@
 </head>
 <body>
 <div class="container">
+    <c:if test="${empty user}">
+        <c:redirect url="/"/>
+    </c:if>
     <c:if test="${not empty param.rid}">
     <!-- HEADER STUFF -->
     <div class="row">

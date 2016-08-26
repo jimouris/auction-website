@@ -15,7 +15,10 @@
 </head>
 <body>
 
-<c:if test="${not empty user.userId}">
+<c:if test="${empty user}">
+    <c:redirect url="/"/>
+</c:if>
+<c:if test ="${not empty user.userId}">
 <div class="container">
     <!-- HEADER STUFF -->
     <div class="row">

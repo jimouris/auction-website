@@ -11,7 +11,9 @@
     <link href="/css/skeleton.css" rel="stylesheet">
 </head>
 <body>
-
+<c:if test="${not isAdmin}">
+    <c:redirect url="/"/>
+</c:if>
 <c:if test="${isAdmin}">
     <div class="container">
         <div class="row">

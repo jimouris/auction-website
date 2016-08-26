@@ -14,12 +14,14 @@
     <jsp:useBean id="auctionsLst" class="java.util.ArrayList" scope="request" />
 </head>
 <body>
-
 <div class="container">
+
+    <c:if test="${empty user}">
+        <c:redirect url="/"/>
+    </c:if>
     <a href="/user/homepage.jsp">home</a>
 
     <h2>Inbox</h2>
-
     <div>
         <c:if test="${not empty messagesLst}">
             <c:forEach var="message" items="${messagesLst}" varStatus="status">

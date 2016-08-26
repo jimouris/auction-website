@@ -15,6 +15,9 @@
 </head>
 <body>
 <!-- HEADER STUFF -->
+<c:if test="${empty user}">
+    <c:redirect url="/"/>
+</c:if>
 <c:if test="${not empty user.userId}">
     <a href="/user/homepage.jsp">Homepage</a>
     <a href="/auction.do?action=getAllAuctions">View All Auctions</a>
