@@ -2,6 +2,7 @@ package javauction.model;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.util.Set;
 
 /**
  * Created by jimouris on 7/2/16.
@@ -28,6 +29,10 @@ public class UserEntity {
     private Date signUpDate;
     private byte isAdmin;
     private byte isApproved;
+
+    @OneToMany(targetEntity = NotificationEntity.class, mappedBy = "actor", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OrderBy("dateAdded DESC")
+    private Set<NotificationEntity> notifications;
 
     public UserEntity(String username, byte[] hash, byte[] salt, String firstname, String lastname, String email, String phoneNumber, String vat,
                       String homeAddress, String latitude, String longitude, String city, String country) {

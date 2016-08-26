@@ -143,7 +143,7 @@ CREATE TABLE IF NOT EXISTS `auctionwebsite`.`bid` (
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB
-AUTO_INCREMENT = 58
+AUTO_INCREMENT = 62
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -199,6 +199,41 @@ CREATE TABLE IF NOT EXISTS `auctionwebsite`.`messages` (
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB
+AUTO_INCREMENT = 48
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `auctionwebsite`.`notification`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `auctionwebsite`.`notification` (
+  `NotificationID` BIGINT(20) NOT NULL AUTO_INCREMENT,
+  `Type` VARCHAR(45) NOT NULL,
+  `AuctionID` BIGINT(20) NOT NULL,
+  `ReceiverID` BIGINT(20) NOT NULL,
+  `ActorID` BIGINT(20) NOT NULL,
+  `isSeen` TINYINT(1) NULL DEFAULT '0',
+  `DateAdded` DATETIME NOT NULL,
+  PRIMARY KEY (`NotificationID`),
+  UNIQUE INDEX `NotificationID_UNIQUE` (`NotificationID` ASC),
+  INDEX `fk_notification_auction_idx` (`AuctionID` ASC),
+  INDEX `fk_notification_user_idx` (`ReceiverID` ASC),
+  INDEX `fk_notification_user1_idx` (`ActorID` ASC),
+  CONSTRAINT `fk_notification_auction`
+    FOREIGN KEY (`AuctionID`)
+    REFERENCES `auctionwebsite`.`auction` (`AuctionID`)
+    ON DELETE CASCADE
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_notification_user`
+    FOREIGN KEY (`ReceiverID`)
+    REFERENCES `auctionwebsite`.`user` (`UserID`)
+    ON DELETE CASCADE
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_notification_user1`
+    FOREIGN KEY (`ActorID`)
+    REFERENCES `auctionwebsite`.`user` (`UserID`))
+ENGINE = InnoDB
+AUTO_INCREMENT = 23
 DEFAULT CHARACTER SET = utf8;
 
 

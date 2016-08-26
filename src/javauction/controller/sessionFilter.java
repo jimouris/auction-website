@@ -23,11 +23,10 @@ public class sessionFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
         HttpSession session = request.getSession();
-
         boolean loggedIn = false;
         Boolean isAdmin = (Boolean) session.getAttribute("isAdmin");
+        UserEntity user = (UserEntity) session.getAttribute("user");
         if (session != null) {
-            UserEntity user = (UserEntity) session.getAttribute("user");
 
             loggedIn = user != null;
             if (isAdmin == null) {
@@ -57,13 +56,11 @@ public class sessionFilter implements Filter {
                 }
             }
         } else { /* if not logged in */
-            if (requestPath.startsWith("/public") || requestPath.equals("/")) {
+            if (requestPath.contains("login.do") || requestPath.startsWith("/public") || requestPath.equals("/")) {
                 filterChain.doFilter(request, response);
             } else {
                 response.sendRedirect("/public/");
             }
-
-
         }
     }
 

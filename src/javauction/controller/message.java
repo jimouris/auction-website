@@ -2,9 +2,11 @@ package javauction.controller;
 
 import javauction.model.AuctionEntity;
 import javauction.model.MessagesEntity;
+import javauction.model.NotificationEntity;
 import javauction.model.UserEntity;
 import javauction.service.AuctionService;
 import javauction.service.MessagesService;
+import javauction.service.NotificationService;
 import javauction.service.UserService;
 
 import javax.servlet.RequestDispatcher;
@@ -26,6 +28,7 @@ public class message extends HttpServlet {
     // all actions of post follows a post/redirect/get pattern in order to avoid form resubmission
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         MessagesService messagesService = new MessagesService();
+        NotificationService notificationService = new NotificationService();
         String next_page = "/user/homepage.jsp";
         String action = request.getParameter("action");
         HttpSession session = request.getSession();
@@ -38,6 +41,8 @@ public class message extends HttpServlet {
 
             MessagesEntity messagesEntity = new MessagesEntity(sid, rid, aid, msg);
             messagesService.addEntity(messagesEntity);
+            NotificationEntity notificationEntity = new NotificationEntity(rid, "message", aid, sid);
+            notificationService.addEntity(notificationEntity);
 
             String url = "/message.do?action=getConversation&rid=" + rid + "&aid=" + aid;
             response.sendRedirect(url);
@@ -51,6 +56,7 @@ public class message extends HttpServlet {
             // check if someone else tries to delete a message that he/she does not own
             if (sender_id == uid){
                 messagesService.deleteMessage(mid);
+                notificationService.deleteNotificaton(mid);
             }
 
             String url = "/message.do?action=getConversation&rid=" + rid + "&aid=" + aid;

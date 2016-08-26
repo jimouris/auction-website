@@ -171,6 +171,23 @@ span.arrow {
 
 
 
+
+
+/*------------------------------------*\
+  #NOTIFICATIONS
+\*------------------------------------*/
+.c-notification--seen{
+    opacity: 0.6;
+}
+
+.c-notification--seen:hover{
+    opacity: 1;
+}
+
+.c-notification--unseen{
+    font-weight: bold;
+}
+
 /*------------------------------------*\
   #STATUS
 \*------------------------------------*/

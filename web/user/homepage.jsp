@@ -6,6 +6,7 @@
 <head>
     <meta charset="utf-8">
     <title>Welcome Page</title>
+    <jsp:useBean id="notifLst" class="java.util.ArrayList" scope="request" />
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css" rel="stylesheet">
@@ -14,7 +15,7 @@
 </head>
 <body>
 
-<c:if test ="${not empty user.userId}">
+<c:if test="${not empty user.userId}">
 <div class="container">
     <!-- HEADER STUFF -->
     <div class="row">
@@ -22,6 +23,7 @@
             <a href="/user/homepage.jsp">
                 <img class="u-max-full-width" src="/images/logo.png">
             </a>
+            Hello ${sessionScope.user.getFirstname()},
         </div>
         <div class="offset-by-seven four columns">
             <ul class="nav u-full-width row">
@@ -68,6 +70,24 @@
         </section>
     </div>
     <!-- end of search row -->
+    <hr />
+    <div class="row">
+        <h5>Latest notifications</h5>
+        <c:if test="${not empty notifLst}">
+            <c:forEach var="notification" items="${notifLst}">
+                <c:if test="${notification.isSeen == 1}">
+                    <p class="c-notification--seen">
+                    You have a new message from user ${notification.actor.username}. <a href="/notification.do?action=viewNotification&nid=${notification.notificationId}">view</a>
+                    </p>
+                </c:if>
+                <c:if test="${notification.isSeen == 0}">
+                    <p class="c-notification--unseen">
+                        You have a new message from user ${notification.actor.username}. <a href="/notification.do?action=viewNotification&nid=${notification.notificationId}">view</a>
+                    </p>
+                </c:if>
+            </c:forEach>
+        </c:if>
+    </div>
     </c:if>
     <c:if test ="${empty user.userId}">
     <h3>You are logged out</h3>

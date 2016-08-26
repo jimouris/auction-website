@@ -1,25 +1,23 @@
 package javauction.service;
 
-import javauction.model.AuctionEntity;
 import javauction.util.HibernateUtil;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
-import org.hibernate.metamodel.domain.Entity;
-import org.hibernate.metamodel.relational.ObjectName;
-import org.hibernate.metamodel.source.annotations.entity.EntityClass;
 
 /**
  * Created by root on 8/12/16.
  */
 abstract class Service {
 
-    public void addEntity(Object entity) {
+    public long addEntity(Object entity) {
+        long id;
         Session session = HibernateUtil.getSession();
         try {
             session.beginTransaction();
-            session.save(entity);
+            id = (long) session.save(entity);
             session.getTransaction().commit();
         } catch (HibernateException e) {
+            id = -1;
             e.printStackTrace();
         } finally {
             try {
@@ -28,6 +26,7 @@ abstract class Service {
                 // ignore
             }
         }
+        return id;
     }
 
 }
