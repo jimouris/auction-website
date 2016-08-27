@@ -19,7 +19,7 @@
     <c:if test="${empty user}">
         <c:redirect url="/"/>
     </c:if>
-    <a href="/user/homepage.jsp">home</a>
+    <%@ include file="./header.jsp" %>
 
     <h2>Send messages</h2>
 
@@ -34,6 +34,7 @@
         </c:if>
     </div>
 </div>
-
+<script src="../js/jquery.min.js"></script>
+<script src="../js/scripts.js"></script>
 </body>
 </html>

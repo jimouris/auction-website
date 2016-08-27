@@ -19,28 +19,8 @@
     </c:if>
     <c:if test="${not empty param.aid}">
         <!-- HEADER STUFF -->
-        <div class="row">
-            <div class="one column">
-                <a href="/user/homepage.jsp">
-                    <img class="u-max-full-width" src="/images/logo.png">
-                </a>
-            </div>
-            <div class="offset-by-seven four columns">
-                <ul class="nav u-full-width row">
-                    <li class="offset-by-one-third one-third column newMessage tooltip"><span class="tooltipFire">Messages</span>
-                        <div class="tooltipText"><div class="tooltipMargin"></div>
-                            <a href="/message.do?action=listInbox">Inbox</a>
-                            <br/>
-                            <a href="/message.do?action=listSent">Sent</a>
-                        </div>
-                    </li>
-                    <li class="one-third column">
-                        <a href="/logout.do"><span class="delete">Logout</span></a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-        <!-- end of header row -->
+        <%@ include file="./header.jsp" %>
+
 
         <!-- Rating -->
         <div class="row">
@@ -70,6 +50,7 @@
         <!-- end of rating row -->
     </c:if>
 </div>
-
+<script src="../js/jquery.min.js"></script>
+<script src="../js/scripts.js"></script>
 </body>
 </html>

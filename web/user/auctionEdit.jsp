@@ -19,8 +19,7 @@
     <c:redirect url="/"/>
 </c:if>
 <c:if test="${not empty user.userId}">
-    <a href="/user/homepage.jsp">Homepage</a>
-    <a href="/auction.do?action=getAllAuctions">View All Auctions</a>
+    <%@ include file="./header.jsp" %>
 </c:if>
 
 <c:if test ="${not empty auction}">
@@ -192,7 +191,7 @@
     }
 </script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA7om9lzVVpATrE6I8ceaK9vMyE6Bi2KSw&callback=initMap&libraries=places" async defer></script>
-
+<script src="../js/scripts.js"></script>
 
 </body>
 </html>

@@ -19,8 +19,8 @@
     <c:if test="${empty user}">
         <c:redirect url="/"/>
     </c:if>
-    <a href="/user/homepage.jsp">home</a>
 
+    <%@ include file="./header.jsp" %>
     <h2>Inbox</h2>
     <div>
         <c:if test="${not empty messagesLst}">
@@ -33,6 +33,7 @@
         </c:if>
     </div>
 </div>
-
+<script src="../js/jquery.min.js"></script>
+<script src="../js/scripts.js"></script>
 </body>
 </html>

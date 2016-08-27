@@ -13,6 +13,7 @@
 <body>
 
 <div class="container">
+    <%@ include file="./header.jsp" %>
     <h1>Your auction submitted successfully.</h1>
     <p>Thanks for your auction!</p>
 
@@ -23,5 +24,7 @@
     </p>
 </div>
 
+<script src="../js/jquery.min.js"></script>
+<script src="../js/scripts.js"></script>
 </body>
 </html>
