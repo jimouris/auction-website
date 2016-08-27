@@ -57,7 +57,7 @@ public class message extends HttpServlet {
             if (sender_id == uid){
                 messagesService.deleteMessage(mid);
 //                notificationService.deleteNotificaton(mid);
-            }1
+            }
 
             String url = "/message.do?action=getConversation&rid=" + rid + "&aid=" + aid;
             response.sendRedirect(url);
