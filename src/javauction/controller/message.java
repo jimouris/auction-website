@@ -56,8 +56,8 @@ public class message extends HttpServlet {
             // check if someone else tries to delete a message that he/she does not own
             if (sender_id == uid){
                 messagesService.deleteMessage(mid);
-                notificationService.deleteNotificaton(mid);
-            }
+//                notificationService.deleteNotificaton(mid);
+            }1
 
             String url = "/message.do?action=getConversation&rid=" + rid + "&aid=" + aid;
             response.sendRedirect(url);
