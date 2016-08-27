@@ -23,6 +23,7 @@ import java.util.List;
  */
 public class rate extends HttpServlet {
 
+    // all actions of post follows a post/redirect/get pattern in order to avoid form resubmission
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         RatingService ratingService = new RatingService();
         String next_page = "/user/homepage.jsp";
@@ -37,25 +38,18 @@ public class rate extends HttpServlet {
 
             RatingEntity ratingEntity = new RatingEntity(from_id, to_id, aid, rating);
             ratingService.addEntity(ratingEntity);
-            UserEntity user = userService.getUser(to_id);
 
-            request.setAttribute("aid", aid);
-            request.setAttribute("to_id", to_id);
-            request.setAttribute("to_user", user);
-            request.setAttribute("from_id", from_id);
-            request.setAttribute("rating", rating);
-            next_page = "/user/rating.jsp";
+            String url = "/rate.do?action=getRating&to_id=" + to_id + "&aid=" + aid;
+            response.sendRedirect(url);
+            return;
         } else if (request.getParameter("action").equals("updateRating")) {
             int rating = Integer.parseInt(request.getParameter("rating"));
 
             ratingService.updateRating(from_id, to_id, aid, rating);
-            UserEntity user = userService.getUser(to_id);
-            request.setAttribute("aid", aid);
-            request.setAttribute("to_id", to_id);
-            request.setAttribute("to_user", user);
-            request.setAttribute("from_id", from_id);
-            request.setAttribute("rating", rating);
-            next_page = "/user/rating.jsp";
+
+            String url = "/rate.do?action=getRating&to_id=" + to_id + "&aid=" + aid;
+            response.sendRedirect(url);
+            return;
         }
 
         RequestDispatcher view = request.getRequestDispatcher(next_page);

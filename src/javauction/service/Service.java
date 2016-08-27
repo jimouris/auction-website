@@ -9,15 +9,13 @@ import org.hibernate.Session;
  */
 abstract class Service {
 
-    public long addEntity(Object entity) {
-        long id;
+    public void addEntity(Object entity) {
         Session session = HibernateUtil.getSession();
         try {
             session.beginTransaction();
-            id = (long) session.save(entity);
+            session.save(entity);
             session.getTransaction().commit();
         } catch (HibernateException e) {
-            id = -1;
             e.printStackTrace();
         } finally {
             try {
@@ -26,7 +24,6 @@ abstract class Service {
                 // ignore
             }
         }
-        return id;
     }
 
 }

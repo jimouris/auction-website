@@ -47,7 +47,7 @@
             <main class="u-full-width ">
                 <div class="row u-full-width">
                     <c:if test="${not empty rating}">
-                        <h6>You have already rated ${to_user.firstname} ${to_user.lastname} with ${rating}.</h6>
+                        <h6>You have already rated ${to_user.firstname} ${to_user.lastname} with <b>${rating}</b>.</h6>
                         <form action="/rate.do" method="POST">
                             <input type="hidden" name="to_id" value=${to_id} />
                             <input type="hidden" name="aid" value=${aid} />
