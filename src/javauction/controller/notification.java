@@ -37,6 +37,10 @@ public class notification extends HttpServlet {
                     url = "/message.do?action=getConversation&rid=" + notification.getActorId()
                             + "&aid=" + notification.getAuctionId();
                     break;
+                case "rate":
+                    url = "/rate.do?action=getRating&to_id=" + notification.getActorId()
+                            + "&aid=" + notification.getAuctionId();
+                    break;
             }
             // set a isSeen to true
             notificationService.setSeen(nid);

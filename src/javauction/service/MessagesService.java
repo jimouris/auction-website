@@ -12,12 +12,32 @@ import java.util.List;
  */
 public class MessagesService extends Service {
 
-
     public enum Message_t {
         Inbox_t,
         Sent_t
     }
 
+    public Long addNewMessage(MessagesEntity messagesEntity) {
+        Session session = HibernateUtil.getSession();
+        Transaction tx = null;
+        Long messageID = null;
+        try{
+            tx = session.beginTransaction();
+            messageID = (Long) session.save(messagesEntity);
+            session.flush();
+            tx.commit();
+        } catch (HibernateException e){
+            tx.rollback();
+            e.printStackTrace();
+        } finally {
+            try {
+                if (session != null) session.close();
+            } catch (Exception e){
+                // ignore
+            }
+        }
+        return messageID;
+    }
 
     public void deleteMessage(long mid) {
         Session session = HibernateUtil.getSession();

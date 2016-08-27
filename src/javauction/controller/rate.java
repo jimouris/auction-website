@@ -1,9 +1,11 @@
 package javauction.controller;
 
 import javauction.model.AuctionEntity;
+import javauction.model.NotificationEntity;
 import javauction.model.RatingEntity;
 import javauction.model.UserEntity;
 import javauction.service.AuctionService;
+import javauction.service.NotificationService;
 import javauction.service.RatingService;
 import javauction.service.UserService;
 
@@ -28,16 +30,18 @@ public class rate extends HttpServlet {
         RatingService ratingService = new RatingService();
         String next_page = "/user/homepage.jsp";
         HttpSession session = request.getSession();
-        UserService userService = new UserService();
 
         long from_id = ((UserEntity) session.getAttribute("user")).getUserId();
         long to_id = Long.parseLong(request.getParameter("to_id"));
         long aid = Long.parseLong(request.getParameter("aid"));
         if (request.getParameter("action").equals("addRating")) {
             int rating = Integer.parseInt(request.getParameter("rating"));
+            NotificationService notificationService = new NotificationService();
 
             RatingEntity ratingEntity = new RatingEntity(from_id, to_id, aid, rating);
             ratingService.addEntity(ratingEntity);
+            NotificationEntity notificationEntity = new NotificationEntity(to_id, "rate", aid, from_id);
+            notificationService.addEntity(notificationEntity);
 
             String url = "/rate.do?action=getRating&to_id=" + to_id + "&aid=" + aid;
             response.sendRedirect(url);

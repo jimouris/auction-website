@@ -40,8 +40,8 @@ public class message extends HttpServlet {
             String msg = request.getParameter("message_text");
 
             MessagesEntity messagesEntity = new MessagesEntity(sid, rid, aid, msg);
-            messagesService.addEntity(messagesEntity);
-            NotificationEntity notificationEntity = new NotificationEntity(rid, "message", aid, sid);
+            Long mid = messagesService.addNewMessage(messagesEntity);
+            NotificationEntity notificationEntity = new NotificationEntity(rid, "message", aid, sid, mid);
             notificationService.addEntity(notificationEntity);
 
             String url = "/message.do?action=getConversation&rid=" + rid + "&aid=" + aid;

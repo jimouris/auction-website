@@ -172,6 +172,40 @@ span.arrow {
 
 
 
+/*------------------------------------*\
+  #NOTIFICATIONS
+\*------------------------------------*/
+.c-dropdown{
+    position: relative;
+    z-index: 15;
+}
+
+.c-dropdown__trigger{
+    border: 1px solid #0FA0CE;
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 2px;
+}
+
+.c-dropdown__content{
+    display: none;
+    position: absolute;
+    width: 100%;
+    background: white;
+    box-shadow: 0 0 10px rgba(0,0,0,0.08), 0 2px 4px rgba(0,0,0,0.15);
+    border-radius: 4px;
+}
+
+p.c-dropdown__title {
+    font-size: 1.2em;
+    font-weight: bold;
+    border-bottom: 1px solid lightgrey;
+}
+
+
+
+
+
 
 /*------------------------------------*\
   #NOTIFICATIONS
@@ -187,6 +221,11 @@ span.arrow {
 .c-notification--unseen{
     font-weight: bold;
 }
+
+
+
+
+
 
 /*------------------------------------*\
   #STATUS
@@ -254,6 +293,9 @@ span.arrow {
 .h-show{
     display: block;
 }
+.h-forceShow{
+    display: block!important;
+}
 
 .h-showInline{
     display: inline-block;
@@ -263,3 +305,14 @@ span.arrow {
     display: none!important;
 }
 
+
+
+
+
+
+/*------------------------------------*\
+  #LAYOUT RELATED
+\*------------------------------------*/
+.l-pad1{
+    padding: 15px;
+}

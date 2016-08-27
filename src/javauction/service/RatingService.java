@@ -6,7 +6,6 @@ import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
-import java.text.DecimalFormat;
 import java.util.List;
 
 /**
@@ -94,8 +93,7 @@ public class RatingService extends Service {
             return null;
         }
         avg_rating /= ratingsLst.size();
-        DecimalFormat df = new DecimalFormat("0.0");
-        return Double.parseDouble(df.format(avg_rating));
+        return avg_rating;
     }
 
 }

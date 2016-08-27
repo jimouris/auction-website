@@ -32,6 +32,7 @@ public class MessagesEntity {
     }
 
     @Id
+    @GeneratedValue(strategy=GenerationType.AUTO) /* use this in order to get the right id after session.save() */
     @Column(name = "MessageID")
     public long getMessageId() {
         return messageId;
