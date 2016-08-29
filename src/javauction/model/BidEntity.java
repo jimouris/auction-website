@@ -1,5 +1,10 @@
 package javauction.model;
 
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+import com.thoughtworks.xstream.annotations.XStreamConverter;
+import com.thoughtworks.xstream.annotations.XStreamOmitField;
+import javauction.util.MoneyXmlUtil;
+
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.Calendar;
@@ -10,15 +15,19 @@ import java.util.Calendar;
 
 @Entity
 @Table(name = "bid", schema = "auctionwebsite")
+@XStreamAlias("bid")
 public class BidEntity {
     private long bidid;
     private long bidderId;
     private Timestamp bidTime;
-    private float amount;
+    @XStreamAlias("Amount")
+    @XStreamConverter(MoneyXmlUtil.class)
+    private Double amount;
     private long auctionId;
+    @XStreamOmitField
     private AuctionEntity auction;
 
-    public BidEntity(long bidderId, long auctionId, float amount) {
+    public BidEntity(long bidderId, long auctionId, Double amount) {
         this.bidderId = bidderId;
         this.auctionId = auctionId;
         this.amount = amount;
@@ -73,11 +82,11 @@ public class BidEntity {
 
     @Basic
     @Column(name = "Amount")
-    public float getAmount() {
+    public Double getAmount() {
         return amount;
     }
 
-    public void setAmount(float amount) {
+    public void setAmount(Double amount) {
         this.amount = amount;
     }
 
@@ -111,7 +120,7 @@ public class BidEntity {
         int result = (int) (bidderId ^ (bidderId >>> 32));
         result = 31 * result + (int) (auctionId ^ (auctionId >>> 32));
         result = 31 * result + (bidTime != null ? bidTime.hashCode() : 0);
-        result = 31 * result + (int) amount;
+        result = (int) (31 * result +  amount);
         return result;
     }
 }

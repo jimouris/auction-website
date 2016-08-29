@@ -1,5 +1,9 @@
 package javauction.model;
 
+import com.thoughtworks.xstream.annotations.*;
+import javauction.util.CategoryXmlUtil;
+import javauction.util.MoneyXmlUtil;
+
 import javax.persistence.*;
 import java.sql.Date;
 import java.util.Set;
@@ -9,25 +13,36 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "auction", schema = "auctionwebsite")
+@XStreamAlias("Item")
 public class AuctionEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "AuctionID")
+    @XStreamAlias("ItemID")
+    @XStreamAsAttribute
     private long auctionId;
+    @XStreamOmitField
     private Long sellerId;
+    @XStreamOmitField
     private Long buyerId;
+    @XStreamAlias("Name")
     private String name;
-    private String description;
+    @XStreamAlias("First_Bid")
+    @XStreamConverter(MoneyXmlUtil.class)
     private double lowestBid;
+    @XStreamOmitField
     private double finalPrice;
     private Date startingDate;
     private Date endingDate;
+    @XStreamAlias("Location")
     private String location;
+    @XStreamAlias("Country")
     private String country;
     private double longitude;
     private double latitude;
     private Integer numOfBids;
+    @XStreamOmitField
     private Byte isStarted;
     private double buyPrice;
 
@@ -35,15 +50,22 @@ public class AuctionEntity {
     @JoinTable(name = "auction_has_category",
             joinColumns = { @JoinColumn(name = "auction_AuctionID") },
             inverseJoinColumns = { @JoinColumn(name = "category_CategoryID") })
+    @XStreamImplicit(itemFieldName = "Category")
+    @XStreamConverter(CategoryXmlUtil.class)
     private Set<CategoryEntity> categories;
 
     @OneToMany(targetEntity = BidEntity.class, mappedBy = "auction", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @OrderBy("amount DESC")
+//    @XStreamImplicit(itemFieldName = "Bids")
     private Set<BidEntity> bids;
 
-
     @OneToMany(targetEntity = ItemImageEntity.class, mappedBy = "auction",fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @XStreamOmitField
     private Set<ItemImageEntity> images;
+
+    @XStreamAlias("Description")
+    private String description;
+
 
     public AuctionEntity() {
     }
@@ -232,7 +254,6 @@ public class AuctionEntity {
     public void setBids(Set<BidEntity> bids) {
         this.bids = bids;
     }
-
 
     public Set<ItemImageEntity> getImages() {
         return images;

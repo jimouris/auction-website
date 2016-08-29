@@ -1,5 +1,7 @@
 package javauction.controller;
 
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.xml.DomDriver;
 import javauction.model.*;
 import javauction.service.AuctionService;
 import javauction.service.CategoryService;
@@ -13,6 +15,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -184,7 +187,7 @@ public class auction extends HttpServlet {
                 e.printStackTrace();
             }
         } else if (request.getParameter("action").equals("bidAuction")) {
-            float amount = Float.parseFloat(request.getParameter("bid"));
+            double amount = Float.parseFloat(request.getParameter("bid"));
             long aid = Long.parseLong(request.getParameter("aid"));
             HttpSession session = request.getSession();
             long uid = ((UserEntity) session.getAttribute("user")).getUserId();
@@ -208,7 +211,7 @@ public class auction extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String next_page = null;
+        String next_page = "/";
         String param = request.getParameter("action");
         AuctionService auctionService = new AuctionService();
         HttpSession session = request.getSession();
@@ -324,10 +327,40 @@ public class auction extends HttpServlet {
                     next_page = "/user/auctionEdit.jsp";
                 }
                 break;
+            case "getAuctionXML":
+                response.setContentType("text/xml");
+                PrintWriter out = response.getWriter();
+
+                aid = Long.parseLong(request.getParameter("aid"));
+                auction = auctionService.getAuction(aid);
+
+
+//                to-do: find a way to fix bid hashset.
+//                CategoryXmlUtil xmlUtil = new CategoryXmlUtil();
+                XStream stream = new XStream(new DomDriver());
+//                stream.alias("bids", BidEntity.class);
+                stream.processAnnotations(AuctionEntity.class);
+//                String xml = xmlUtil.convertToXml(auction, auction.getClass());
+                out.println(stream.toXML(auction));
+//
+
+//                String xpathExpression = "/car/@registration";
+//                String actual = xmlUtil.extractValue(xml, xpathExpression);
+//                assertThat(actual, is(registration));
+//
+//                xpathExpression = "/car/brand";
+//                actual = xmlUtil.extractValue(xml, xpathExpression);
+//                assertThat(actual, is(brand));
+//
+//                xpathExpression = "/car/description";
+//                actual = xmlUtil.extractValue(xml, xpathExpression);
+//                assertThat(actual, is(description));
+
+            break;
         }
 
-        RequestDispatcher view = request.getRequestDispatcher(next_page);
-        view.forward(request, response);
+//        RequestDispatcher view = request.getRequestDispatcher(next_page);
+//        view.forward(request, response);
     }
 
 
