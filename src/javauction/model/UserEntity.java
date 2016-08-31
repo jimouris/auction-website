@@ -1,5 +1,9 @@
 package javauction.model;
 
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
+import com.thoughtworks.xstream.annotations.XStreamOmitField;
+
 import javax.persistence.*;
 import java.sql.Date;
 import java.util.Set;
@@ -8,30 +12,48 @@ import java.util.Set;
  * Created by jimouris on 7/2/16.
  */
 @Entity
-@Table(name = "user", schema = "auctionwebsite", catalog = "")
+@Table(name = "user", schema = "auctionwebsite")
 public class UserEntity {
 
+    @XStreamOmitField
     private long userId;
 
+    @XStreamAlias("BidderID")
+    @XStreamAsAttribute
     private String username;
+    @XStreamOmitField
     private byte[] hash;
+    @XStreamOmitField
     private byte[] salt;
+    @XStreamOmitField
     private String firstname;
+    @XStreamOmitField
     private String lastname;
+    @XStreamOmitField
     private String email;
+    @XStreamOmitField
     private String phoneNumber;
+    @XStreamOmitField
     private String vat;
+    @XStreamAlias("Location")
     private String homeAddress;
+    @XStreamOmitField
     private String latitude;
+    @XStreamOmitField
     private String longitude;
+    @XStreamOmitField
     private String city;
+    @XStreamAlias("Country")
     private String country;
+    @XStreamOmitField
     private Date signUpDate;
+    @XStreamOmitField
     private byte isAdmin;
+    @XStreamOmitField
     private byte isApproved;
 
     @OneToMany(targetEntity = NotificationEntity.class, mappedBy = "actor", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @OrderBy("dateAdded DESC")
+    @OrderBy("DxateAdded DESC")
     private Set<NotificationEntity> notifications;
 
     public UserEntity(String username, byte[] hash, byte[] salt, String firstname, String lastname, String email, String phoneNumber, String vat,

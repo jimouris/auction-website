@@ -1,7 +1,9 @@
 package javauction.controller;
 
 import com.thoughtworks.xstream.XStream;
-import com.thoughtworks.xstream.io.xml.DomDriver;
+import com.thoughtworks.xstream.hibernate.converter.HibernatePersistentCollectionConverter;
+import com.thoughtworks.xstream.hibernate.converter.HibernatePersistentMapConverter;
+import com.thoughtworks.xstream.mapper.Mapper;
 import javauction.model.*;
 import javauction.service.AuctionService;
 import javauction.service.CategoryService;
@@ -334,31 +336,27 @@ public class auction extends HttpServlet {
                 aid = Long.parseLong(request.getParameter("aid"));
                 auction = auctionService.getAuction(aid);
 
+                // use xstream to convert entities to xml
+                XStream stream = new XStream();
+                stream.setMode(XStream.NO_REFERENCES);
 
-//                to-do: find a way to fix bid hashset.
-//                CategoryXmlUtil xmlUtil = new CategoryXmlUtil();
-                XStream stream = new XStream(new DomDriver());
-//                stream.alias("bids", BidEntity.class);
+                // http://constc.blogspot.gr/2008/03/xstream-with-hibernate.html
+                stream.addDefaultImplementation(org.hibernate.collection.internal.PersistentList.class, java.util.List.class);
+                stream.addDefaultImplementation(org.hibernate.collection.internal.PersistentMap.class, java.util.Map.class);
+                stream.addDefaultImplementation(org.hibernate.collection.internal.PersistentSet.class, java.util.Set.class);
+
+                Mapper mapper = stream.getMapper();
+                stream.registerConverter(new HibernatePersistentCollectionConverter(mapper));
+                stream.registerConverter(new HibernatePersistentMapConverter(mapper));
+
+
+                // use annotaations instead of stream calls
                 stream.processAnnotations(AuctionEntity.class);
-//                String xml = xmlUtil.convertToXml(auction, auction.getClass());
                 out.println(stream.toXML(auction));
-//
-
-//                String xpathExpression = "/car/@registration";
-//                String actual = xmlUtil.extractValue(xml, xpathExpression);
-//                assertThat(actual, is(registration));
-//
-//                xpathExpression = "/car/brand";
-//                actual = xmlUtil.extractValue(xml, xpathExpression);
-//                assertThat(actual, is(brand));
-//
-//                xpathExpression = "/car/description";
-//                actual = xmlUtil.extractValue(xml, xpathExpression);
-//                assertThat(actual, is(description));
 
             break;
         }
-
+//
 //        RequestDispatcher view = request.getRequestDispatcher(next_page);
 //        view.forward(request, response);
     }

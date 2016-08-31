@@ -15,17 +15,24 @@ import java.util.Calendar;
 
 @Entity
 @Table(name = "bid", schema = "auctionwebsite")
-@XStreamAlias("bid")
+@XStreamAlias("Bid")
 public class BidEntity {
+    @XStreamOmitField
     private long bidid;
+    @XStreamOmitField
     private long bidderId;
     private Timestamp bidTime;
     @XStreamAlias("Amount")
     @XStreamConverter(MoneyXmlUtil.class)
     private Double amount;
+    @XStreamOmitField
     private long auctionId;
     @XStreamOmitField
     private AuctionEntity auction;
+    @XStreamAlias("Bidder")
+    private UserEntity bidder;
+
+
 
     public BidEntity(long bidderId, long auctionId, Double amount) {
         this.bidderId = bidderId;
@@ -99,6 +106,19 @@ public class BidEntity {
     public void setAuction(AuctionEntity auction) {
         this.auction = auction;
     }
+
+    @OneToOne
+    @JoinColumn(name="bidderId")
+    public UserEntity getBidder() {
+        return bidder;
+    }
+
+    public void setBidder(UserEntity seller) {
+        this.bidder = seller;
+    }
+
+
+
 
     @Override
     public boolean equals(Object o) {

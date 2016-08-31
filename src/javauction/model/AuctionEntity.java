@@ -56,7 +56,7 @@ public class AuctionEntity {
 
     @OneToMany(targetEntity = BidEntity.class, mappedBy = "auction", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @OrderBy("amount DESC")
-//    @XStreamImplicit(itemFieldName = "Bids")
+    @XStreamAlias("Bids")
     private Set<BidEntity> bids;
 
     @OneToMany(targetEntity = ItemImageEntity.class, mappedBy = "auction",fetch = FetchType.EAGER, cascade = CascadeType.ALL)
