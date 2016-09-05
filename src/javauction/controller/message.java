@@ -30,38 +30,40 @@ public class message extends HttpServlet {
         MessagesService messagesService = new MessagesService();
         NotificationService notificationService = new NotificationService();
         String next_page = "/user/homepage.jsp";
-        String action = request.getParameter("action");
         HttpSession session = request.getSession();
 
         long rid = Long.parseLong(request.getParameter("rid"));                 // the receiver of conversation
-        if (action.equals("addNewMessage")) {
-            long sid = ((UserEntity) session.getAttribute("user")).getUserId(); // the sender
-            long aid = Long.parseLong(request.getParameter("aid"));             // the auction id
-            String msg = request.getParameter("message_text");
+        if (request.getParameter("action") != null) {
+            String action = request.getParameter("action");
+            if (action.equals("addNewMessage")) {
+                long sid = ((UserEntity) session.getAttribute("user")).getUserId(); // the sender
+                long aid = Long.parseLong(request.getParameter("aid"));             // the auction id
+                String msg = request.getParameter("message_text");
 
-            MessagesEntity messagesEntity = new MessagesEntity(sid, rid, aid, msg);
-            Long mid = messagesService.addNewMessage(messagesEntity);
-            NotificationEntity notificationEntity = new NotificationEntity(rid, "message", aid, sid, mid);
-            notificationService.addEntity(notificationEntity);
+                MessagesEntity messagesEntity = new MessagesEntity(sid, rid, aid, msg);
+                Long mid = messagesService.addNewMessage(messagesEntity);
+                NotificationEntity notificationEntity = new NotificationEntity(rid, "message", aid, sid, mid);
+                notificationService.addEntity(notificationEntity);
 
-            String url = "/message.do?action=getConversation&rid=" + rid + "&aid=" + aid;
-            response.sendRedirect(url);
-            return;
-        } else if (action.equals("deleteMessage")){
-            long uid = ((UserEntity) session.getAttribute("user")).getUserId(); // just for safety check
-            long mid = Long.parseLong(request.getParameter("mid"));             // message id to delete
-            long sender_id = Long.parseLong(request.getParameter("sid"));
-            long aid = Long.parseLong(request.getParameter("aid"));
+                String url = "/message.do?action=getConversation&rid=" + rid + "&aid=" + aid;
+                response.sendRedirect(url);
+                return;
+            } else if (action.equals("deleteMessage")){
+                long uid = ((UserEntity) session.getAttribute("user")).getUserId(); // just for safety check
+                long mid = Long.parseLong(request.getParameter("mid"));             // message id to delete
+                long sender_id = Long.parseLong(request.getParameter("sid"));
+                long aid = Long.parseLong(request.getParameter("aid"));
 
-            // check if someone else tries to delete a message that he/she does not own
-            if (sender_id == uid){
-                messagesService.deleteMessage(mid);
-//                notificationService.deleteNotificaton(mid);
+                // check if someone else tries to delete a message that he/she does not own
+                if (sender_id == uid){
+                    messagesService.deleteMessage(mid);
+    //                notificationService.deleteNotificaton(mid);
+                }
+
+                String url = "/message.do?action=getConversation&rid=" + rid + "&aid=" + aid;
+                response.sendRedirect(url);
+                return;
             }
-
-            String url = "/message.do?action=getConversation&rid=" + rid + "&aid=" + aid;
-            response.sendRedirect(url);
-            return;
         }
 
         RequestDispatcher view = request.getRequestDispatcher(next_page);
@@ -70,62 +72,63 @@ public class message extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String next_page = null;
-        String param = request.getParameter("action");
         MessagesService messagesService = new MessagesService();
         HttpSession session = request.getSession();
         UserService userService = new UserService();
         AuctionService auctionService = new AuctionService();
 
         long rid;
-        switch (param) {
-            case "getConversation": /* get all actions with sellerId = uid (from session) */
-                rid = Long.parseLong(request.getParameter("rid"));
-                long aid = Long.parseLong(request.getParameter("aid"));
+        if (request.getParameter("action") != null) {
+            String param = request.getParameter("action");
+            switch (param) {
+                case "getConversation": /* get all actions with sellerId = uid (from session) */
+                    rid = Long.parseLong(request.getParameter("rid"));
+                    long aid = Long.parseLong(request.getParameter("aid"));
 
-                getConversation(messagesService, request, aid);
-                request.setAttribute("aid", aid);
-                request.setAttribute("rid", rid);
-                next_page = "/user/messages.jsp";
+                    getConversation(messagesService, request, aid);
+                    request.setAttribute("aid", aid);
+                    request.setAttribute("rid", rid);
+                    next_page = "/user/messages.jsp";
 
-                break;
-            case "listInbox": /* get all messages from inbox */
-                rid = ((UserEntity) session.getAttribute("user")).getUserId();
+                    break;
+                case "listInbox": /* get all messages from inbox */
+                    rid = ((UserEntity) session.getAttribute("user")).getUserId();
 
-                List<MessagesEntity> msgsLst = messagesService.getInboxOrSent(rid, MessagesService.Message_t.Inbox_t);
+                    List<MessagesEntity> msgsLst = messagesService.getInboxOrSent(rid, MessagesService.Message_t.Inbox_t);
 
-                List<UserEntity> sendersLst = new ArrayList<>();
-                List<AuctionEntity> auctionsLst = new ArrayList<>();
-                for (MessagesEntity m : msgsLst) {
-                    sendersLst.add(userService.getUser(m.getSenderId()));
-                    auctionsLst.add(auctionService.getAuction(m.getAuctionId()));
-                }
+                    List<UserEntity> sendersLst = new ArrayList<>();
+                    List<AuctionEntity> auctionsLst = new ArrayList<>();
+                    for (MessagesEntity m : msgsLst) {
+                        sendersLst.add(userService.getUser(m.getSenderId()));
+                        auctionsLst.add(auctionService.getAuction(m.getAuctionId()));
+                    }
 
-                request.setAttribute("messagesLst", msgsLst);
-                request.setAttribute("sendersLst", sendersLst);
-                request.setAttribute("auctionsLst", auctionsLst);
+                    request.setAttribute("messagesLst", msgsLst);
+                    request.setAttribute("sendersLst", sendersLst);
+                    request.setAttribute("auctionsLst", auctionsLst);
 
-                next_page = "/user/listInbox.jsp";
-                break;
-            case "listSent": /* get all messages from inbox */
-                rid = ((UserEntity) session.getAttribute("user")).getUserId();
+                    next_page = "/user/listInbox.jsp";
+                    break;
+                case "listSent": /* get all messages from inbox */
+                    rid = ((UserEntity) session.getAttribute("user")).getUserId();
 
-                msgsLst = messagesService.getInboxOrSent(rid, MessagesService.Message_t.Sent_t);
+                    msgsLst = messagesService.getInboxOrSent(rid, MessagesService.Message_t.Sent_t);
 
-                List<UserEntity> receiversLst = new ArrayList<>();
-                auctionsLst = new ArrayList<>();
-                for (MessagesEntity m : msgsLst) {
-                    receiversLst.add(userService.getUser(m.getReceiverId()));
-                    auctionsLst.add(auctionService.getAuction(m.getAuctionId()));
-                }
+                    List<UserEntity> receiversLst = new ArrayList<>();
+                    auctionsLst = new ArrayList<>();
+                    for (MessagesEntity m : msgsLst) {
+                        receiversLst.add(userService.getUser(m.getReceiverId()));
+                        auctionsLst.add(auctionService.getAuction(m.getAuctionId()));
+                    }
 
-                request.setAttribute("messagesLst", msgsLst);
-                request.setAttribute("receiversLst", receiversLst);
-                request.setAttribute("auctionsLst", auctionsLst);
+                    request.setAttribute("messagesLst", msgsLst);
+                    request.setAttribute("receiversLst", receiversLst);
+                    request.setAttribute("auctionsLst", auctionsLst);
 
-                next_page = "/user/listSent.jsp";
-                break;
+                    next_page = "/user/listSent.jsp";
+                    break;
+            }
         }
-
         RequestDispatcher view = request.getRequestDispatcher(next_page);
         view.forward(request, response);
     }

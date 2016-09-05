@@ -34,99 +34,104 @@ public class rate extends HttpServlet {
         long from_id = ((UserEntity) session.getAttribute("user")).getUserId();
         long to_id = Long.parseLong(request.getParameter("to_id"));
         long aid = Long.parseLong(request.getParameter("aid"));
-        if (request.getParameter("action").equals("addRating")) {
-            int rating = Integer.parseInt(request.getParameter("rating"));
-            NotificationService notificationService = new NotificationService();
+        if (request.getParameter("action") != null) {
+            if (request.getParameter("action").equals("addRating")) {
+                int rating = Integer.parseInt(request.getParameter("rating"));
+                NotificationService notificationService = new NotificationService();
 
-            RatingEntity ratingEntity = new RatingEntity(from_id, to_id, aid, rating);
-            ratingService.addEntity(ratingEntity);
-            NotificationEntity notificationEntity = new NotificationEntity(to_id, "rate", aid, from_id);
-            notificationService.addEntity(notificationEntity);
+                RatingEntity ratingEntity = new RatingEntity(from_id, to_id, aid, rating);
+                ratingService.addEntity(ratingEntity);
+                NotificationEntity notificationEntity = new NotificationEntity(to_id, "rate", aid, from_id);
+                notificationService.addEntity(notificationEntity);
 
-            String url = "/rate.do?action=getRating&to_id=" + to_id + "&aid=" + aid;
-            response.sendRedirect(url);
-            return;
-        } else if (request.getParameter("action").equals("updateRating")) {
-            int rating = Integer.parseInt(request.getParameter("rating"));
+                String url = "/rate.do?action=getRating&to_id=" + to_id + "&aid=" + aid;
+                response.sendRedirect(url);
+                return;
+            } else if (request.getParameter("action").equals("updateRating")) {
+                int rating = Integer.parseInt(request.getParameter("rating"));
 
-            ratingService.updateRating(from_id, to_id, aid, rating);
+                ratingService.updateRating(from_id, to_id, aid, rating);
 
-            String url = "/rate.do?action=getRating&to_id=" + to_id + "&aid=" + aid;
-            response.sendRedirect(url);
-            return;
+                String url = "/rate.do?action=getRating&to_id=" + to_id + "&aid=" + aid;
+                response.sendRedirect(url);
+                return;
+            }
         }
-
         RequestDispatcher view = request.getRequestDispatcher(next_page);
         view.forward(request, response);
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String next_page = null;
-        String param = request.getParameter("action");
+        String next_page = "/user/homepage.jsp";
+
         HttpSession session = request.getSession();
         RatingService ratingService = new RatingService();
         UserService userService = new UserService();
 
         long to_id, from_id, aid;
         from_id = ((UserEntity) session.getAttribute("user")).getUserId();
-        switch (param) {
-            case "getRating":
-                to_id = Long.parseLong(request.getParameter("to_id"));
-                aid = Long.parseLong(request.getParameter("aid"));
+        if (request.getParameter("action") != null) {
+            String param = request.getParameter("action");
+            switch (param) {
+                case "getRating":
+                    to_id = Long.parseLong(request.getParameter("to_id"));
+                    aid = Long.parseLong(request.getParameter("aid"));
 
-                Integer rating = null;
-                RatingEntity ratingEntity = ratingService.getRating(from_id, to_id, aid);
-                if (ratingEntity != null) {
-                    rating = ratingEntity.getRating();
-                }
-                UserEntity user = userService.getUser(to_id);
-
-                request.setAttribute("aid", aid);
-                request.setAttribute("to_id", to_id);
-                request.setAttribute("to_user", user);
-                request.setAttribute("from_id", from_id);
-                request.setAttribute("rating", rating);
-                next_page = "/user/rating.jsp";
-                break;
-            case "listFrom": case "listTo":
-                List<RatingEntity> ratingsLst;
-                if (param.equals("listFrom")) {
-                    ratingsLst = ratingService.getFromOrToRatings(from_id, RatingService.Rating_t.To_t);
-                } else {
-                    ratingsLst = ratingService.getFromOrToRatings(from_id, RatingService.Rating_t.From_t);
-                }
-                List<UserEntity> sendersOrReceiversLst = new ArrayList<>();
-                List<AuctionEntity> auctionsLst = new ArrayList<>();
-                AuctionService auctionService = new AuctionService();
-
-                double avg_rating = 0;
-                for (RatingEntity r : ratingsLst) {
-                    avg_rating += r.getRating();
-                    if (param.equals("listFrom")) {
-                        sendersOrReceiversLst.add(userService.getUser(r.getFromId()));
-                    } else {
-                        sendersOrReceiversLst.add(userService.getUser(r.getToId()));
+                    Integer rating = null;
+                    RatingEntity ratingEntity = ratingService.getRating(from_id, to_id, aid);
+                    if (ratingEntity != null) {
+                        rating = ratingEntity.getRating();
                     }
-                    auctionsLst.add(auctionService.getAuction(r.getAuctionId()));
-                }
-                if (ratingsLst.size() > 0) {
-                    avg_rating /= ratingsLst.size();
-                    DecimalFormat df = new DecimalFormat("0.0");
-                    request.setAttribute("avg_rating", Double.parseDouble(df.format(avg_rating)));
-                } else {
-                    request.setAttribute("avg_rating", null);
-                }
-                request.setAttribute("ratingsLst", ratingsLst);
-                if (param.equals("listFrom")) {
-                    request.setAttribute("sendersLst", sendersOrReceiversLst);
-                    next_page = "/user/listYourReceivedRatings.jsp";
-                } else {
-                    request.setAttribute("receiversLst", sendersOrReceiversLst);
-                    next_page = "/user/listYourSubmittedRatings.jsp";
-                }
-                request.setAttribute("auctionsLst", auctionsLst);
-                break;
+                    UserEntity user = userService.getUser(to_id);
+
+                    request.setAttribute("aid", aid);
+                    request.setAttribute("to_id", to_id);
+                    request.setAttribute("to_user", user);
+                    request.setAttribute("from_id", from_id);
+                    request.setAttribute("rating", rating);
+                    next_page = "/user/rating.jsp";
+                    break;
+                case "listFrom": case "listTo":
+                    List<RatingEntity> ratingsLst;
+                    if (param.equals("listFrom")) {
+                        ratingsLst = ratingService.getFromOrToRatings(from_id, RatingService.Rating_t.To_t);
+                    } else {
+                        ratingsLst = ratingService.getFromOrToRatings(from_id, RatingService.Rating_t.From_t);
+                    }
+                    List<UserEntity> sendersOrReceiversLst = new ArrayList<>();
+                    List<AuctionEntity> auctionsLst = new ArrayList<>();
+                    AuctionService auctionService = new AuctionService();
+
+                    double avg_rating = 0;
+                    for (RatingEntity r : ratingsLst) {
+                        avg_rating += r.getRating();
+                        if (param.equals("listFrom")) {
+                            sendersOrReceiversLst.add(userService.getUser(r.getFromId()));
+                        } else {
+                            sendersOrReceiversLst.add(userService.getUser(r.getToId()));
+                        }
+                        auctionsLst.add(auctionService.getAuction(r.getAuctionId()));
+                    }
+                    if (ratingsLst.size() > 0) {
+                        avg_rating /= ratingsLst.size();
+                        DecimalFormat df = new DecimalFormat("0.0");
+                        request.setAttribute("avg_rating", Double.parseDouble(df.format(avg_rating)));
+                    } else {
+                        request.setAttribute("avg_rating", null);
+                    }
+                    request.setAttribute("ratingsLst", ratingsLst);
+                    if (param.equals("listFrom")) {
+                        request.setAttribute("sendersLst", sendersOrReceiversLst);
+                        next_page = "/user/listYourReceivedRatings.jsp";
+                    } else {
+                        request.setAttribute("receiversLst", sendersOrReceiversLst);
+                        next_page = "/user/listYourSubmittedRatings.jsp";
+                    }
+                    request.setAttribute("auctionsLst", auctionsLst);
+                    break;
+            }
         }
+
         RequestDispatcher view = request.getRequestDispatcher(next_page);
         view.forward(request, response);
     }
