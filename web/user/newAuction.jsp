@@ -6,11 +6,13 @@
 <head>
     <meta charset="utf-8">
     <title>Ted Project at DI</title>
-    <jsp:useBean id="categoryLst" class="java.util.ArrayList" scope="request" />
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="/css/skeleton.css" rel="stylesheet">
     <link href="/css/custom.css" rel="stylesheet">
+    <link href="/css/organism.css" rel="stylesheet">
+
+    <jsp:useBean id="categoryLst" class="java.util.ArrayList" scope="request" />
 </head>
 <body>
 <div class="container">

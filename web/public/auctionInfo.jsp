@@ -11,7 +11,6 @@
     <jsp:useBean id="bidLst" class="java.util.ArrayList" scope="request" />
     <jsp:useBean id="seller" class="javauction.model.UserEntity" scope="request"/>
 
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="/css/skeleton.css" rel="stylesheet">
     <link href="/css/custom.css" rel="stylesheet">
