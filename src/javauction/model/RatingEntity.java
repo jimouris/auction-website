@@ -13,6 +13,8 @@ public class RatingEntity implements Serializable {
     private long toId;
     private long auctionId;
     private int rating;
+    private Byte isSeller;
+    private UserEntity receiver;
 
     public RatingEntity(long from_id, long to_id, long aid, int rating) {
         this.fromId = from_id;
@@ -64,6 +66,26 @@ public class RatingEntity implements Serializable {
         this.rating = rating;
     }
 
+    @ManyToOne
+    @JoinColumn(name="ToID", insertable = false, updatable = false)
+    public UserEntity getReceiver() {
+        return receiver;
+    }
+
+    public void setReceiver(UserEntity user) {
+        this.receiver = user;
+    }
+
+    @Basic
+    @Column(name = "isSeller")
+    public Byte getIsSeller() {
+        return isSeller;
+    }
+
+    public void setIsSeller(Byte isSeller) {
+        this.isSeller = isSeller;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -90,11 +112,11 @@ public class RatingEntity implements Serializable {
     @Override
     public String toString() {
         return "RatingEntity{" +
-                ", fromId=" + fromId +
+                "fromId=" + fromId +
                 ", toId=" + toId +
-                ", rating=" + rating +
                 ", auctionId=" + auctionId +
+                ", rating=" + rating +
+                ", isSeller=" + isSeller +
                 '}';
     }
-
 }

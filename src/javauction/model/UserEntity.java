@@ -6,6 +6,7 @@ import com.thoughtworks.xstream.annotations.XStreamOmitField;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.util.Arrays;
 import java.util.Set;
 
 /**
@@ -18,7 +19,7 @@ public class UserEntity {
     @XStreamOmitField
     private long userId;
 
-    @XStreamAlias("BidderID")
+    @XStreamAlias("UserID")
     @XStreamAsAttribute
     private String username;
     @XStreamOmitField
@@ -51,10 +52,15 @@ public class UserEntity {
     private byte isAdmin;
     @XStreamOmitField
     private byte isApproved;
-
-    @OneToMany(targetEntity = NotificationEntity.class, mappedBy = "actor", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @OrderBy("DxateAdded DESC")
+    @XStreamOmitField
+    private Set<RatingEntity> rating;
+    @XStreamOmitField
     private Set<NotificationEntity> notifications;
+    @XStreamOmitField
+    private Set<AuctionEntity> auctions;
+    @XStreamAlias("Rating")
+    @XStreamAsAttribute
+    private Integer sumRating = 0;
 
     public UserEntity(String username, byte[] hash, byte[] salt, String firstname, String lastname, String email, String phoneNumber, String vat,
                       String homeAddress, String latitude, String longitude, String city, String country) {
@@ -78,30 +84,11 @@ public class UserEntity {
         this.signUpDate = sqlDate;
     }
 
-    public UserEntity() {
+    public UserEntity(Set<NotificationEntity> notifications) {
+        this.notifications = notifications;
     }
 
-    @Override
-    public String toString() {
-        return "UserEntity{" +
-                "userId=" + userId +
-                ", username='" + username + '\'' +
-                ", hash='" + hash + '\'' +
-                ", salt='" + salt + '\'' +
-                ", firstname='" + firstname + '\'' +
-                ", lastname='" + lastname + '\'' +
-                ", email='" + email + '\'' +
-                ", phoneNumber='" + phoneNumber + '\'' +
-                ", vat='" + vat + '\'' +
-                ", homeAddress='" + homeAddress + '\'' +
-                ", latitude='" + latitude + '\'' +
-                ", longitude='" + longitude + '\'' +
-                ", city='" + city + '\'' +
-                ", country='" + country + '\'' +
-                ", signUpDate=" + signUpDate +
-                ", isAdmin=" + isAdmin +
-                ", isApproved=" + isApproved +
-                '}';
+    public UserEntity() {
     }
 
     @Id
@@ -275,6 +262,51 @@ public class UserEntity {
         this.isApproved = isApproved;
     }
 
+
+    @OneToMany(targetEntity = NotificationEntity.class, mappedBy = "actor", fetch = FetchType.EAGER)
+    @OrderBy("dateAdded DESC")
+    public Set<NotificationEntity> getNotifications() {
+        return notifications;
+    }
+
+    public void setNotifications(Set<NotificationEntity> notifications) {
+        this.notifications = notifications;
+    }
+
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "seller")
+    public Set<AuctionEntity> getAuctions() {
+        return auctions;
+    }
+
+    public void setAuctions(Set<AuctionEntity> auctions) {
+        this.auctions = auctions;
+    }
+
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "receiver")
+    public Set<RatingEntity> getRating() {
+        return rating;
+    }
+
+    public void setRating(Set<RatingEntity> rating) {
+        this.rating = rating;
+    }
+
+    public void setSumRating(Byte isSeller){
+        this.sumRating = 0;
+        if ( rating.size() > 0 )
+            for (RatingEntity r : rating)
+                    this.sumRating += r.getIsSeller().equals(isSeller) ? r.getRating() : 0;
+    }
+
+    @Transient
+    public Integer getSumRating() {
+        return sumRating;
+    }
+
+    public void setSumRating(Integer sumRating) {
+        this.sumRating = sumRating;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -323,5 +355,31 @@ public class UserEntity {
         result = 31 * result + (int) isAdmin;
         result = 31 * result + (int) isApproved;
         return result;
+    }
+
+
+    @Override
+    public String toString() {
+        return "UserEntity{" +
+                "userId=" + userId +
+                ", username='" + username + '\'' +
+                ", hash=" + Arrays.toString(hash) +
+                ", salt=" + Arrays.toString(salt) +
+                ", firstname='" + firstname + '\'' +
+                ", lastname='" + lastname + '\'' +
+                ", email='" + email + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", vat='" + vat + '\'' +
+                ", homeAddress='" + homeAddress + '\'' +
+                ", latitude='" + latitude + '\'' +
+                ", longitude='" + longitude + '\'' +
+                ", city='" + city + '\'' +
+                ", country='" + country + '\'' +
+                ", signUpDate=" + signUpDate +
+                ", isAdmin=" + isAdmin +
+                ", isApproved=" + isApproved +
+//                ", rating=" + rating +
+                ", notifications=" + notifications +
+                '}';
     }
 }

@@ -20,6 +20,7 @@
             <div class="four columns offset-by-four">
                 <h2>This is the main page of admin.</h2>
                 <a href="/user.do?action=getAllUsers" class="button button-primary">View all users</a>
+                <a href="/auction.do?action=getAuctionsAsXML" class="button button-primary">All auctions to XML</a>
                 <a href="/logout.do" class="button">Logout</a>
             </div>
         </div>

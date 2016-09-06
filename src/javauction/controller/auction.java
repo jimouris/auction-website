@@ -3,6 +3,8 @@ package javauction.controller;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.hibernate.converter.HibernatePersistentCollectionConverter;
 import com.thoughtworks.xstream.hibernate.converter.HibernatePersistentMapConverter;
+import com.thoughtworks.xstream.io.naming.NoNameCoder;
+import com.thoughtworks.xstream.io.xml.StaxDriver;
 import com.thoughtworks.xstream.mapper.Mapper;
 import javauction.model.*;
 import javauction.service.AuctionService;
@@ -15,10 +17,8 @@ import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.sql.Date;
+import java.io.*;
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -37,6 +37,7 @@ public class auction extends HttpServlet {
      * the web application directory.
      */
     private static final String DIR_TO_UPLOAD = "image_auction";
+    private static final String DIR_FOR_XML = "xml";
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         AuctionService auctionService = new AuctionService();
@@ -63,14 +64,14 @@ public class auction extends HttpServlet {
             long sellerId = ((UserEntity) session.getAttribute("user")).getUserId();
 
             // the auction will start now, so we have to find the current date
-            java.sql.Date startDate = null;
-            java.sql.Date endDate = null;
+            Timestamp startDate = null;
+            Timestamp endDate = null;
             byte isStarted = 0;
             if (startToday.equals("true")){
                 java.util.Date currentDate = new java.util.Date(System.currentTimeMillis());
-                startDate = new java.sql.Date(currentDate.getTime());
+                startDate = new Timestamp(currentDate.getTime());
 
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                SimpleDateFormat sdf = new SimpleDateFormat("MMM-dd-yyyy");
                 Calendar c = Calendar.getInstance();
                 try {
                     c.setTime(sdf.parse(String.valueOf(startDate)));
@@ -78,7 +79,7 @@ public class auction extends HttpServlet {
                     e.printStackTrace();
                 }
                 c.add(Calendar.DATE, activeDays);  // number of days to add
-                endDate = Date.valueOf(sdf.format(c.getTime()));  // dt is now the new date
+                endDate = Timestamp.valueOf(sdf.format(c.getTime()));  // dt is now the new date
 
                 isStarted = 1;
             }
@@ -121,7 +122,7 @@ public class auction extends HttpServlet {
         } else if (request.getParameter("action").equals("activateAuction")){
             AuctionEntity auction;
             long aid = Long.parseLong(request.getParameter("aid"));
-            Date endingDate = Date.valueOf(request.getParameter("endingDate"));
+            Timestamp endingDate = Timestamp.valueOf(request.getParameter("endingDate"));
             Boolean status;
             try {
                 auctionService.activateAuction(aid, endingDate, true);
@@ -153,12 +154,12 @@ public class auction extends HttpServlet {
                 longitude = Double.valueOf(request.getParameter("longitude"));  /* optional */
             String location = request.getParameter("location");
             String country = request.getParameter("country");
-            Date startingDate = null;
+            Timestamp startingDate = null;
             if (request.getParameterMap().containsKey("startingDate"))
-                startingDate = Date.valueOf(request.getParameter("startingDate"));
-            Date endingDate = null;
+                startingDate = Timestamp.valueOf(request.getParameter("startingDate"));
+            Timestamp endingDate = null;
             if (request.getParameterMap().containsKey("endingDate"))
-                endingDate = Date.valueOf(request.getParameter("endingDate"));
+                endingDate = Timestamp.valueOf(request.getParameter("endingDate"));
             long aid = Long.parseLong(request.getParameter("aid"));
             String[] categoriesParam = request.getParameterValues("categories");
 
@@ -329,36 +330,60 @@ public class auction extends HttpServlet {
                     next_page = "/user/auctionEdit.jsp";
                 }
                 break;
-            case "getAuctionXML":
-                response.setContentType("text/xml");
-                PrintWriter out = response.getWriter();
+            case "getAuctionsAsXML":
+                Boolean isAdmin = (Boolean) session.getAttribute("isAdmin");
+                next_page = "homepage.jsp";
 
-                aid = Long.parseLong(request.getParameter("aid"));
-                auction = auctionService.getAuction(aid);
+                if ( isAdmin ) {
+                    List<AuctionEntity> auctions = auctionService.getEveryAuction();
+                    for (AuctionEntity a : auctions)
+                        a.setBidStuff();
 
-                // use xstream to convert entities to xml
-                XStream stream = new XStream();
-                stream.setMode(XStream.NO_REFERENCES);
+                    // use xstream to convert entities to xml
+                    XStream stream = new XStream((new StaxDriver(new NoNameCoder())));
+                    stream.setMode(XStream.NO_REFERENCES);
 
-                // http://constc.blogspot.gr/2008/03/xstream-with-hibernate.html
-                stream.addDefaultImplementation(org.hibernate.collection.internal.PersistentList.class, java.util.List.class);
-                stream.addDefaultImplementation(org.hibernate.collection.internal.PersistentMap.class, java.util.Map.class);
-                stream.addDefaultImplementation(org.hibernate.collection.internal.PersistentSet.class, java.util.Set.class);
+                    // http://constc.blogspot.gr/2008/03/xstream-with-hibernate.html
+                    stream.addDefaultImplementation(org.hibernate.collection.internal.PersistentList.class, java.util.List.class);
+                    stream.addDefaultImplementation(org.hibernate.collection.internal.PersistentMap.class, java.util.Map.class);
+                    stream.addDefaultImplementation(org.hibernate.collection.internal.PersistentSet.class, java.util.Set.class);
 
-                Mapper mapper = stream.getMapper();
-                stream.registerConverter(new HibernatePersistentCollectionConverter(mapper));
-                stream.registerConverter(new HibernatePersistentMapConverter(mapper));
+                    Mapper mapper = stream.getMapper();
+                    stream.registerConverter(new HibernatePersistentCollectionConverter(mapper));
+                    stream.registerConverter(new HibernatePersistentMapConverter(mapper));
 
+                    // use annotaations instead of stream calls
+                    stream.processAnnotations(AuctionEntity.class);
+                    stream.alias("Items", List.class);
 
-                // use annotaations instead of stream calls
-                stream.processAnnotations(AuctionEntity.class);
-                out.println(stream.toXML(auction));
+                    // create the file to export
+                    String applicationPath = request.getServletContext().getRealPath("");
+                    String uploadFilePath = applicationPath + File.separator + DIR_FOR_XML;
+                    String fileName = uploadFilePath + "/auctions.xml";
+                    File fileSaveDir = new File(uploadFilePath);
+                    if (!fileSaveDir.exists()) {
+                        fileSaveDir.mkdirs();
+                    }
 
+                    // generate the xml and write it
+                    Writer out;
+                    out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileName), "UTF-8"));
+                    try {
+                        String xml = stream.toXML(auctions);
+                        out.write(xml);
+                        out.write(" ");
+                        out.close();
+                        next_page = DIR_FOR_XML + "/auctions.xml";
+                    } catch (FileNotFoundException e) {
+                        out.close();
+
+                    }
+                }
             break;
         }
-//
-//        RequestDispatcher view = request.getRequestDispatcher(next_page);
-//        view.forward(request, response);
+
+        RequestDispatcher view = request.getRequestDispatcher(next_page);
+        view.forward(request, response);
     }
 
 
@@ -447,7 +472,7 @@ public class auction extends HttpServlet {
 
     /* check if auction has ended and set the related fields */
     private AuctionEntity checkDateAndSetBuyer(HttpServletRequest request, AuctionEntity auction, long aid, Long buyerId, AuctionService auctionService) {
-        Date currentDate = new Date(System.currentTimeMillis());
+        Timestamp currentDate = new Timestamp(System.currentTimeMillis());
         if(auction.getEndingDate() != null) {
             if (auction.getEndingDate().before(currentDate)) {
                 request.setAttribute("isEnded", true);

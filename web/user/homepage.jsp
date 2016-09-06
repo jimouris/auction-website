@@ -44,24 +44,6 @@
         </section>
     </div>
     <!-- end of search row -->
-    <hr />
-    <div class="row">
-        <h5>Latest notifications</h5>
-        <c:if test="${not empty notifLst}">
-            <c:forEach var="notification" items="${notifLst}">
-                <c:if test="${notification.isSeen == 1}">
-                    <p class="c-notification--seen">
-                    You have a new ${notification.type} from user ${notification.actor.username}. <a href="/notification.do?action=viewNotification&nid=${notification.notificationId}">${notification.type} back</a>
-                    </p>
-                </c:if>
-                <c:if test="${notification.isSeen == 0}">
-                    <p class="c-notification--unseen">
-                        You have a new ${notification.type} from user ${notification.actor.username}. <a href="/notification.do?action=viewNotification&nid=${notification.notificationId}">${notification.type} back</a>
-                    </p>
-                </c:if>
-            </c:forEach>
-        </c:if>
-    </div>
     </c:if>
     <c:if test ="${empty user.userId}">
     <h3>You are logged out</h3>

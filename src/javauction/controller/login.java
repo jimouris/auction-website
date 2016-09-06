@@ -39,8 +39,9 @@ public class login extends HttpServlet {
                 result = userService.authenticateAdmin(username, password);
                 next_page = "/public/backoffice.jsp";
                 if (result == UserService.LoginStatus.LOGIN_SUCCESS) {
-                    next_page = "/admin/homepage.jsp";
                     session.setAttribute("isAdmin", true);
+
+                    next_page = "/admin/homepage.jsp";
                 } else if (result == UserService.LoginStatus.LOGIN_NOT_ADMIN) {
                     errorMsg = "You are not admin!";
                     request.setAttribute("errorMsg", errorMsg);

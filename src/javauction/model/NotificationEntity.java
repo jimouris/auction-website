@@ -20,6 +20,7 @@ public class NotificationEntity {
     private Timestamp DateAdded;
 
     private UserEntity actor;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="ActorID", nullable = false, insertable = false, updatable = false)
     public UserEntity getActor() {

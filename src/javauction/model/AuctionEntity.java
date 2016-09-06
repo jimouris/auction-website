@@ -2,10 +2,13 @@ package javauction.model;
 
 import com.thoughtworks.xstream.annotations.*;
 import javauction.util.CategoryXmlUtil;
+import javauction.util.DateXmlUtil;
 import javauction.util.MoneyXmlUtil;
+import javauction.util.SellerXmlUtil;
 
 import javax.persistence.*;
-import java.sql.Date;
+import java.sql.Timestamp;
+import java.util.Iterator;
 import java.util.Set;
 
 /**
@@ -16,9 +19,6 @@ import java.util.Set;
 @XStreamAlias("Item")
 public class AuctionEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "AuctionID")
     @XStreamAlias("ItemID")
     @XStreamAsAttribute
     private long auctionId;
@@ -28,49 +28,54 @@ public class AuctionEntity {
     private Long buyerId;
     @XStreamAlias("Name")
     private String name;
+    @XStreamOmitField
+    private double finalPrice;
+    @XStreamImplicit(itemFieldName = "Category")
+    @XStreamConverter(CategoryXmlUtil.class)
+    private Set<CategoryEntity> categories;
+    @Transient
+    @XStreamAlias("Currently")
+    @XStreamConverter(MoneyXmlUtil.class)
+    Double currently;
     @XStreamAlias("First_Bid")
     @XStreamConverter(MoneyXmlUtil.class)
     private double lowestBid;
+    @Transient
+    @XStreamAlias("Number_of_Bids")
+    int numOfBids;
+    @XStreamAlias("Bids")
+    private Set<BidEntity> bids;
     @XStreamOmitField
-    private double finalPrice;
-    private Date startingDate;
-    private Date endingDate;
+    private Set<ItemImageEntity> images;
     @XStreamAlias("Location")
     private String location;
     @XStreamAlias("Country")
     private String country;
+    @XStreamOmitField
     private double longitude;
+    @XStreamOmitField
     private double latitude;
-    private Integer numOfBids;
     @XStreamOmitField
     private Byte isStarted;
-    private double buyPrice;
-
-    @ManyToMany(targetEntity = CategoryEntity.class, fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinTable(name = "auction_has_category",
-            joinColumns = { @JoinColumn(name = "auction_AuctionID") },
-            inverseJoinColumns = { @JoinColumn(name = "category_CategoryID") })
-    @XStreamImplicit(itemFieldName = "Category")
-    @XStreamConverter(CategoryXmlUtil.class)
-    private Set<CategoryEntity> categories;
-
-    @OneToMany(targetEntity = BidEntity.class, mappedBy = "auction", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @OrderBy("amount DESC")
-    @XStreamAlias("Bids")
-    private Set<BidEntity> bids;
-
-    @OneToMany(targetEntity = ItemImageEntity.class, mappedBy = "auction",fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @XStreamOmitField
-    private Set<ItemImageEntity> images;
-
+    @XStreamAlias("Buy_Price")
+    private Double buyPrice;
+    @XStreamAlias("Started")
+    @XStreamConverter(DateXmlUtil.class)
+    private Timestamp startingDate;
+    @XStreamAlias("Ends")
+    @XStreamConverter(DateXmlUtil.class)
+    private Timestamp endingDate;
     @XStreamAlias("Description")
     private String description;
+    @XStreamAlias("Seller")
+    @XStreamConverter(SellerXmlUtil.class)
+    private UserEntity seller;
 
 
     public AuctionEntity() {
     }
 
-    public AuctionEntity(String name, long sellerId, String description, double lowestBid, String location, String country, double buyPrice, Date startingDate, Byte isStarted, Date endDate) {
+    public AuctionEntity(String name, long sellerId, String description, double lowestBid, String location, String country, double buyPrice, Timestamp startingDate, Byte isStarted, Timestamp endDate) {
         this.name = name;
         this.sellerId = sellerId;
         this.description = description;
@@ -83,6 +88,9 @@ public class AuctionEntity {
         this.buyPrice = buyPrice;
     }
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "AuctionID")
     public long getAuctionId() {
         return auctionId;
     }
@@ -93,21 +101,19 @@ public class AuctionEntity {
 
     @Basic
     @Column(name = "SellerID")
-    public long getSellerId() {
-        return sellerId;
-    }
+    public Long getSellerId() { return sellerId; }
 
-    public void setSellerId(long sellerId) {
+    public void setSellerId(Long sellerId) {
         this.sellerId = sellerId;
     }
 
     @Basic
     @Column(name = "BuyerID")
-    public long getBuyerId() {
+    public Long getBuyerId() {
         return buyerId;
     }
 
-    public void setBuyerId(long buyerId) {
+    public void setBuyerId(Long buyerId) {
         this.buyerId = buyerId;
     }
 
@@ -122,7 +128,7 @@ public class AuctionEntity {
     }
 
     @Basic
-    @Column(name = "Description")
+    @Column(name = "Description", nullable = true)
     public String getDescription() {
         return description;
     }
@@ -151,23 +157,24 @@ public class AuctionEntity {
         this.finalPrice = finalPrice;
     }
 
+
     @Basic
     @Column(name = "StartingDate")
-    public Date getStartingDate() {
+    public Timestamp getStartingDate() {
         return startingDate;
     }
 
-    public void setStartingDate(Date startingDate) {
+    public void setStartingDate(Timestamp startingDate) {
         this.startingDate = startingDate;
     }
 
     @Basic
     @Column(name = "EndingDate")
-    public Date getEndingDate() {
+    public Timestamp getEndingDate() {
         return endingDate;
     }
 
-    public void setEndingDate(Date endingDate) {
+    public void setEndingDate(Timestamp endingDate) {
         this.endingDate = endingDate;
     }
 
@@ -189,16 +196,6 @@ public class AuctionEntity {
 
     public void setLocation(String location) {
         this.location = location;
-    }
-
-    @Basic
-    @Column(name = "NumOfBids")
-    public Integer getNumOfBids() {
-        return numOfBids;
-    }
-
-    public void setNumOfBids(Integer numOfBids) {
-        this.numOfBids = numOfBids;
     }
 
     @Basic
@@ -232,13 +229,17 @@ public class AuctionEntity {
     }
 
     @Basic
-    @Column(name = "BuyPrice")
-    public double getBuyPrice() {
+    @Column(name = "BuyPrice", nullable = true)
+    public Double getBuyPrice() {
         return buyPrice;
     }
 
-    public void setBuyPrice(double buyPrice) { this.buyPrice = buyPrice; }
+    public void setBuyPrice(Double buyPrice) { this.buyPrice = buyPrice; }
 
+    @ManyToMany(targetEntity = CategoryEntity.class, fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(name = "auction_has_category",
+            joinColumns = { @JoinColumn(name = "auction_AuctionID") },
+            inverseJoinColumns = { @JoinColumn(name = "category_CategoryID") })
     public Set<CategoryEntity> getCategories(){
         return categories;
     }
@@ -247,6 +248,8 @@ public class AuctionEntity {
         this.categories = categories;
     }
 
+    @OneToMany(targetEntity = BidEntity.class, mappedBy = "auction", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OrderBy("amount DESC")
     public Set<BidEntity> getBids() {
         return bids;
     }
@@ -255,6 +258,7 @@ public class AuctionEntity {
         this.bids = bids;
     }
 
+    @OneToMany(targetEntity = ItemImageEntity.class, mappedBy = "auction",fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     public Set<ItemImageEntity> getImages() {
         return images;
     }
@@ -263,62 +267,30 @@ public class AuctionEntity {
         this.images = images;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        AuctionEntity that = (AuctionEntity) o;
-
-        if (auctionId != that.auctionId) return false;
-        if (Double.compare(that.lowestBid, lowestBid) != 0) return false;
-        if (Double.compare(that.finalPrice, finalPrice) != 0) return false;
-        if (Double.compare(that.longitude, longitude) != 0) return false;
-        if (Double.compare(that.latitude, latitude) != 0) return false;
-        if (Double.compare(that.buyPrice, buyPrice) != 0) return false;
-        if (sellerId != null ? !sellerId.equals(that.sellerId) : that.sellerId != null) return false;
-        if (buyerId != null ? !buyerId.equals(that.buyerId) : that.buyerId != null) return false;
-        if (name != null ? !name.equals(that.name) : that.name != null) return false;
-        if (description != null ? !description.equals(that.description) : that.description != null) return false;
-        if (startingDate != null ? !startingDate.equals(that.startingDate) : that.startingDate != null) return false;
-        if (endingDate != null ? !endingDate.equals(that.endingDate) : that.endingDate != null) return false;
-        if (location != null ? !location.equals(that.location) : that.location != null) return false;
-        if (country != null ? !country.equals(that.country) : that.country != null) return false;
-        if (numOfBids != null ? !numOfBids.equals(that.numOfBids) : that.numOfBids != null) return false;
-        if (isStarted != null ? !isStarted.equals(that.isStarted) : that.isStarted != null) return false;
-        if (categories != null ? !categories.equals(that.categories) : that.categories != null) return false;
-        return bids != null ? bids.equals(that.bids) : that.bids == null;
-
+    @ManyToOne
+    @JoinColumn(name="SellerID", nullable = false, insertable = false, updatable = false)
+    public UserEntity getSeller() {
+        return seller;
     }
 
-    @Override
-    public int hashCode() {
-        int result;
-        long temp;
-        result = (int) (auctionId ^ (auctionId >>> 32));
-        result = 31 * result + (sellerId != null ? sellerId.hashCode() : 0);
-        result = 31 * result + (buyerId != null ? buyerId.hashCode() : 0);
-        result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + (description != null ? description.hashCode() : 0);
-        temp = Double.doubleToLongBits(lowestBid);
-        result = 31 * result + (int) (temp ^ (temp >>> 32));
-        temp = Double.doubleToLongBits(finalPrice);
-        result = 31 * result + (int) (temp ^ (temp >>> 32));
-        result = 31 * result + (startingDate != null ? startingDate.hashCode() : 0);
-        result = 31 * result + (endingDate != null ? endingDate.hashCode() : 0);
-        result = 31 * result + (location != null ? location.hashCode() : 0);
-        result = 31 * result + (country != null ? country.hashCode() : 0);
-        temp = Double.doubleToLongBits(longitude);
-        result = 31 * result + (int) (temp ^ (temp >>> 32));
-        temp = Double.doubleToLongBits(latitude);
-        result = 31 * result + (int) (temp ^ (temp >>> 32));
-        result = 31 * result + (numOfBids != null ? numOfBids.hashCode() : 0);
-        result = 31 * result + (isStarted != null ? isStarted.hashCode() : 0);
-        temp = Double.doubleToLongBits(buyPrice);
-        result = 31 * result + (int) (temp ^ (temp >>> 32));
-        result = 31 * result + (categories != null ? categories.hashCode() : 0);
-        result = 31 * result + (bids != null ? bids.hashCode() : 0);
-        return result;
+    public void setSeller(UserEntity seller) {
+        this.seller = seller;
+    }
+
+
+    public void setBidStuff(){
+        if ( bids.size() > 0 ){
+            Iterator iter = bids.iterator();
+            numOfBids = bids.size();
+            BidEntity bid = (BidEntity) iter.next();
+            currently = bid.getAmount();
+            // this will compute the sum for user when is a bidder
+            Byte isSeller = 0;
+            bid.getBidder().setSumRating(isSeller);
+        } else{
+            numOfBids = 0;
+            currently = lowestBid;
+        }
     }
 
     @Override
@@ -328,20 +300,20 @@ public class AuctionEntity {
                 ", sellerId=" + sellerId +
                 ", buyerId=" + buyerId +
                 ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", lowestBid=" + lowestBid +
                 ", finalPrice=" + finalPrice +
-                ", startingDate=" + startingDate +
-                ", endingDate=" + endingDate +
+                ", categories=" + categories +
+                ", lowestBid=" + lowestBid +
+                ", bids=" + bids +
+                ", images=" + images +
                 ", location='" + location + '\'' +
                 ", country='" + country + '\'' +
                 ", longitude=" + longitude +
                 ", latitude=" + latitude +
-                ", numOfBids=" + numOfBids +
                 ", isStarted=" + isStarted +
                 ", buyPrice=" + buyPrice +
-                ", categories=" + categories +
-                ", bids=" + bids +
+                ", startingDate=" + startingDate +
+                ", endingDate=" + endingDate +
+                ", description='" + description + '\'' +
                 '}';
     }
 }

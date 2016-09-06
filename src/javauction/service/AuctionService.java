@@ -6,7 +6,7 @@ import javauction.util.HibernateUtil;
 import org.hibernate.*;
 import org.hibernate.criterion.*;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -55,7 +55,7 @@ public class AuctionService extends Service {
             /* get all inactive */
             criteria.add(Restrictions.eq("isStarted", (byte) 0));
             /* get all those that are really ended */
-            java.sql.Date currentDate = new Date(Calendar.getInstance().getTimeInMillis());
+            Timestamp currentDate = new Timestamp(Calendar.getInstance().getTimeInMillis());
             criteria.add(Restrictions.lt("endingDate", currentDate));
             /* where seller id == sid */
             if (uid != null) {
@@ -128,7 +128,7 @@ public class AuctionService extends Service {
             /* only active */
             criteria.add(Restrictions.eq("isStarted", (byte) 1));
             /* get all those that are really not ended */
-            java.sql.Date currentDate = new Date(Calendar.getInstance().getTimeInMillis());
+            Timestamp currentDate = new Timestamp(Calendar.getInstance().getTimeInMillis());
             criteria.add(Restrictions.gt("endingDate", currentDate));
 
 
@@ -169,7 +169,7 @@ public class AuctionService extends Service {
             /* only active */
             criteria.add(Restrictions.eq("isStarted", (byte) 1));
             /* get all those that are really not ended */
-            java.sql.Date currentDate = new Date(Calendar.getInstance().getTimeInMillis());
+            Timestamp currentDate = new Timestamp(Calendar.getInstance().getTimeInMillis());
             criteria.add(Restrictions.gt("endingDate", currentDate));
             /* category search */
             if (categories != null) {
@@ -211,7 +211,7 @@ public class AuctionService extends Service {
         return auctions;
     }
 
-    public void activateAuction(long aid, Date endingDate, boolean activate) {
+    public void activateAuction(long aid, Timestamp endingDate, boolean activate) {
         Session session = HibernateUtil.getSession();
         try {
             session.beginTransaction();
@@ -223,7 +223,7 @@ public class AuctionService extends Service {
             } else {
                 auction.setIsStarted((byte) 0);
             }
-            java.sql.Date timeNow = new Date(Calendar.getInstance().getTimeInMillis());
+            Timestamp timeNow = new Timestamp(Calendar.getInstance().getTimeInMillis());
             auction.setStartingDate(timeNow);
 
             session.update(auction);
@@ -262,7 +262,7 @@ public class AuctionService extends Service {
     }
 
     public void updateAuction(Set<CategoryEntity> categories, Long aid, String name, String desc, Double lowestBid,
-                              Double buyPrice, String location, String country, Date startingDate, Date endingDate, Long buyerid, Double latitude, Double longitude) {
+                              Double buyPrice, String location, String country, Timestamp startingDate, Timestamp endingDate, Long buyerid, Double latitude, Double longitude) {
 
         Session session = HibernateUtil.getSession();
         Transaction tx = null;
@@ -293,5 +293,24 @@ public class AuctionService extends Service {
                 // ignore
             }
         }
+    }
+
+    public List getEveryAuction() {
+        Session session = HibernateUtil.getSession();
+        List results = null;
+        try {
+            Query query;
+            query = session.createQuery("from AuctionEntity");
+            results = query.list();
+        } catch (HibernateException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (session != null) session.close();
+            } catch (Exception e) {
+                // ignore
+            }
+        }
+        return results;
     }
 }

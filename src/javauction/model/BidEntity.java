@@ -3,6 +3,7 @@ package javauction.model;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamConverter;
 import com.thoughtworks.xstream.annotations.XStreamOmitField;
+import javauction.util.DateXmlUtil;
 import javauction.util.MoneyXmlUtil;
 
 import javax.persistence.*;
@@ -21,6 +22,10 @@ public class BidEntity {
     private long bidid;
     @XStreamOmitField
     private long bidderId;
+    @XStreamAlias("Bidder")
+    private UserEntity bidder;
+    @XStreamAlias("Time")
+    @XStreamConverter(DateXmlUtil.class)
     private Timestamp bidTime;
     @XStreamAlias("Amount")
     @XStreamConverter(MoneyXmlUtil.class)
@@ -29,10 +34,6 @@ public class BidEntity {
     private long auctionId;
     @XStreamOmitField
     private AuctionEntity auction;
-    @XStreamAlias("Bidder")
-    private UserEntity bidder;
-
-
 
     public BidEntity(long bidderId, long auctionId, Double amount) {
         this.bidderId = bidderId;
