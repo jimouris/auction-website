@@ -21,35 +21,35 @@ public class notification extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String action = request.getParameter("action");
         Long nid = Long.valueOf(request.getParameter("nid"));
         String next_page = "/user/homepage.jsp";
         String url = "";
+        if (request.getParameter("action") != null) {
+            String action = request.getParameter("action");
+            if (action.equals("viewNotification")) {
+                // get the notification based on the id
+                NotificationService notificationService = new NotificationService();
+                NotificationEntity notification = notificationService.getNotification(nid);
 
-        if (action.equals("viewNotification")) {
-            // get the notification based on the id
-            NotificationService notificationService = new NotificationService();
-            NotificationEntity notification = notificationService.getNotification(nid);
+                // construct the url for get message
+                switch (notification.getType()) {
+                    case "message":
+                        url = "/message.do?action=getConversation&rid=" + notification.getActorId()
+                                + "&aid=" + notification.getAuctionId();
+                        break;
+                    case "rate":
+                        url = "/rate.do?action=getRating&to_id=" + notification.getActorId()
+                                + "&aid=" + notification.getAuctionId();
+                        break;
+                }
+                // set a isSeen to true
+                notificationService.setSeen(nid);
 
-            // construct the url for get message
-            switch (notification.getType()){
-                case "message":
-                    url = "/message.do?action=getConversation&rid=" + notification.getActorId()
-                            + "&aid=" + notification.getAuctionId();
-                    break;
-                case "rate":
-                    url = "/rate.do?action=getRating&to_id=" + notification.getActorId()
-                            + "&aid=" + notification.getAuctionId();
-                    break;
+                // redirect
+                response.sendRedirect(url);
+                return;
             }
-            // set a isSeen to true
-            notificationService.setSeen(nid);
-
-            // redirect
-            response.sendRedirect(url);
-            return;
         }
-
         RequestDispatcher view = request.getRequestDispatcher(next_page);
         view.forward(request, response);
     }

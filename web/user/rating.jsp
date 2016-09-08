@@ -9,18 +9,18 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="/css/skeleton.css" rel="stylesheet">
+    <link href="/css/custom.css" rel="stylesheet">
     <link href="/css/organism.css" rel="stylesheet">
 </head>
 <body>
 
 <div class="container">
-    <c:if test="${empty user}">
+    <c:if test="${empty user or user.userId == to_user.userId}">
         <c:redirect url="/"/>
     </c:if>
     <c:if test="${not empty param.aid}">
         <!-- HEADER STUFF -->
         <%@ include file="./header.jsp" %>
-
 
         <!-- Rating -->
         <div class="row">

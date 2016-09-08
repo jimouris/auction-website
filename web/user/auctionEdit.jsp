@@ -8,7 +8,7 @@
     <jsp:useBean id="auction" class="javauction.model.AuctionEntity" scope="request" />
     <jsp:useBean id="usedCategories" class="java.util.ArrayList" scope="request" />
     <jsp:useBean id="categoryLst" class="java.util.ArrayList" scope="request" />
-
+    
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="/css/skeleton.css" rel="stylesheet">
     <link href="/css/organism.css" rel="stylesheet">

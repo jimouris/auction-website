@@ -44,163 +44,159 @@ public class auction extends HttpServlet {
         CategoryService categoryService = new CategoryService();
         String next_page = "/user/homepage.jsp";
 
-        if (request.getParameter("action").equals("addNew")){
-            // get the user input
-            String name = request.getParameter("name"); /* required */
-            String description = request.getParameter("description"); /* required */
-            float lowestBid = Float.parseFloat(request.getParameter("lowestBid")); /* required */
-            String startToday = request.getParameter("startToday"); /* always sent by default */
-            int activeDays = Integer.parseInt(request.getParameter("activeDays")); /* optional */
-            String location = request.getParameter("location");  /* required */
-            String country = request.getParameter("country");  /* required */
-            String instantBuy = request.getParameter("instantBuy"); /* always sent by default */
-            /* get userid from session. userid will be sellerid for this specific auction! */
-            HttpSession session = request.getSession();
-            long sellerId = ((UserEntity) session.getAttribute("user")).getUserId();
+        if (request.getParameter("action") != null) {
+            if (request.getParameter("action").equals("addNew")) {
+                // get the user input
+                String name = request.getParameter("name"); /* required */
+                String description = request.getParameter("description"); /* required */
+                float lowestBid = Float.parseFloat(request.getParameter("lowestBid")); /* required */
+                String startToday = request.getParameter("startToday"); /* always sent by default */
+                int activeDays = Integer.parseInt(request.getParameter("activeDays")); /* optional */
+                String location = request.getParameter("location");  /* required */
+                String country = request.getParameter("country");  /* required */
+                String instantBuy = request.getParameter("instantBuy"); /* always sent by default */
+                /* get userid from session. userid will be sellerid for this specific auction! */
+                HttpSession session = request.getSession();
+                long sellerId = ((UserEntity) session.getAttribute("user")).getUserId();
 
-            // the auction will start now, so we have to find the current date
-            Timestamp startDate = null;
-            Timestamp endDate = null;
-            byte isStarted = 0;
-            if (startToday.equals("true")){
-                startDate = new Timestamp(System.currentTimeMillis());
+                // the auction will start now, so we have to find the current date
+                Timestamp startDate = null;
+                Timestamp endDate = null;
+                byte isStarted = 0;
+                if (startToday.equals("true")) {
+                    startDate = new Timestamp(System.currentTimeMillis());
 
-                Calendar cal = Calendar.getInstance();
-                cal.setTime(startDate);
-                cal.add(Calendar.DAY_OF_WEEK, activeDays);
-                endDate = new Timestamp(cal.getTime().getTime());
-
-                isStarted = 1;
-            }
-
-            // create auction entity with the required value
-            AuctionEntity auction = new AuctionEntity(name, sellerId, description, lowestBid, location, country, startDate, isStarted, endDate);
-
-
-            /* find out if we can sell this auction instantly */
-            if (instantBuy.equals("true")){
-                double buyPrice = Double.parseDouble(request.getParameter("buyPrice"));
-                auction.setBuyPrice(buyPrice);
-            }
-            /* if google maps returned precise location */
-            if (request.getParameterMap().containsKey("longitude") && request.getParameterMap().containsKey("latitude")) {
-                Double longitude = Double.valueOf(request.getParameter("longitude"));  /* optional */
-                Double latitude = Double.valueOf(request.getParameter("latitude")); /* optional */
-                auction.setLongitude(longitude);
-                auction.setLatitude(latitude);
-            }
-            /* if seller selected categories */
-            if (request.getParameterMap().containsKey("categories")) {
-                String[] categoriesParam = request.getParameterValues("categories"); /* required */
-                // map the auction with the specified categories
-                CategoryEntity category;
-                Set<CategoryEntity> categories = new HashSet<>();
-                for (String cid : categoriesParam) {
-                    category = categoryService.getCategory(Integer.parseInt(cid));
-                    categories.add(category);
+                    Calendar cal = Calendar.getInstance();
+                    cal.setTime(startDate);
+                    cal.add(Calendar.DAY_OF_WEEK, activeDays);
+                    endDate = new Timestamp(cal.getTime().getTime());
+                    isStarted = 1;
                 }
-                auction.setCategories(categories);
-            }
 
-            /* by now all the data should be ok */
-            try {
-                auctionService.addEntity(auction);
+                // create auction entity with the required value
+                AuctionEntity auction = new AuctionEntity(name, sellerId, description, lowestBid, location, country, startDate, isStarted, endDate);
 
-                // upload the images
-                uploadFiles(request, auction.getAuctionId());
-
-                request.setAttribute("aid", auction.getAuctionId());
-                next_page = "/user/auctionSubmit.jsp";
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } else if (request.getParameter("action").equals("activateAuction")){
-            AuctionEntity auction;
-            long aid = Long.parseLong(request.getParameter("aid"));
-            Timestamp endingDate = Timestamp.valueOf(request.getParameter("endingDate"));
-            Boolean status;
-            try {
-                auctionService.activateAuction(aid, endingDate, true);
-                status = true;
-            } catch (Exception e) {
-                e.printStackTrace();
-                status = false; // @jimouris edw tha trexei ama skasei, h' vlakeia egraya?
-            }
-
-            response.sendRedirect("/auction.do?action=getAnAuction&aid="+aid+"&from=activate&status="+status);
-            return;
-        } else if (request.getParameter("action").equals("updateAuction")) {
-            Boolean status = false;
-            String name = request.getParameter("name");
-            String desc = request.getParameter("description");
-            Double lowestBid = null;
-            if (request.getParameterMap().containsKey("lowestBid"))
-                lowestBid = Double.parseDouble(request.getParameter("lowestBid"));
-            Double buyPrice = null;
-            if (request.getParameterMap().containsKey("buyPrice")) {
-                Boolean set_buyPrice = request.getParameter("buyPrice").isEmpty();
-                buyPrice = set_buyPrice ? -1 : Double.parseDouble(request.getParameter("buyPrice"));
-            }
-            Double latitude = null;
-            if (request.getParameterMap().containsKey("latitude"))
-                latitude = Double.valueOf(request.getParameter("latitude")); /* optional */
-            Double longitude = null;
-            if (request.getParameterMap().containsKey("longitude"))
-                longitude = Double.valueOf(request.getParameter("longitude"));  /* optional */
-            String location = request.getParameter("location");
-            String country = request.getParameter("country");
-            Timestamp startingDate = null;
-            if (request.getParameterMap().containsKey("startingDate"))
-                startingDate = Timestamp.valueOf(request.getParameter("startingDate"));
-            Timestamp endingDate = null;
-            if (request.getParameterMap().containsKey("endingDate"))
-                endingDate = Timestamp.valueOf(request.getParameter("endingDate"));
-            long aid = Long.parseLong(request.getParameter("aid"));
-            String[] categoriesParam = request.getParameterValues("categories");
-
-            try {
-                // map the auction with the specified categories
-                Set<CategoryEntity> categories = null;
-                if (categoriesParam != null) {
+                /* find out if we can sell this auction instantly */
+                if (instantBuy.equals("true")) {
+                    double buyPrice = Double.parseDouble(request.getParameter("buyPrice"));
+                    auction.setBuyPrice(buyPrice);
+                }
+                /* if google maps returned precise location */
+                if (request.getParameterMap().containsKey("longitude") && request.getParameterMap().containsKey("latitude")) {
+                    Double longitude = Double.valueOf(request.getParameter("longitude"));  /* optional */
+                    Double latitude = Double.valueOf(request.getParameter("latitude")); /* optional */
+                    auction.setLongitude(longitude);
+                    auction.setLatitude(latitude);
+                }
+                /* if seller selected categories */
+                if (request.getParameterMap().containsKey("categories")) {
+                    String[] categoriesParam = request.getParameterValues("categories"); /* required */
+                    // map the auction with the specified categories
                     CategoryEntity category;
-                    categories = new HashSet<>();
+                    Set<CategoryEntity> categories = new HashSet<>();
                     for (String cid : categoriesParam) {
                         category = categoryService.getCategory(Integer.parseInt(cid));
                         categories.add(category);
                     }
+                    auction.setCategories(categories);
                 }
-                auctionService.updateAuction(categories, aid, name, desc, lowestBid,  buyPrice, location, country, startingDate, endingDate, null, latitude, longitude);
-                status = true;
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            response.sendRedirect("/auction.do?action=getAnAuction&aid="+aid+"&from=update&status="+status);
-            return;
-        } else if (request.getParameter("action").equals("deleteAuction")) {
-            try {
+
+                /* by now all the data should be ok */
+                try {
+                    auctionService.addEntity(auction);
+                    // upload the images
+                    uploadFiles(request, auction.getAuctionId());
+                    request.setAttribute("aid", auction.getAuctionId());
+                    next_page = "/user/auctionSubmit.jsp";
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } else if (request.getParameter("action").equals("activateAuction")) {
                 long aid = Long.parseLong(request.getParameter("aid"));
-                auctionService.deleteAuction(aid);
-                next_page = "/user/homepage.jsp";
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } else if (request.getParameter("action").equals("bidAuction")) {
-            double amount = Float.parseFloat(request.getParameter("bid"));
-            long aid = Long.parseLong(request.getParameter("aid"));
-            HttpSession session = request.getSession();
-            long uid = ((UserEntity) session.getAttribute("user")).getUserId();
+                Timestamp endingDate = Timestamp.valueOf(request.getParameter("endingDate"));
+                Boolean status;
+                try {
+                    auctionService.activateAuction(aid, endingDate, true);
+                    status = true;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    status = false;
+                }
+                response.sendRedirect("/auction.do?action=getAnAuction&aid=" + aid + "&from=activate&status=" + status);
+                return;
+            } else if (request.getParameter("action").equals("updateAuction")) {
+                Boolean status = false;
+                String name = request.getParameter("name");
+                String desc = request.getParameter("description");
+                Double lowestBid = null;
+                if (request.getParameterMap().containsKey("lowestBid"))
+                    lowestBid = Double.parseDouble(request.getParameter("lowestBid"));
+                Double buyPrice = null;
+                if (request.getParameterMap().containsKey("buyPrice")) {
+                    Boolean set_buyPrice = request.getParameter("buyPrice").isEmpty();
+                    buyPrice = set_buyPrice ? -1 : Double.parseDouble(request.getParameter("buyPrice"));
+                }
+                Double latitude = null;
+                if (request.getParameterMap().containsKey("latitude"))
+                    latitude = Double.valueOf(request.getParameter("latitude")); /* optional */
+                Double longitude = null;
+                if (request.getParameterMap().containsKey("longitude"))
+                    longitude = Double.valueOf(request.getParameter("longitude"));  /* optional */
+                String location = request.getParameter("location");
+                String country = request.getParameter("country");
+                Timestamp startingDate = null;
+                if (request.getParameterMap().containsKey("startingDate"))
+                    startingDate = Timestamp.valueOf(request.getParameter("startingDate"));
+                Timestamp endingDate = null;
+                if (request.getParameterMap().containsKey("endingDate"))
+                    endingDate = Timestamp.valueOf(request.getParameter("endingDate"));
+                long aid = Long.parseLong(request.getParameter("aid"));
+                String[] categoriesParam = request.getParameterValues("categories");
 
-            Boolean status = false;
-            try {
-                BidEntity bid = new BidEntity(uid, aid, amount);
-                auctionService.addEntity(bid);
-                status = true;
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+                try {
+                    // map the auction with the specified categories
+                    Set<CategoryEntity> categories = null;
+                    if (categoriesParam != null) {
+                        CategoryEntity category;
+                        categories = new HashSet<>();
+                        for (String cid : categoriesParam) {
+                            category = categoryService.getCategory(Integer.parseInt(cid));
+                            categories.add(category);
+                        }
+                    }
+                    auctionService.updateAuction(categories, aid, name, desc, lowestBid, buyPrice, location, country, startingDate, endingDate, null, latitude, longitude);
+                    status = true;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                response.sendRedirect("/auction.do?action=getAnAuction&aid=" + aid + "&from=update&status=" + status);
+                return;
+            } else if (request.getParameter("action").equals("deleteAuction")) {
+                try {
+                    long aid = Long.parseLong(request.getParameter("aid"));
+                    auctionService.deleteAuction(aid);
+                    next_page = "/user/homepage.jsp";
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } else if (request.getParameter("action").equals("bidAuction")) {
+                double amount = Float.parseFloat(request.getParameter("bid"));
+                long aid = Long.parseLong(request.getParameter("aid"));
+                HttpSession session = request.getSession();
+                long uid = ((UserEntity) session.getAttribute("user")).getUserId();
 
-            response.sendRedirect("/auction.do?action=getAnAuction&aid="+aid+"&from=bid&status="+status);
-            return;
+                Boolean status = false;
+                try {
+                    BidEntity bid = new BidEntity(uid, aid, amount);
+                    auctionService.addEntity(bid);
+                    status = true;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                response.sendRedirect("/auction.do?action=getAnAuction&aid=" + aid + "&from=bid&status=" + status);
+                return;
+            }
         }
 
         RequestDispatcher view = request.getRequestDispatcher(next_page);
@@ -208,8 +204,8 @@ public class auction extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String next_page = "/";
-        String param = request.getParameter("action");
+        String next_page = "/user/homepage.jsp";
+
         AuctionService auctionService = new AuctionService();
         HttpSession session = request.getSession();
         CategoryService categoryService = new CategoryService();
@@ -217,168 +213,170 @@ public class auction extends HttpServlet {
 
         /* assign successMsg or errorMsg to request*/
         createMsg(request, response);
+        if (request.getParameter("action") != null) {
+            String param = request.getParameter("action");
 
-        switch (param) {
-            case "getAllAuctions": /* get all actions with sellerId = uid (from session) */
-                long uid = ((UserEntity) session.getAttribute("user")).getUserId();
-                List auctionLst = auctionService.getAllAuctions(uid, false);
-                request.setAttribute("auctionLst", auctionLst);
-                next_page = "/public/listAuctions.jsp";
-                break;
-            case "getAllActiveAuctions": /* get all active auctions, all sellers */
-                request.setAttribute("auctionLst", auctionService.getAllAuctions(-1, true));
-                next_page = "/public/listAuctions.jsp";
-                break;
-            case "newAuction": /* gather all categories to display on jsp */
-                request.setAttribute("categoryLst", categoryLst);
-                next_page = "/user/newAuction.jsp";
-                break;
-            case "getAnAuction": /* get an auction with auctionId = aid */
-                long aid = Long.parseLong(request.getParameter("aid"));
-                AuctionEntity auction = auctionService.getAuction(aid);
-                UserEntity user = (UserEntity) session.getAttribute("user");
+            switch (param) {
+                case "getAllAuctions": /* get all actions with sellerId = uid (from session) */
+                    long uid = ((UserEntity) session.getAttribute("user")).getUserId();
+                    List auctionLst = auctionService.getAllAuctions(uid, false);
+                    request.setAttribute("auctionLst", auctionLst);
+                    next_page = "/public/listAuctions.jsp";
+                    break;
+                case "getAllActiveAuctions": /* get all active auctions, all sellers */
+                    request.setAttribute("auctionLst", auctionService.getAllAuctions(-1, true));
+                    next_page = "/public/listAuctions.jsp";
+                    break;
+                case "newAuction": /* gather all categories to display on jsp */
+                    request.setAttribute("categoryLst", categoryLst);
+                    next_page = "/user/newAuction.jsp";
+                    break;
+                case "getAnAuction": /* get an auction with auctionId = aid */
+                    long aid = Long.parseLong(request.getParameter("aid"));
+                    AuctionEntity auction = auctionService.getAuction(aid);
+                    UserEntity user = (UserEntity) session.getAttribute("user");
 
                 /* get seller id for the auction */
-                long sid = auction.getSellerId();
+                    long sid = auction.getSellerId();
                 /* Guest session */
-                if (user == null) {
-                    session.setAttribute("isSeller", false);
-                } else {
-                    session.setAttribute("isSeller", sid == user.getUserId());
-                }
+                    if (user == null) {
+                        session.setAttribute("isSeller", false);
+                    } else {
+                        session.setAttribute("isSeller", sid == user.getUserId());
+                    }
 
                 /* Auctions selected categories*/
-                Set <CategoryEntity> cats = auction.getCategories();
-                List<CategoryEntity> usedCategories = new ArrayList<>();
-                for (CategoryEntity c : cats){
-                    usedCategories.add(new CategoryEntity(c.getCategoryId(), c.getCategoryName()));
-                }
-                /* get all images */
-                Set <ItemImageEntity> allImages = auction.getImages();
-                List<ItemImageEntity> imageLst = new ArrayList<>();
-                for(ItemImageEntity img : allImages){
-                    imageLst.add(img);
-                }
-                /* get the highest bid */
-                Set <BidEntity> allBids = auction.getBids();
-                List<BidEntity> bidLst = new ArrayList<>();
-                List<UserEntity> biddersLst = new ArrayList<>();
-                UserService userService = new UserService();
-                for (BidEntity b : allBids) {
-                    bidLst.add(b);
-                    biddersLst.add(userService.getUser(b.getBidderId()));
-                }
-                /* if auction has ended */
-                Long buyerid = null;
-                if (biddersLst.size() > 0) {
-                    buyerid = (Long) biddersLst.get(0).getUserId();
-                }
-                auction = checkDateAndSetBuyer(request, auction, aid, buyerid, auctionService);
-                UserEntity seller = userService.getUser(sid);
-                RatingService ratingService = new RatingService();
-                Double avg_rating = ratingService.calcAvgRating(sid, RatingService.Rating_t.To_t);
-
-                request.setAttribute("auction", auction);
-                request.setAttribute("usedCategories", usedCategories);
-                request.setAttribute("imageLst", imageLst);
-                request.setAttribute("seller", seller);
-                request.setAttribute("biddersLst", biddersLst);
-                request.setAttribute("bidLst", bidLst);
-                request.setAttribute("avg_rating", avg_rating);
-                next_page = "/public/auctionInfo.jsp";
-                break;
-            case "getAllYourEndedAuctions":
-                uid = (Long) ((UserEntity) session.getAttribute("user")).getUserId();
-                auctionLst = auctionService.getAllEndedAuctions(uid, true);
-                request.setAttribute("auctionLst", auctionLst);
-                next_page = "/public/listAuctions.jsp";
-                break;
-            case "getAllEndedAuctions":
-                auctionLst = auctionService.getAllEndedAuctions(null, false);
-                request.setAttribute("auctionLst", auctionLst);
-                next_page = "/public/listAuctions.jsp";
-                break;
-            case "getAuctionsYouHaveBought":
-                uid = (Long) ((UserEntity) session.getAttribute("user")).getUserId();
-                auctionLst = auctionService.getAllEndedAuctions(uid, false);
-                request.setAttribute("auctionLst", auctionLst);
-                next_page = "/public/listAuctions.jsp";
-                break;
-            case "editAuction":
-                aid = Long.parseLong(request.getParameter("aid"));
-                auction = auctionService.getAuction(aid);
-                uid = (Long) ((UserEntity) session.getAttribute("user")).getUserId();
-                if (auction.getSellerId() != uid) {
-                    next_page = "/user/homepage.jsp";
-                } else {
-                    /* Auctions selected categories*/
-                    cats = auction.getCategories();
-                    usedCategories = new ArrayList<>();
-                    for (CategoryEntity c : cats){
+                    Set<CategoryEntity> cats = auction.getCategories();
+                    List<CategoryEntity> usedCategories = new ArrayList<>();
+                    for (CategoryEntity c : cats) {
                         usedCategories.add(new CategoryEntity(c.getCategoryId(), c.getCategoryName()));
                     }
-                    /* all categories */
-                    request.setAttribute("usedCategories", usedCategories);
-                    request.setAttribute("categoryLst", categoryLst);
+                /* get all images */
+                    Set<ItemImageEntity> allImages = auction.getImages();
+                    List<ItemImageEntity> imageLst = new ArrayList<>();
+                    for (ItemImageEntity img : allImages) {
+                        imageLst.add(img);
+                    }
+                /* get the highest bid */
+                    Set<BidEntity> allBids = auction.getBids();
+                    List<BidEntity> bidLst = new ArrayList<>();
+                    List<UserEntity> biddersLst = new ArrayList<>();
+                    UserService userService = new UserService();
+                    for (BidEntity b : allBids) {
+                        bidLst.add(b);
+                        biddersLst.add(userService.getUser(b.getBidderId()));
+                    }
+                /* if auction has ended */
+                    Long buyerid = null;
+                    if (biddersLst.size() > 0) {
+                        buyerid = (Long) biddersLst.get(0).getUserId();
+                    }
+                    auction = checkDateAndSetBuyer(request, auction, aid, buyerid, auctionService);
+                    UserEntity seller = userService.getUser(sid);
+                    RatingService ratingService = new RatingService();
+                    Double avg_rating = ratingService.calcAvgRating(sid, RatingService.Rating_t.To_t);
+
                     request.setAttribute("auction", auction);
-                    next_page = "/user/auctionEdit.jsp";
-                }
-                break;
-            case "getAuctionsAsXML":
-                Boolean isAdmin = (Boolean) session.getAttribute("isAdmin");
-                next_page = "homepage.jsp";
-
-                if ( isAdmin ) {
-                    List<AuctionEntity> auctions = auctionService.getEveryAuction();
-                    for (AuctionEntity a : auctions)
-                        a.setBidStuff();
-
-                    // use xstream to convert entities to xml
-                    XStream stream = new XStream((new StaxDriver(new NoNameCoder())));
-                    stream.setMode(XStream.NO_REFERENCES);
-
-                    // http://constc.blogspot.gr/2008/03/xstream-with-hibernate.html
-                    stream.addDefaultImplementation(org.hibernate.collection.internal.PersistentList.class, java.util.List.class);
-                    stream.addDefaultImplementation(org.hibernate.collection.internal.PersistentMap.class, java.util.Map.class);
-                    stream.addDefaultImplementation(org.hibernate.collection.internal.PersistentSet.class, java.util.Set.class);
-
-                    Mapper mapper = stream.getMapper();
-                    stream.registerConverter(new HibernatePersistentCollectionConverter(mapper));
-                    stream.registerConverter(new HibernatePersistentMapConverter(mapper));
-
-                    // use annotaations instead of stream calls
-                    stream.processAnnotations(AuctionEntity.class);
-                    stream.alias("Items", List.class);
-
-                    // create the file to export
-                    String applicationPath = request.getServletContext().getRealPath("");
-                    String uploadFilePath = applicationPath + File.separator + DIR_FOR_XML;
-                    String fileName = uploadFilePath + "/auctions.xml";
-                    File fileSaveDir = new File(uploadFilePath);
-                    if (!fileSaveDir.exists()) {
-                        fileSaveDir.mkdirs();
+                    request.setAttribute("usedCategories", usedCategories);
+                    request.setAttribute("imageLst", imageLst);
+                    request.setAttribute("seller", seller);
+                    request.setAttribute("biddersLst", biddersLst);
+                    request.setAttribute("bidLst", bidLst);
+                    request.setAttribute("avg_rating", avg_rating);
+                    next_page = "/public/auctionInfo.jsp";
+                    break;
+                case "getAllYourEndedAuctions":
+                    uid = (Long) ((UserEntity) session.getAttribute("user")).getUserId();
+                    auctionLst = auctionService.getAllEndedAuctions(uid, true);
+                    request.setAttribute("auctionLst", auctionLst);
+                    next_page = "/public/listAuctions.jsp";
+                    break;
+                case "getAllEndedAuctions":
+                    auctionLst = auctionService.getAllEndedAuctions(null, false);
+                    request.setAttribute("auctionLst", auctionLst);
+                    next_page = "/public/listAuctions.jsp";
+                    break;
+                case "getAuctionsYouHaveBought":
+                    uid = (Long) ((UserEntity) session.getAttribute("user")).getUserId();
+                    auctionLst = auctionService.getAllEndedAuctions(uid, false);
+                    request.setAttribute("auctionLst", auctionLst);
+                    next_page = "/public/listAuctions.jsp";
+                    break;
+                case "editAuction":
+                    aid = Long.parseLong(request.getParameter("aid"));
+                    auction = auctionService.getAuction(aid);
+                    uid = (Long) ((UserEntity) session.getAttribute("user")).getUserId();
+                    if (auction.getSellerId() != uid) {
+                        next_page = "/user/homepage.jsp";
+                    } else {
+                    /* Auctions selected categories*/
+                        cats = auction.getCategories();
+                        usedCategories = new ArrayList<>();
+                        for (CategoryEntity c : cats) {
+                            usedCategories.add(new CategoryEntity(c.getCategoryId(), c.getCategoryName()));
+                        }
+                    /* all categories */
+                        request.setAttribute("usedCategories", usedCategories);
+                        request.setAttribute("categoryLst", categoryLst);
+                        request.setAttribute("auction", auction);
+                        next_page = "/user/auctionEdit.jsp";
                     }
+                    break;
+                case "getAuctionsAsXML":
+                    Boolean isAdmin = (Boolean) session.getAttribute("isAdmin");
+                    next_page = "homepage.jsp";
 
-                    // generate the xml and write it
-                    Writer out;
-                    out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileName), "UTF-8"));
-                    try {
-                        String xml = stream.toXML(auctions);
-                        out.write(xml);
-                        out.write(" ");
-                        out.close();
-                        next_page = DIR_FOR_XML + "/auctions.xml";
-                    } catch (FileNotFoundException e) {
-                        out.close();
+                    if ( isAdmin ) {
+                        List<AuctionEntity> auctions = auctionService.getEveryAuction();
+                        for (AuctionEntity a : auctions)
+                            a.setBidStuff();
 
+                        // use xstream to convert entities to xml
+                        XStream stream = new XStream((new StaxDriver(new NoNameCoder())));
+                        stream.setMode(XStream.NO_REFERENCES);
+
+                        // http://constc.blogspot.gr/2008/03/xstream-with-hibernate.html
+                        stream.addDefaultImplementation(org.hibernate.collection.internal.PersistentList.class, java.util.List.class);
+                        stream.addDefaultImplementation(org.hibernate.collection.internal.PersistentMap.class, java.util.Map.class);
+                        stream.addDefaultImplementation(org.hibernate.collection.internal.PersistentSet.class, java.util.Set.class);
+
+                        Mapper mapper = stream.getMapper();
+                        stream.registerConverter(new HibernatePersistentCollectionConverter(mapper));
+                        stream.registerConverter(new HibernatePersistentMapConverter(mapper));
+
+                        // use annotaations instead of stream calls
+                        stream.processAnnotations(AuctionEntity.class);
+                        stream.alias("Items", List.class);
+
+                        // create the file to export
+                        String applicationPath = request.getServletContext().getRealPath("");
+                        String uploadFilePath = applicationPath + File.separator + DIR_FOR_XML;
+                        String fileName = uploadFilePath + "/auctions.xml";
+                        File fileSaveDir = new File(uploadFilePath);
+                        if (!fileSaveDir.exists()) {
+                            fileSaveDir.mkdirs();
+                        }
+
+                        // generate the xml and write it
+                        Writer out;
+                        out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileName), "UTF-8"));
+                        try {
+                            String xml = stream.toXML(auctions);
+                            out.write(xml);
+                            out.write(" ");
+                            out.close();
+                            next_page = DIR_FOR_XML + "/auctions.xml";
+                        } catch (FileNotFoundException e) {
+                            out.close();
+
+                        }
                     }
+                    break;
                 }
-            break;
+            }
+            RequestDispatcher view = request.getRequestDispatcher(next_page);
+            view.forward(request, response);
         }
-
-        RequestDispatcher view = request.getRequestDispatcher(next_page);
-        view.forward(request, response);
-    }
 
 
     private Boolean uploadFiles(HttpServletRequest request, long auctionId) throws IOException, ServletException {
