@@ -61,7 +61,7 @@ public class UserEntity {
     @XStreamAlias("Rating")
     @XStreamAsAttribute
     private Integer ratingAsBidder = 0;
-
+    @XStreamOmitField
     private Integer ratingAsSeller = 0;
 
     public UserEntity(String username, byte[] hash, byte[] salt, String firstname, String lastname, String email, String phoneNumber, String vat,

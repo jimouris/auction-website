@@ -272,7 +272,8 @@
 
 </script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA7om9lzVVpATrE6I8ceaK9vMyE6Bi2KSw&callback=initMap&libraries=places" async defer></script>
-<script src="../js"></script>
+<script src="/js/jquery.min.js"></script>
+<script src="/js/scripts.js"></script>
 
 
 </body>

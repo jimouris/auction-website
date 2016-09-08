@@ -25,6 +25,5 @@ $(document).ready(function () {
         endingDate = $(dateField).val() + " " + h + ":" + m + ":" + s;
         $(dateField).attr('type', 'text').val(endingDate);
         console.log(dateField.val());
-        debugger;
     });
 });
