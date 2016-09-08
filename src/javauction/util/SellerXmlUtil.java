@@ -16,9 +16,8 @@ public class SellerXmlUtil implements Converter {
         UserEntity seller = (UserEntity) o;
         writer.addAttribute("UserID", seller.getUsername());
         // this will compute the sum of ratings of a user as seller
-        Byte isSeller = 1;
-        seller.setSumRating(isSeller);
-        writer.addAttribute("Rating", String.valueOf(seller.getSumRating()));
+        seller.setRatingAs("seller");
+        writer.addAttribute("Rating", String.valueOf(seller.getRatingAsSeller()));
 
     }
 

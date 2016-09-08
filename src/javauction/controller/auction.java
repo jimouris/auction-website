@@ -54,11 +54,6 @@ public class auction extends HttpServlet {
             String location = request.getParameter("location");  /* required */
             String country = request.getParameter("country");  /* required */
             String instantBuy = request.getParameter("instantBuy"); /* always sent by default */
-            /* find out if we can sell this auction instantly */
-            float buyPrice = -1;
-            if (instantBuy.equals("true")){
-                buyPrice = Float.parseFloat(request.getParameter("buyPrice"));
-            }
             /* get userid from session. userid will be sellerid for this specific auction! */
             HttpSession session = request.getSession();
             long sellerId = ((UserEntity) session.getAttribute("user")).getUserId();
@@ -68,25 +63,25 @@ public class auction extends HttpServlet {
             Timestamp endDate = null;
             byte isStarted = 0;
             if (startToday.equals("true")){
-                java.util.Date currentDate = new java.util.Date(System.currentTimeMillis());
-                startDate = new Timestamp(currentDate.getTime());
+                startDate = new Timestamp(System.currentTimeMillis());
 
-                SimpleDateFormat sdf = new SimpleDateFormat("MMM-dd-yyyy");
-                Calendar c = Calendar.getInstance();
-                try {
-                    c.setTime(sdf.parse(String.valueOf(startDate)));
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-                c.add(Calendar.DATE, activeDays);  // number of days to add
-                endDate = Timestamp.valueOf(sdf.format(c.getTime()));  // dt is now the new date
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(startDate);
+                cal.add(Calendar.DAY_OF_WEEK, activeDays);
+                endDate = new Timestamp(cal.getTime().getTime());
 
                 isStarted = 1;
             }
 
             // create auction entity with the required value
-            AuctionEntity auction = new AuctionEntity(name, sellerId, description, lowestBid, location, country, buyPrice, startDate, isStarted, endDate);
+            AuctionEntity auction = new AuctionEntity(name, sellerId, description, lowestBid, location, country, startDate, isStarted, endDate);
 
+
+            /* find out if we can sell this auction instantly */
+            if (instantBuy.equals("true")){
+                double buyPrice = Double.parseDouble(request.getParameter("buyPrice"));
+                auction.setBuyPrice(buyPrice);
+            }
             /* if google maps returned precise location */
             if (request.getParameterMap().containsKey("longitude") && request.getParameterMap().containsKey("latitude")) {
                 Double longitude = Double.valueOf(request.getParameter("longitude"));  /* optional */
@@ -202,7 +197,6 @@ public class auction extends HttpServlet {
                 status = true;
             } catch (Exception e) {
                 e.printStackTrace();
-                status = false; // @jimouris edw tha trexei ama skasei, h' vlakeia egraya?
             }
 
             response.sendRedirect("/auction.do?action=getAnAuction&aid="+aid+"&from=bid&status="+status);

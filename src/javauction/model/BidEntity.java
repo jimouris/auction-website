@@ -109,7 +109,7 @@ public class BidEntity {
     }
 
     @OneToOne
-    @JoinColumn(name="bidderId")
+    @JoinColumn(name="BidderID", referencedColumnName = "userId", insertable = false, updatable = false)
     public UserEntity getBidder() {
         return bidder;
     }
@@ -143,5 +143,18 @@ public class BidEntity {
         result = 31 * result + (bidTime != null ? bidTime.hashCode() : 0);
         result = (int) (31 * result +  amount);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "BidEntity{" +
+                "bidid=" + bidid +
+                ", bidderId=" + bidderId +
+                ", bidder=" + bidder +
+                ", bidTime=" + bidTime +
+                ", amount=" + amount +
+                ", auctionId=" + auctionId +
+                ", auction=" + auction +
+                '}';
     }
 }

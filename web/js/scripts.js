@@ -13,4 +13,18 @@ $(document).ready(function () {
         $(daddy).find('.c-delete__confirm').toggleClass('h-show');
         $(daddy).find('.c-delete__cancel').toggleClass('h-showInline');
     });
+
+    $('.form-changeDate').submit(function () {
+        var dt = new Date();
+        var dateField = $('[name="endingDate"]');
+        var endingDate;
+        var h, m, s;
+        h = dt.getHours();
+        m = dt.getMinutes();
+        s = dt.getSeconds();
+        endingDate = $(dateField).val() + " " + h + ":" + m + ":" + s;
+        $(dateField).attr('type', 'text').val(endingDate);
+        console.log(dateField.val());
+        debugger;
+    });
 });

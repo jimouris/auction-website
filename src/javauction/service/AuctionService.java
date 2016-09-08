@@ -112,7 +112,7 @@ public class AuctionService extends Service {
         Session session = HibernateUtil.getSession();
         Transaction tx = null;
         List auctions = null;
-        int pagesize = 2;
+        int pagesize = 6;
         int start = pagesize*page;
         try {
             tx = session.beginTransaction();
@@ -121,8 +121,10 @@ public class AuctionService extends Service {
             criteria.addOrder(Order.desc("name"));
             criteria.setFirstResult(start); // 0, pagesize*1 + 1, pagesize*2 + 1, ...
             criteria.setMaxResults(pagesize);
-            criteria.setFetchMode("categories", FetchMode.SELECT);  // disabling those two "fetch lines"
+            criteria.setFetchMode("categories", FetchMode.SELECT);  // disabling those "FetchMode.SELECT"
             criteria.setFetchMode("bids", FetchMode.SELECT);        // will screw up everything.
+            criteria.setFetchMode("seller", FetchMode.SELECT);
+            criteria.setFetchMode("images", FetchMode.SELECT);
             /* based on name */
             criteria.add(Restrictions.like("name", name, MatchMode.ANYWHERE));
             /* only active */

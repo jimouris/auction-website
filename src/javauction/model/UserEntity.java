@@ -60,7 +60,9 @@ public class UserEntity {
     private Set<AuctionEntity> auctions;
     @XStreamAlias("Rating")
     @XStreamAsAttribute
-    private Integer sumRating = 0;
+    private Integer ratingAsBidder = 0;
+
+    private Integer ratingAsSeller = 0;
 
     public UserEntity(String username, byte[] hash, byte[] salt, String firstname, String lastname, String email, String phoneNumber, String vat,
                       String homeAddress, String latitude, String longitude, String city, String country) {
@@ -291,20 +293,40 @@ public class UserEntity {
         this.rating = rating;
     }
 
-    public void setSumRating(Byte isSeller){
-        this.sumRating = 0;
-        if ( rating.size() > 0 )
-            for (RatingEntity r : rating)
-                    this.sumRating += r.getIsSeller().equals(isSeller) ? r.getRating() : 0;
+    @Transient
+    public Integer getRatingAsBidder() {
+        return ratingAsBidder;
+    }
+
+    public void setRatingAsBidder(Integer ratingAsBidder) {
+        this.ratingAsBidder = ratingAsBidder;
     }
 
     @Transient
-    public Integer getSumRating() {
-        return sumRating;
+    public Integer getRatingAsSeller() {
+        return ratingAsSeller;
     }
 
-    public void setSumRating(Integer sumRating) {
-        this.sumRating = sumRating;
+    public void setRatingAsSeller(Integer ratingAsSeller) {
+        this.ratingAsSeller = ratingAsSeller;
+    }
+
+    public void setRatingAs(String usr_type){
+        if ( rating.size() > 0 ) {
+            if (usr_type.equals("seller")){
+                this.ratingAsSeller = 0; // do this because
+                for (RatingEntity r : rating)
+                    this.ratingAsSeller += r.getIsSeller() == 1 ? r.getRating() : 0;
+            }
+            else if (usr_type.equals("bidder")){
+                this.ratingAsBidder = 0; // do this because
+                for (RatingEntity r : rating)
+                    this.ratingAsBidder += r.getIsSeller() == 0 ? r.getRating() : 0;
+            }
+
+
+
+        }
     }
 
     @Override

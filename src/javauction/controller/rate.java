@@ -34,12 +34,24 @@ public class rate extends HttpServlet {
         long from_id = ((UserEntity) session.getAttribute("user")).getUserId();
         long to_id = Long.parseLong(request.getParameter("to_id"));
         long aid = Long.parseLong(request.getParameter("aid"));
+        AuctionEntity auction = new AuctionService().getAuction(aid);
         if (request.getParameter("action").equals("addRating")) {
             int rating = Integer.parseInt(request.getParameter("rating"));
-            NotificationService notificationService = new NotificationService();
 
-            RatingEntity ratingEntity = new RatingEntity(from_id, to_id, aid, rating);
+            // check if the rating goes to seller
+            Byte forSeller;
+            if (to_id == auction.getSellerId())
+                forSeller = 1;
+            else
+                forSeller = 0;
+
+
+            // add the rating
+            RatingEntity ratingEntity = new RatingEntity(from_id, to_id, aid, rating, forSeller);
             ratingService.addEntity(ratingEntity);
+
+            // add a notification for this rating
+            NotificationService notificationService = new NotificationService();
             NotificationEntity notificationEntity = new NotificationEntity(to_id, "rate", aid, from_id);
             notificationService.addEntity(notificationEntity);
 
@@ -60,6 +72,7 @@ public class rate extends HttpServlet {
         view.forward(request, response);
     }
 
+    // TODO: 08/09/16 compute different rating for seller and buyers
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String next_page = null;
         String param = request.getParameter("action");

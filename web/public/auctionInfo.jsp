@@ -44,7 +44,7 @@
             <p class="status--error eight columns u-no-bottom">The auction is inactive. to start the auction click activate.</p>
             <span class="button button-primary js-toggle-date">activate</span>
             <div class="js-date row">
-                <form action="/auction.do" method="post" class="four columns u-no-bottom">
+                <form action="/auction.do" method="post" class="four columns u-no-bottom form-changeDate" >
                     <input type="hidden" value=${auction.auctionId} name="aid">
                     <input type="hidden" value=activateAuction name="action">
                     <label>Please set an ending date:</label>
@@ -273,6 +273,7 @@
 
 </script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA7om9lzVVpATrE6I8ceaK9vMyE6Bi2KSw&callback=initMap&libraries=places" async defer></script>
+<script src="../js"></script>
 
 
 </body>

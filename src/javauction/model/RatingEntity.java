@@ -13,14 +13,15 @@ public class RatingEntity implements Serializable {
     private long toId;
     private long auctionId;
     private int rating;
-    private Byte isSeller;
+    private Byte isSeller; // the toID attribute is the id of seller
     private UserEntity receiver;
 
-    public RatingEntity(long from_id, long to_id, long aid, int rating) {
+    public RatingEntity(long from_id, long to_id, long aid, int rating, Byte forSeller) {
         this.fromId = from_id;
         this.toId = to_id;
         this.auctionId = aid;
         this.rating = rating;
+        this.isSeller = forSeller;
     }
 
     public RatingEntity() {

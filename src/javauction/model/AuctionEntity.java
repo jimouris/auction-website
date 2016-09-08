@@ -72,10 +72,9 @@ public class AuctionEntity {
     private UserEntity seller;
 
 
-    public AuctionEntity() {
-    }
+    public AuctionEntity() {}
 
-    public AuctionEntity(String name, long sellerId, String description, double lowestBid, String location, String country, double buyPrice, Timestamp startingDate, Byte isStarted, Timestamp endDate) {
+    public AuctionEntity(String name, long sellerId, String description, double lowestBid, String location, String country, Timestamp startingDate, Byte isStarted, Timestamp endDate) {
         this.name = name;
         this.sellerId = sellerId;
         this.description = description;
@@ -85,7 +84,6 @@ public class AuctionEntity {
         this.startingDate = startingDate;
         this.endingDate = endDate;
         this.isStarted = isStarted;
-        this.buyPrice = buyPrice;
     }
 
     @Id
@@ -285,8 +283,7 @@ public class AuctionEntity {
             BidEntity bid = (BidEntity) iter.next();
             currently = bid.getAmount();
             // this will compute the sum for user when is a bidder
-            Byte isSeller = 0;
-            bid.getBidder().setSumRating(isSeller);
+            bid.getBidder().setRatingAs("bidder");
         } else{
             numOfBids = 0;
             currently = lowestBid;

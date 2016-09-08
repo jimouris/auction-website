@@ -11,6 +11,7 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="/css/skeleton.css" rel="stylesheet">
+    <link href="/css/organism.css" rel="stylesheet">
     <link href="/css/custom.css" rel="stylesheet">
 </head>
 <body>
@@ -81,14 +82,6 @@
                         <div id="map" style="height: 250px;"></div>
                     </div>
                 </div>
-
-                <c:if test="${auction.isStarted==0}">
-                    <label>Starting date</label>
-                    <input class="u-full-width" type="date" name="startingDate"  value="${auction.startingDate}">
-                </c:if>
-
-                <label>Ending date</label>
-                <input class="u-full-width" type="date" name="endingDate" value="${auction.endingDate}">
 
                 <input type="hidden" name="aid" value="${auction.auctionId}">
                 <button class="button button-primary" type="submit" name="action" value="updateAuction">update auction</button>
