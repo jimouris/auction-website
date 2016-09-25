@@ -1,5 +1,6 @@
 package javauction.controller;
 
+import javauction.model.RecommendationEngine;
 import javauction.model.UserEntity;
 import javauction.service.UserService;
 
@@ -140,7 +141,7 @@ public class user extends HttpServlet {
                 if (userService.unameExist( uname))
                     out.println("exists");
                 return;
-            } else if (request.getParameter("action").equals("emailExists")){
+            } else if (request.getParameter("action").equals("emailExists")) {
                 String email = request.getParameter("email");
                 response.setContentType("text/html");
 
@@ -149,6 +150,10 @@ public class user extends HttpServlet {
                 if (userService.emailExist(email))
                     out.println("exists");
                 return;
+            } else if (request.getParameter("action").equals("lalala")){
+                long uid = Long.parseLong(request.getParameter("uid"));
+                RecommendationEngine recommender = new RecommendationEngine();
+                recommender.createNeighborhood(uid);
             } else if (request.getParameter("action").equals("home")){
                 next_page = "/user/homepage.jsp";
             }

@@ -1,16 +1,14 @@
 package javauction.service;
 
 import javauction.model.AuctionEntity;
+import javauction.model.BidEntity;
 import javauction.model.CategoryEntity;
 import javauction.util.HibernateUtil;
 import org.hibernate.*;
 import org.hibernate.criterion.*;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by gpelelis on 5/7/2016.
@@ -146,9 +144,7 @@ public class AuctionService extends Service {
         } finally {
             try {
                 if (session != null) session.close();
-            } catch (Exception e) {
-                // ignore
-            }
+            } catch (Exception ignored) {}
         }
         return auctions;
     }
@@ -315,4 +311,20 @@ public class AuctionService extends Service {
         }
         return results;
     }
+
+    public HashSet<Long> getUniqueBidders(Long aid) {
+        AuctionEntity auction = getAuction(aid);
+        if (auction == null) {
+            return null;
+        }
+        Set<BidEntity> bidEntities = auction.getBids();
+        List<Long> bidders = new ArrayList<>();
+
+        for (BidEntity b: bidEntities) {
+            bidders.add(b.getBidderId());
+        }
+        HashSet<Long> uniqueBidders = new HashSet<>(bidders);
+        return uniqueBidders;
+    }
+
 }

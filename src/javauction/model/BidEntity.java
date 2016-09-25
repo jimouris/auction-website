@@ -119,8 +119,6 @@ public class BidEntity {
     }
 
 
-
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -128,20 +126,25 @@ public class BidEntity {
 
         BidEntity bidEntity = (BidEntity) o;
 
+        if (bidid != bidEntity.bidid) return false;
         if (bidderId != bidEntity.bidderId) return false;
         if (auctionId != bidEntity.auctionId) return false;
-        if (amount != bidEntity.amount) return false;
+        if (bidder != null ? !bidder.equals(bidEntity.bidder) : bidEntity.bidder != null) return false;
         if (bidTime != null ? !bidTime.equals(bidEntity.bidTime) : bidEntity.bidTime != null) return false;
+        if (amount != null ? !amount.equals(bidEntity.amount) : bidEntity.amount != null) return false;
+        return auction != null ? auction.equals(bidEntity.auction) : bidEntity.auction == null;
 
-        return true;
     }
 
     @Override
     public int hashCode() {
-        int result = (int) (bidderId ^ (bidderId >>> 32));
-        result = 31 * result + (int) (auctionId ^ (auctionId >>> 32));
+        int result = (int) (bidid ^ (bidid >>> 32));
+        result = 31 * result + (int) (bidderId ^ (bidderId >>> 32));
+        result = 31 * result + (bidder != null ? bidder.hashCode() : 0);
         result = 31 * result + (bidTime != null ? bidTime.hashCode() : 0);
-        result = (int) (31 * result +  amount);
+        result = 31 * result + (amount != null ? amount.hashCode() : 0);
+        result = 31 * result + (int) (auctionId ^ (auctionId >>> 32));
+        result = 31 * result + (auction != null ? auction.hashCode() : 0);
         return result;
     }
 
