@@ -36,9 +36,7 @@ public class AuctionService extends Service {
         } finally {
             try {
                 if (session != null) session.close();
-            } catch (Exception e) {
-                // ignore
-            }
+            } catch (Exception ignored) {}
         }
         return null;
     }
@@ -74,9 +72,7 @@ public class AuctionService extends Service {
         } finally {
             try {
                 if (session != null) session.close();
-            } catch (Exception e) {
-                // ignore
-            }
+            } catch (Exception ignored) {}
         }
         return auctions;
     }
@@ -98,9 +94,7 @@ public class AuctionService extends Service {
         } finally {
             try {
                 if (session != null) session.close();
-            } catch (Exception e) {
-                // ignore
-            }
+            } catch (Exception ignored) {}
         }
         return results;
     }
@@ -202,9 +196,7 @@ public class AuctionService extends Service {
         } finally {
             try {
                 if (session != null) session.close();
-            } catch (Exception e) {
-                // ignore
-            }
+            } catch (Exception ignored) {}
         }
         return auctions;
     }
@@ -231,8 +223,7 @@ public class AuctionService extends Service {
         } finally {
             try {
                 if (session != null) session.close();
-            } catch (Exception e) {
-            }
+            } catch (Exception ignored) {}
         }
     }
 
@@ -248,14 +239,13 @@ public class AuctionService extends Service {
             session.delete(auction);
             transaction.commit();
         } catch (HibernateException e) {
+            assert transaction != null;
             transaction.rollback();
             e.printStackTrace();
         } finally {
             try {
                 if (session != null) session.close();
-            } catch (Exception e) {
-                // ignore
-            }
+            } catch (Exception ignored) {}
         }
     }
 
@@ -287,9 +277,7 @@ public class AuctionService extends Service {
         } finally {
             try {
                 if (session != null) session.close();
-            } catch (Exception e) {
-                // ignore
-            }
+            } catch (Exception ignored) {}
         }
     }
 
@@ -305,9 +293,7 @@ public class AuctionService extends Service {
         } finally {
             try {
                 if (session != null) session.close();
-            } catch (Exception e) {
-                // ignore
-            }
+            } catch (Exception ignored) {}
         }
         return results;
     }

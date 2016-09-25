@@ -9,14 +9,17 @@
         <webroots>
           <root url="file://$MODULE_DIR$/web" relative="/" />
         </webroots>
+        <sourceRoots />
       </configuration>
     </facet>
     <facet type="hibernate" name="Hibernate">
       <configuration>
         <datasource-map>
-          <unit-entry name="hibernate.cfg.xml" value="504565f4-17d3-45ab-8724-a30d70b0e797" />
+          <unit-entry name="hibernate.cfg.xml" value="46d9db6e-86bb-462b-9d29-c7330568b011" />
         </datasource-map>
-        <naming-strategy-map />
+        <naming-strategy-map>
+          <unit-entry name="hibernate.cfg.xml" />
+        </naming-strategy-map>
         <deploymentDescriptor name="hibernate.cfg.xml" url="file://$MODULE_DIR$/src/hibernate.cfg.xml" />
       </configuration>
     </facet>
@@ -28,12 +31,20 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="jstl-1.2" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Tomcat 8.0.33" level="application_server_libraries" />
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///usr/share/java/mysql-connector-java.jar!/" />
+          <root url="jar:///usr/share/java/mysql-connector-java-5.1.38.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
     <orderEntry type="library" name="Hibernate 4.2.2-4.2.2" level="project" />
-    <orderEntry type="library" name="mysql:mysql-connector-java:5.1.38" level="project" />
     <orderEntry type="library" name="com.thoughtworks.xstream:xstream:1.4.9" level="project" />
     <orderEntry type="library" name="com.thoughtworks.xstream:xstream-hibernate:1.4.9" level="project" />
     <orderEntry type="library" name="org.hibernate:hibernate-c3p0:4.2.2.Final" level="project" />
-    <orderEntry type="library" name="Java EE 6-Java EE 6" level="project" />
   </component>
 </module>

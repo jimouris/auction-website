@@ -33,7 +33,6 @@
             <a class="button button" href="/auction.do?action=getAllEndedAuctions">Browse to all ended auctions</a>
         </section>
 
-
         <section class="search seven columns">
             <h1><span class="look">></span> Search for a product</h1>
             <form action="/search.do" method="POST">
@@ -42,13 +41,23 @@
             </form>
             <a class="button" href="/search.do?action=advancedSearch">Advanced Search</a>
         </section>
-    </div>
+
+        <section>
+            <jsp:useBean id="recommendationLst" class="java.util.ArrayList" scope="request" />
+            <c:if test="${not empty recommendationLst}">
+                <c:forEach var="recomendation" items="${recommendationLst}" varStatus="status">
+                    <span class="message__text">${recomendation.auctionId} ${recomendation.name} ${recomendation.description}</span> <br />
+                </c:forEach>
+            </c:if>
+        </section>
+</div>
     <!-- end of search row -->
-    </c:if>
-    <c:if test ="${empty user.userId}">
+</c:if>
+
+<c:if test ="${empty user.userId}">
     <h3>You are logged out</h3>
     <p>Please go to the <a href="/">start page</a> and login again.</p>
-    </c:if>
+</c:if>
 
     <script src="../js/jquery.min.js"></script>
     <script src="../js/scripts.js"></script>
