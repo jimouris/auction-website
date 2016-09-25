@@ -3,16 +3,16 @@ package javauction.service;
 import javauction.model.AuctionEntity;
 import javauction.model.BidEntity;
 import javauction.model.CategoryEntity;
+import javauction.model.ItemImageEntity;
 import javauction.util.HibernateUtil;
 import org.hibernate.*;
-import org.hibernate.criterion.*;
+import org.hibernate.criterion.CriteriaSpecification;
+import org.hibernate.criterion.Restrictions;
 
 import java.sql.Timestamp;
 import java.util.*;
 
-/**
- * Created by gpelelis on 5/7/2016.
- */
+
 public class AuctionService extends Service {
 
     public AuctionEntity getAuction(Object obj) {
@@ -41,6 +41,7 @@ public class AuctionService extends Service {
         return null;
     }
 
+    @Deprecated
     public List getAllEndedAuctions(Long uid, boolean isSeller) {
         Session session = HibernateUtil.getSession();
         Transaction tx = null;
@@ -77,6 +78,7 @@ public class AuctionService extends Service {
         return auctions;
     }
 
+    @Deprecated
     public List getAllAuctions(long sid, boolean getAllActive) {
         Session session = HibernateUtil.getSession();
         List results = null;
@@ -97,108 +99,6 @@ public class AuctionService extends Service {
             } catch (Exception ignored) {}
         }
         return results;
-    }
-
-    /* simple search: search for auctions whose names contain string name */
-    public List searchAuction(String name, int page) {
-        Session session = HibernateUtil.getSession();
-        Transaction tx = null;
-        List auctions = null;
-        int pagesize = 6;
-        int start = pagesize*page;
-        try {
-            tx = session.beginTransaction();
-            Criteria criteria = session.createCriteria(AuctionEntity.class);
-            /* stuff for pagination */
-            criteria.addOrder(Order.desc("name"));
-            criteria.setFirstResult(start); // 0, pagesize*1 + 1, pagesize*2 + 1, ...
-            criteria.setMaxResults(pagesize);
-            criteria.setFetchMode("categories", FetchMode.SELECT);  // disabling those "FetchMode.SELECT"
-            criteria.setFetchMode("bids", FetchMode.SELECT);        // will screw up everything.
-            criteria.setFetchMode("seller", FetchMode.SELECT);
-            criteria.setFetchMode("images", FetchMode.SELECT);
-            /* based on name */
-            criteria.add(Restrictions.like("name", name, MatchMode.ANYWHERE));
-            /* only active */
-            criteria.add(Restrictions.eq("isStarted", (byte) 1));
-            /* get all those that are really not ended */
-            Timestamp currentDate = new Timestamp(Calendar.getInstance().getTimeInMillis());
-            criteria.add(Restrictions.gt("endingDate", currentDate));
-
-
-            criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
-            auctions = criteria.list();
-
-            tx.commit();
-        } catch (HibernateException e) {
-            if (tx != null) {
-                tx.rollback();
-            }
-            e.printStackTrace();
-        } finally {
-            try {
-                if (session != null) session.close();
-            } catch (Exception ignored) {}
-        }
-        return auctions;
-    }
-
-    /* advanced search, using custom criteria! */
-    public List searchAuction(String[] categories, String desc, double minPrice, double maxPrice, String location, int page) {
-        Session session = HibernateUtil.getSession();
-        Transaction tx = null;
-        List auctions = null;
-        int pagesize = 2;
-        int start = pagesize*page;
-        try {
-            tx = session.beginTransaction();
-            Criteria criteria = session.createCriteria(AuctionEntity.class);
-            criteria.addOrder(Order.desc("name"));
-            criteria.setFirstResult(start); // 0, pagesize*1 + 1, pagesize*2 + 1, ...
-            criteria.setMaxResults(pagesize);
-            criteria.setFetchMode("categories", FetchMode.SELECT);  // disabling those fetch line
-            criteria.setFetchMode("bids", FetchMode.SELECT);        // will screw up everything.
-            /* only active */
-            criteria.add(Restrictions.eq("isStarted", (byte) 1));
-            /* get all those that are really not ended */
-            Timestamp currentDate = new Timestamp(Calendar.getInstance().getTimeInMillis());
-            criteria.add(Restrictions.gt("endingDate", currentDate));
-            /* category search */
-            if (categories != null) {
-                /* convert list of strings to list of integers */
-                List <Integer> intCategories = new ArrayList<>();
-                for (String c : categories) {
-                    intCategories.add(Integer.parseInt(c));
-                }
-
-                criteria.createAlias("categories", "auctionCategory");
-                criteria.add(Restrictions.in("auctionCategory.categoryId", intCategories));
-            }
-            /* description search */
-            if (desc != "") criteria.add(Restrictions.like("description", desc, MatchMode.ANYWHERE));
-            /* minPrice < price < maxPrice */
-            Criterion buyNow = Restrictions.between("buyPrice", minPrice, maxPrice);
-            Criterion bid = Restrictions.between("lowestBid", minPrice, maxPrice);
-            LogicalExpression bidOrBuy = Restrictions.or(buyNow, bid);
-            criteria.add(bidOrBuy);
-
-            /* location search*/
-            if (location != "") criteria.add(Restrictions.like("location", location, MatchMode.ANYWHERE));
-
-            criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
-            auctions = criteria.list();
-            tx.commit();
-        } catch (HibernateException e) {
-            if (tx != null) {
-                tx.rollback();
-            }
-            e.printStackTrace();
-        } finally {
-            try {
-                if (session != null) session.close();
-            } catch (Exception ignored) {}
-        }
-        return auctions;
     }
 
     public void activateAuction(long aid, Timestamp endingDate, boolean activate) {
@@ -226,7 +126,6 @@ public class AuctionService extends Service {
             } catch (Exception ignored) {}
         }
     }
-
 
     // deletes an auction and all associated records of auction_has_category from db
     // todo: when we add the images, check if it also delete those
@@ -281,13 +180,15 @@ public class AuctionService extends Service {
         }
     }
 
-    public List getEveryAuction() {
+    public List getNAuctions(int N) {
         Session session = HibernateUtil.getSession();
         List results = null;
         try {
-            Query query;
-            query = session.createQuery("from AuctionEntity");
-            results = query.list();
+            Criteria criteria = session.createCriteria(AuctionEntity.class);
+
+            criteria.setMaxResults(N);
+
+            results = criteria.list();
         } catch (HibernateException e) {
             e.printStackTrace();
         } finally {
@@ -306,11 +207,48 @@ public class AuctionService extends Service {
         Set<BidEntity> bidEntities = auction.getBids();
         List<Long> bidders = new ArrayList<>();
 
-        for (BidEntity b: bidEntities) {
+        for (BidEntity b : bidEntities) {
             bidders.add(b.getBidderId());
         }
         HashSet<Long> uniqueBidders = new HashSet<>(bidders);
         return uniqueBidders;
+    }
+
+    public long addAuction(AuctionEntity auction){
+        Session session = HibernateUtil.getSession();
+
+        try {
+            session.beginTransaction();
+            session.save(auction);
+            session.getTransaction().commit();
+        } catch (HibernateException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (session != null) session.close();
+            } catch (Exception e) {
+                // ignore
+            } finally {
+                return auction.getAuctionId();
+            }
+        }
+    }
+
+    public long getLastImageId() {
+        Session session = HibernateUtil.getSession();
+        ItemImageEntity result = null;
+        try{
+            result = (ItemImageEntity) session.createQuery("from ItemImageEntity ORDER BY itemImageId DESC")
+                    .setMaxResults(1).uniqueResult();
+
+        } catch (HibernateException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (session != null) session.close();
+            } catch (Exception ignored) {}
+        }
+        return result != null ? result.getItemImageId() : 0;
     }
 
 }

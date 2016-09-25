@@ -81,7 +81,7 @@
             <h4><span class="look">> </span>Search for a product</h4>
             <form action="/search.do" method="POST">
                 <input class="u-full-width" type="text" name="name">
-                <button class="button-primary" type="submit" name="action" value="doSimpleSearch">Search</button>
+                <button class="button-primary" type="submit" name="action" value="searchAuctions">Search</button>
             </form>
             <h5><span class="look">> </span>Or perform an advanced search</h5>
             <a class="button" href="/search.do?action=advancedSearch">Advanced Search</a>

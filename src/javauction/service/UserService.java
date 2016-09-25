@@ -3,6 +3,7 @@ package javauction.service;
 import javauction.controller.PasswordAuthentication;
 import javauction.model.UserEntity;
 import javauction.util.HibernateUtil;
+import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
@@ -12,6 +13,35 @@ import java.util.List;
  * Created by jimouris on 7/3/16.
  */
 public class UserService {
+
+    public long addOrUpdate(UserEntity user) {
+        Session session = HibernateUtil.getSession();
+
+        Query query = session.createQuery("from UserEntity where username = :username");
+        List results = query.setParameter("username", user.getUsername()).list();
+        if (results.size() > 0) {
+            UserEntity persUser = (UserEntity) results.get(0);
+            user.setUserId(persUser.getUserId());
+            if (session != null) session.close();
+            return persUser.getUserId();
+        } else {
+            try {
+                session.beginTransaction();
+                session.save(user);
+                session.getTransaction().commit();
+            } catch (HibernateException e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    if (session != null) session.close();
+                } catch (Exception e) {
+                    // ignore
+                } finally {
+                    return user.getUserId();
+                }
+            }
+        }
+    }
 
     public enum RegisterStatus {
         REG_FAIL,
@@ -65,6 +95,7 @@ public class UserService {
         }
         return null;
     }
+
 
     public Boolean unameExist(String uname){
         Session session = HibernateUtil.getSession();
@@ -139,6 +170,7 @@ public class UserService {
         } finally {
             session.close();
         }
+
         return RegisterStatus.REG_FAIL;
     }
 

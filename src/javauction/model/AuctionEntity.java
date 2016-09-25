@@ -58,7 +58,8 @@ public class AuctionEntity {
     @XStreamOmitField
     private Byte isStarted;
     @XStreamAlias("Buy_Price")
-    private Double buyPrice;
+    @XStreamConverter(MoneyXmlUtil.class)
+   private Double buyPrice;
     @XStreamAlias("Started")
     @XStreamConverter(DateXmlUtil.class)
     private Timestamp startingDate;

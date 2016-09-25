@@ -20,9 +20,7 @@ abstract class Service {
         } finally {
             try {
                 if (session != null) session.close();
-            } catch (Exception e) {
-                // ignore
-            }
+            } catch (Exception ignored) {}
         }
     }
 

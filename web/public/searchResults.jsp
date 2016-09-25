@@ -1,4 +1,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
 <!DOCTYPE html>
@@ -25,15 +27,20 @@
         <a href="/public/">Guest, Homepage</a>
     </c:if>
     <!-- end of header row -->
-    <h1>Search Results</h1>
 
     <table>
+        <thead>
+        <th>Auction name</th>
+        <th>Description</th>
+        <th>Lowest bid</th>
+        <th></th>
+        </thead>
         <c:forEach var="auction" items="${auctionsLst}">
             <tr>
                 <td>${auction.name}</td>
-                <td>${auction.description}</td>
+                <td>${fn:replace(auction.description, fn:substring(auction.description, 40, fn:length(auction.description)), '...')}</td>
                 <td>${auction.lowestBid}</td>
-                <td><a class="button button-primary" href=auction.do?action=getAnAuction&aid=${auction.auctionId}>View Auction</a></td>
+                <td><a class="button button-primary" href=auction.do?action=getAnAuction&aid=${auction.auctionId}>View auction</a></td>
             </tr>
         </c:forEach>
         <c:if test="${auctionsLst.size() == 0}">

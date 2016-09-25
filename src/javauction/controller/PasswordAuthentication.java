@@ -13,14 +13,14 @@ import java.util.Random;
  */
 public class PasswordAuthentication {
 
-    static byte[] genSalt() {
+    public static byte[] genSalt() {
         byte[] salt = new byte[16];
         Random rand = new SecureRandom();
         rand.nextBytes(salt);
         return salt;
     }
 
-    static byte[] hash(char[] password, byte[] salt) {
+    public static byte[] hash(char[] password, byte[] salt) {
         PBEKeySpec spec = new PBEKeySpec(password, salt, 5000, 128);
         Arrays.fill(password, Character.MIN_VALUE);
         try {
