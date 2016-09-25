@@ -7,10 +7,7 @@ import com.thoughtworks.xstream.io.naming.NoNameCoder;
 import com.thoughtworks.xstream.io.xml.StaxDriver;
 import com.thoughtworks.xstream.mapper.Mapper;
 import javauction.model.*;
-import javauction.service.AuctionService;
-import javauction.service.CategoryService;
-import javauction.service.RatingService;
-import javauction.service.UserService;
+import javauction.service.*;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -398,9 +395,11 @@ public class auction extends HttpServlet {
         /* Get all the parts from request and write it to the file on server */
         for (Part part : request.getParts()) {
             if (part.getName().equals("fileName") && part.getContentType().contains("image")) {
+                long iid = auctionService.getLastImageId()+1;
                 fileName = getFileName(part);
-                part.write(uploadFilePath + File.separator + fileName);
-                image = new ItemImageEntity(fileName, auctionId);
+                String fileType = fileName.substring(fileName.lastIndexOf(".") + 1).trim();
+                part.write(uploadFilePath + File.separator + iid + "." + fileType);
+                image = new ItemImageEntity(iid + "." + fileType, auctionId);
                 auctionService.addEntity(image);
             }
         }
