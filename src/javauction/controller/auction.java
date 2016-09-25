@@ -397,24 +397,29 @@ public class auction extends HttpServlet {
 
                             // copy bids to savee after auction creation
                             Set<BidEntity> dummyBids = item.getBids();
-                            Set<BidEntity> bids = new LinkedHashSet<>();
+//                            Set<BidEntity> bids = new LinkedHashSet<>();
                             Timestamp currentDate = new Timestamp(System.currentTimeMillis());
                             Boolean hasEnded = item.getEndingDate().before(currentDate);
 
-                            int j = 0;
-                            for (Iterator<BidEntity> i = dummyBids.iterator(); i.hasNext(); ) {
-                                BidEntity b = i.next();
-                                BidEntity bid = new BidEntity(b);
-                                sid = userservice.addOrUpdate(bid.getBidder());
-                                bid.setBidderId(sid);
-                                bids.add(bid);
+//                            int j = 0;
+//                            for (Iterator<BidEntity> i = dummyBids.iterator(); i.hasNext(); ) {
+//                                BidEntity b = i.next();
+//                                BidEntity bid = new BidEntity(b);
+//                                sid = userservice.addOrUpdate(bid.getBidder());
+//                                bid.setBidderId(sid);
+//                                bids.add(bid);
+//
+//                                // do stuff for auction
+//                                i.remove();
+//                                if (hasEnded && j == bids.size() - 1)
+//                                    item.setBuyerId(bid.getBidderId());
+//                                j++;
+//                            }
+//                            Collection<BidEntity> oldSet = dummyBids;
 
-                                // do stuff for auction
-                                i.remove();
-                                if (hasEnded && j == bids.size() - 1)
-                                    item.setBuyerId(bid.getBidderId());
-                                j++;
-                            }
+                            Set<BidEntity> bids = new HashSet<>();
+                            bids.addAll(dummyBids);
+                            dummyBids.clear();
 
                             // try to save or get the user for the auction and each bid
                             sid = userservice.addOrUpdate(item.getSeller());
