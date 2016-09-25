@@ -48,7 +48,7 @@
     <input class="u-full-width" type="search" name="location" placeholder="e.g. Athens">
     <br>
 
-    <button class="button-primary" type="submit" name="action" value="doAdvancedSearch">Search</button>
+    <button class="button-primary" type="submit" name="action" value="searchAuctions">Search</button>
 </form>
 
 </p>

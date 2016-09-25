@@ -17,7 +17,7 @@ import java.util.Calendar;
 @Entity
 @Table(name = "bid", schema = "auctionwebsite")
 @XStreamAlias("Bid")
-public class BidEntity {
+public class BidEntity implements Cloneable{
     @XStreamOmitField
     private long bidid;
     @XStreamOmitField
@@ -99,7 +99,7 @@ public class BidEntity {
     }
 
     @ManyToOne
-    @JoinColumn(name="AuctionID", nullable = false, insertable = false, updatable = false)
+    @JoinColumn(name="AuctionID", nullable = true, insertable = false, updatable = false)
     public AuctionEntity getAuction() {
         return auction;
     }
@@ -157,4 +157,15 @@ public class BidEntity {
                 ", auction=" + auction +
                 '}';
     }
+
+    public BidEntity(BidEntity bid){
+        this.bidid =  bid.bidid;
+        this.bidderId =  bid.bidderId;
+        this.bidder =  bid.bidder;
+        this.bidTime =  bid.bidTime;
+        this.amount =  bid.amount;
+        this.auctionId =  bid.auctionId;
+        this.auction =  bid.auction;
+    }
+
 }

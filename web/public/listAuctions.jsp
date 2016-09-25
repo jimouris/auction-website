@@ -1,4 +1,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+
 <%--<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>--%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -29,10 +31,16 @@
     <jsp:useBean id="auctionLst" class="java.util.ArrayList" scope="request" />
 
     <table>
+        <thead>
+            <th>Auction name</th>
+            <th>Description</th>
+            <th>Lowest bid</th>
+            <th></th>
+        </thead>
         <c:forEach var="auction" items="${auctionLst}">
             <tr>
                 <td>${auction.name}</td>
-                <td>${auction.description}</td>
+                <td>${fn:replace(auction.description, fn:substring(auction.description, 40, fn:length(auction.description)), '...')}</td>
                 <td>${auction.lowestBid}</td>
                 <td><a class="button button-primary" href=auction.do?action=getAnAuction&aid=${auction.auctionId}>View auction</a></td>
             </tr>

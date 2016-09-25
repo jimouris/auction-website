@@ -4,6 +4,7 @@ import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.hibernate.converter.HibernatePersistentCollectionConverter;
 import com.thoughtworks.xstream.hibernate.converter.HibernatePersistentMapConverter;
 import com.thoughtworks.xstream.io.naming.NoNameCoder;
+import com.thoughtworks.xstream.io.xml.DomDriver;
 import com.thoughtworks.xstream.io.xml.StaxDriver;
 import com.thoughtworks.xstream.mapper.Mapper;
 import javauction.model.*;
@@ -11,6 +12,8 @@ import javauction.service.AuctionService;
 import javauction.service.CategoryService;
 import javauction.service.RatingService;
 import javauction.service.UserService;
+import javauction.util.CategoryXmlUtil;
+import javauction.util.SellerXmlUtil;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -19,8 +22,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.*;
 import java.sql.Timestamp;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -245,19 +246,19 @@ public class auction extends HttpServlet {
                         session.setAttribute("isSeller", sid == user.getUserId());
                     }
 
-                /* Auctions selected categories*/
+                    /* Auctions selected categories*/
                     Set<CategoryEntity> cats = auction.getCategories();
                     List<CategoryEntity> usedCategories = new ArrayList<>();
                     for (CategoryEntity c : cats) {
                         usedCategories.add(new CategoryEntity(c.getCategoryId(), c.getCategoryName()));
                     }
-                /* get all images */
+                    /* get all images */
                     Set<ItemImageEntity> allImages = auction.getImages();
                     List<ItemImageEntity> imageLst = new ArrayList<>();
                     for (ItemImageEntity img : allImages) {
                         imageLst.add(img);
                     }
-                /* get the highest bid */
+                     /* get the highest bid */
                     Set<BidEntity> allBids = auction.getBids();
                     List<BidEntity> bidLst = new ArrayList<>();
                     List<UserEntity> biddersLst = new ArrayList<>();
@@ -266,7 +267,7 @@ public class auction extends HttpServlet {
                         bidLst.add(b);
                         biddersLst.add(userService.getUser(b.getBidderId()));
                     }
-                /* if auction has ended */
+                    /* if auction has ended */
                     Long buyerid = null;
                     if (biddersLst.size() > 0) {
                         buyerid = (Long) biddersLst.get(0).getUserId();
@@ -327,7 +328,7 @@ public class auction extends HttpServlet {
                     next_page = "homepage.jsp";
 
                     if ( isAdmin ) {
-                        List<AuctionEntity> auctions = auctionService.getEveryAuction();
+                        List<AuctionEntity> auctions = auctionService.getNAuctions(10);
                         for (AuctionEntity a : auctions)
                             a.setBidStuff();
 
@@ -372,11 +373,73 @@ public class auction extends HttpServlet {
                         }
                     }
                     break;
+                case "setFromXML":
+                    XStream xstream = new XStream(new DomDriver());
+
+                    xstream.processAnnotations(AuctionEntity.class);
+                    xstream.registerConverter(new SellerXmlUtil());
+                    xstream.registerConverter(new CategoryXmlUtil());
+                    xstream.alias("Items", List.class);
+
+                    UserService userservice = new UserService();
+                    AuctionService auctionservice = new AuctionService();
+                    categoryService = new CategoryService();
+
+                    for (int index =0 ; index < 40; index++ ) {
+
+                        InputStream input = getServletContext().getResourceAsStream("items-" + index + ".xml");
+                        System.out.println("\nstart on items-" + index + ".xml");
+                        List<AuctionEntity> items = (List<AuctionEntity>) xstream.fromXML(input);
+                        int itemindex = 0;
+                        for (AuctionEntity item : items) {
+                            System.out.println("\non item " + item.getName());
+                            System.out.println(itemindex++);
+                            item.setIsStarted((byte) 0);
+
+                            // copy bids to savee after auction creation
+                            Set<BidEntity> dummyBids = item.getBids();
+                            Set<BidEntity> bids = new LinkedHashSet<>();
+                            Timestamp currentDate = new Timestamp(System.currentTimeMillis());
+                            Boolean hasEnded = item.getEndingDate().before(currentDate);
+
+                            int j = 0;
+                            for (Iterator<BidEntity> i = dummyBids.iterator(); i.hasNext(); ) {
+                                BidEntity b = i.next();
+                                BidEntity bid = new BidEntity(b);
+                                sid = userservice.addOrUpdate(bid.getBidder());
+                                bid.setBidderId(sid);
+                                bids.add(bid);
+
+                                // do stuff for auction
+                                i.remove();
+                                if (hasEnded && j == bids.size() - 1)
+                                    item.setBuyerId(bid.getBidderId());
+                                j++;
+                            }
+
+                            // try to save or get the user for the auction and each bid
+                            sid = userservice.addOrUpdate(item.getSeller());
+                            item.setSellerId(sid);
+
+                            // try to save or get the current categories
+                            categoryService.addOrUpdate(item.getCategories());
+
+                            // add the auction and commit every bid
+                            aid = auctionservice.addAuction(item);
+                            for (BidEntity b : bids) {
+                                b.setAuctionId(aid);
+                                auctionservice.addEntity(b);
+                            }
+                        }
+                    }
+
+                    break;
                 }
             }
             RequestDispatcher view = request.getRequestDispatcher(next_page);
             view.forward(request, response);
         }
+
 
 
     private Boolean uploadFiles(HttpServletRequest request, long auctionId) throws IOException, ServletException {

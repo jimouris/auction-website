@@ -42,7 +42,7 @@ CREATE TABLE IF NOT EXISTS `auctionwebsite`.`user` (
   UNIQUE INDEX `Id_UNIQUE` (`UserID` ASC),
   UNIQUE INDEX `Username_UNIQUE` (`Username` ASC))
 ENGINE = InnoDB
-AUTO_INCREMENT = 7
+AUTO_INCREMENT = 22880
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -54,16 +54,15 @@ CREATE TABLE IF NOT EXISTS `auctionwebsite`.`auction` (
   `SellerID` BIGINT(20) NOT NULL,
   `BuyerID` BIGINT(20) NULL DEFAULT NULL,
   `Name` VARCHAR(150) NOT NULL,
-  `Description` VARCHAR(1500) NULL DEFAULT NULL,
+  `Description` VARCHAR(10000) NULL DEFAULT NULL,
   `LowestBid` DOUBLE NOT NULL,
   `FinalPrice` DOUBLE NOT NULL,
-  `StartingDate` DATE NULL DEFAULT NULL,
-  `EndingDate` DATE NULL DEFAULT NULL,
+  `StartingDate` DATETIME NULL DEFAULT NULL,
+  `EndingDate` DATETIME NULL DEFAULT NULL,
   `Country` VARCHAR(45) NOT NULL,
   `Location` VARCHAR(45) NOT NULL,
   `Longitude` FLOAT NULL DEFAULT NULL,
   `Latitude` FLOAT NULL DEFAULT NULL,
-  `NumOfBids` INT(11) NULL DEFAULT NULL,
   `IsStarted` TINYINT(1) NULL DEFAULT '0',
   `BuyPrice` INT(11) NULL DEFAULT NULL,
   PRIMARY KEY (`AuctionID`),
@@ -80,7 +79,7 @@ CREATE TABLE IF NOT EXISTS `auctionwebsite`.`auction` (
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB
-AUTO_INCREMENT = 44
+AUTO_INCREMENT = 24516
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -92,7 +91,7 @@ CREATE TABLE IF NOT EXISTS `auctionwebsite`.`category` (
   `CategoryName` VARCHAR(100) NULL DEFAULT NULL,
   PRIMARY KEY (`CategoryID`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 14
+AUTO_INCREMENT = 2132
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -125,7 +124,7 @@ DEFAULT CHARACTER SET = utf8;
 CREATE TABLE IF NOT EXISTS `auctionwebsite`.`bid` (
   `Bid` BIGINT(20) NOT NULL AUTO_INCREMENT,
   `BidderID` BIGINT(20) NOT NULL,
-  `AuctionID` BIGINT(20) NOT NULL,
+  `AuctionID` BIGINT(20) NULL DEFAULT NULL,
   `BidTime` DATETIME NOT NULL,
   `Amount` FLOAT NOT NULL,
   PRIMARY KEY (`Bid`),
@@ -143,7 +142,7 @@ CREATE TABLE IF NOT EXISTS `auctionwebsite`.`bid` (
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB
-AUTO_INCREMENT = 62
+AUTO_INCREMENT = 15825
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -163,7 +162,7 @@ CREATE TABLE IF NOT EXISTS `auctionwebsite`.`itemimage` (
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB
-AUTO_INCREMENT = 22
+AUTO_INCREMENT = 24
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -199,7 +198,7 @@ CREATE TABLE IF NOT EXISTS `auctionwebsite`.`messages` (
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB
-AUTO_INCREMENT = 48
+AUTO_INCREMENT = 59
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -214,16 +213,22 @@ CREATE TABLE IF NOT EXISTS `auctionwebsite`.`notification` (
   `ActorID` BIGINT(20) NOT NULL,
   `isSeen` TINYINT(1) NULL DEFAULT '0',
   `DateAdded` DATETIME NOT NULL,
+  `MessageID` BIGINT(20) NULL DEFAULT NULL,
   PRIMARY KEY (`NotificationID`),
   UNIQUE INDEX `NotificationID_UNIQUE` (`NotificationID` ASC),
   INDEX `fk_notification_auction_idx` (`AuctionID` ASC),
   INDEX `fk_notification_user_idx` (`ReceiverID` ASC),
   INDEX `fk_notification_user1_idx` (`ActorID` ASC),
+  INDEX `fk_notification_message` (`MessageID` ASC),
   CONSTRAINT `fk_notification_auction`
     FOREIGN KEY (`AuctionID`)
     REFERENCES `auctionwebsite`.`auction` (`AuctionID`)
     ON DELETE CASCADE
     ON UPDATE NO ACTION,
+  CONSTRAINT `fk_notification_message`
+    FOREIGN KEY (`MessageID`)
+    REFERENCES `auctionwebsite`.`messages` (`MessageID`)
+    ON DELETE CASCADE,
   CONSTRAINT `fk_notification_user`
     FOREIGN KEY (`ReceiverID`)
     REFERENCES `auctionwebsite`.`user` (`UserID`)
@@ -233,7 +238,7 @@ CREATE TABLE IF NOT EXISTS `auctionwebsite`.`notification` (
     FOREIGN KEY (`ActorID`)
     REFERENCES `auctionwebsite`.`user` (`UserID`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 23
+AUTO_INCREMENT = 39
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -245,6 +250,7 @@ CREATE TABLE IF NOT EXISTS `auctionwebsite`.`rating` (
   `ToID` BIGINT(20) NOT NULL,
   `AuctionID` BIGINT(20) NOT NULL,
   `Rating` INT(11) NOT NULL,
+  `isSeller` TINYINT(1) NULL DEFAULT NULL,
   PRIMARY KEY (`FromID`, `ToID`, `AuctionID`),
   INDEX `fk_rating_user1_idx` (`FromID` ASC),
   INDEX `fk_rating_user2_idx` (`ToID` ASC),

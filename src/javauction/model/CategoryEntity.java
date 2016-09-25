@@ -18,10 +18,16 @@ public class CategoryEntity {
         this.categoryName = categoryName;
     }
 
+    public CategoryEntity(String categoryName){
+        this.categoryName = categoryName;
+    }
+
     public CategoryEntity() {
     }
 
+
     @Id
+    @GeneratedValue(strategy=GenerationType.AUTO)
     @Column(name = "CategoryID")
     public int getCategoryId() {
         return categoryId;

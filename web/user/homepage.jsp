@@ -26,11 +26,14 @@
         <section class="five columns">
             <h1><span class="look">></span> Auctions</h1>
             <a class="button button-primary" href="/auction.do?action=newAuction">Create an auction</a>
-            <a class="button button" href="/auction.do?action=getAuctionsYouHaveBought">View all auctions you have bought</a>
-            <a class="button button" href="/auction.do?action=getAllAuctions">View all your auctions</a>
-            <a class="button button" href="/auction.do?action=getAllYourEndedAuctions">View all your ended auctions</a>
-            <a class="button button" href="/auction.do?action=getAllActiveAuctions">Browse to all active auctions</a>
-            <a class="button button" href="/auction.do?action=getAllEndedAuctions">Browse to all ended auctions</a>
+
+            <a class="button button" href="/search.do?action=searchAuctions&boughtBy=you">View all auctions you have bought</a>
+
+            <a class="button button" href="/search.do?action=searchAuctions&seller=you">View all your auctions</a>
+            <a class="button button" href="/search.do?action=searchAuctions&seller=you&isActive=0">View all your ended auctions</a>
+
+            <a class="button button" href="/search.do?action=searchAuctions&isActive=1">Browse to all active auctions</a>
+            <a class="button button" href="/search.do?action=searchAuctions&isActive=0">Browse to all ended auctions</a>
         </section>
 
 
@@ -38,7 +41,7 @@
             <h1><span class="look">></span> Search for a product</h1>
             <form action="/search.do" method="POST">
                 <input class="u-full-width" type="text" name="name">
-                <button class="button-primary" type="submit" name="action" value="doSimpleSearch">Search</button>
+                <button class="button-primary" type="submit" name="action" value="searchAuctions">Search</button>
             </form>
             <a class="button" href="/search.do?action=advancedSearch">Advanced Search</a>
         </section>
