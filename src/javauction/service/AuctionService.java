@@ -2,6 +2,7 @@ package javauction.service;
 
 import javauction.model.AuctionEntity;
 import javauction.model.CategoryEntity;
+import javauction.model.ItemImageEntity;
 import javauction.util.HibernateUtil;
 import org.hibernate.*;
 import org.hibernate.criterion.CriteriaSpecification;
@@ -234,5 +235,22 @@ public class AuctionService extends Service {
         }
     }
 
+
+    public long getLastImageId() {
+        Session session = HibernateUtil.getSession();
+        ItemImageEntity result = null;
+        try{
+            result = (ItemImageEntity) session.createQuery("from ItemImageEntity ORDER BY itemImageId DESC")
+                    .setMaxResults(1).uniqueResult();
+
+        } catch (HibernateException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (session != null) session.close();
+            } catch (Exception ignored) {}
+        }
+        return result != null ? result.getItemImageId() : 0;
+    }
 
 }

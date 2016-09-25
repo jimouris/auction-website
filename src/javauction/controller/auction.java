@@ -14,7 +14,6 @@ import javauction.service.RatingService;
 import javauction.service.UserService;
 import javauction.util.CategoryXmlUtil;
 import javauction.util.SellerXmlUtil;
-
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -461,9 +460,11 @@ public class auction extends HttpServlet {
         /* Get all the parts from request and write it to the file on server */
         for (Part part : request.getParts()) {
             if (part.getName().equals("fileName") && part.getContentType().contains("image")) {
+                long iid = auctionService.getLastImageId()+1;
                 fileName = getFileName(part);
-                part.write(uploadFilePath + File.separator + fileName);
-                image = new ItemImageEntity(fileName, auctionId);
+                String fileType = fileName.substring(fileName.lastIndexOf(".") + 1).trim();
+                part.write(uploadFilePath + File.separator + iid + "." + fileType);
+                image = new ItemImageEntity(iid + "." + fileType, auctionId);
                 auctionService.addEntity(image);
             }
         }
