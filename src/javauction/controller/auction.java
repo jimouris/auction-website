@@ -384,48 +384,42 @@ public class auction extends HttpServlet {
                     AuctionService auctionservice = new AuctionService();
                     categoryService = new CategoryService();
 
-                    for (int index =0 ; index < 40; index++ ) {
+                    for (int index = 0 ; index < 40; index++ ) {
 
                         InputStream input = getServletContext().getResourceAsStream("items-" + index + ".xml");
                         System.out.println("\nstart on items-" + index + ".xml");
                         List<AuctionEntity> items = (List<AuctionEntity>) xstream.fromXML(input);
                         int itemindex = 0;
                         for (AuctionEntity item : items) {
-                            System.out.println("\non item " + item.getName());
-                            System.out.println(itemindex++);
                             item.setIsStarted((byte) 0);
 
                             // copy bids to savee after auction creation
                             Set<BidEntity> dummyBids = item.getBids();
-//                            Set<BidEntity> bids = new LinkedHashSet<>();
                             Timestamp currentDate = new Timestamp(System.currentTimeMillis());
                             Boolean hasEnded = item.getEndingDate().before(currentDate);
 
-//                            int j = 0;
-//                            for (Iterator<BidEntity> i = dummyBids.iterator(); i.hasNext(); ) {
-//                                BidEntity b = i.next();
-//                                BidEntity bid = new BidEntity(b);
-//                                sid = userservice.addOrUpdate(bid.getBidder());
-//                                bid.setBidderId(sid);
-//                                bids.add(bid);
-//
-//                                // do stuff for auction
-//                                i.remove();
-//                                if (hasEnded && j == bids.size() - 1)
-//                                    item.setBuyerId(bid.getBidderId());
-//                                j++;
-//                            }
-//                            Collection<BidEntity> oldSet = dummyBids;
-
-                            Set<BidEntity> bids = new HashSet<>();
+                            List<BidEntity> bids = new ArrayList<BidEntity>();
                             bids.addAll(dummyBids);
                             dummyBids.clear();
+
+                            // set stuff for bidders
+                            int j = 0;
+                            for (BidEntity bid : bids ) {
+                                sid = userservice.addOrUpdate(bid.getBidder());
+                                bid.setBidderId(sid);
+
+                                // do stuff for auction
+                                if (hasEnded && j == bids.size() - 1)
+                                    item.setBuyerId(bid.getBidderId());
+                                j++;
+                            }
 
                             // try to save or get the user for the auction and each bid
                             sid = userservice.addOrUpdate(item.getSeller());
                             item.setSellerId(sid);
 
-                            // try to save or get the current categories
+                            // try to save or get
+                            // the current categories
                             categoryService.addOrUpdate(item.getCategories());
 
                             // add the auction and commit every bid
