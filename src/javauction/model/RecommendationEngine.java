@@ -32,12 +32,11 @@ public class RecommendationEngine {
             }
         }
         /* Sort the set */
-        SortedSet<Map.Entry<Long, Integer>> descSimilarity = entriesSortedByValues(k_nearestSet);
-        System.out.println(descSimilarity);
+        SortedSet<Map.Entry<Long, Integer>> desc_k_nearest = entriesSortedByValues(k_nearestSet);
         /* Keep the K-Nearest */
         int i = 0;
         List<Long> knn = new ArrayList<>();
-        for (Map.Entry<Long, Integer> it : descSimilarity) {
+        for (Map.Entry<Long, Integer> it : desc_k_nearest) {
             knn.add(it.getKey());
             if (++i > K_Neighbours) {
                 break;

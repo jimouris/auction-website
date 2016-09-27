@@ -155,13 +155,16 @@ public class user extends HttpServlet {
             } else if (request.getParameter("action").equals("home")){
                 HttpSession session = request.getSession();
                 long uid = ((UserEntity) session.getAttribute("user")).getUserId();
-                System.out.println("USERID:"+uid);
-                RecommendationEngine recommender = new RecommendationEngine();
-                List<AuctionEntity> recommendationLst = recommender.getRecommendations(uid);
-                for (AuctionEntity ae : recommendationLst) {
-                    System.out.println(ae.getAuctionId() + " " + ae.getName());
+                List<AuctionEntity> recommendationLst = (List<AuctionEntity>) session.getAttribute("recommendationLst");
+                if (recommendationLst == null) {
+                    RecommendationEngine recommender = new RecommendationEngine();
+                    recommendationLst = recommender.getRecommendations(uid);
+//                    for (AuctionEntity ae : recommendationLst) {
+//                        System.out.println(ae.getAuctionId() + " " + ae.getName());
+//                    }
+                    session.setAttribute("recommendationLst", recommendationLst);
                 }
-                request.setAttribute("recommendationLst", recommendationLst);
+
                 next_page = "/user/homepage.jsp";
             }
         }
