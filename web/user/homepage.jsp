@@ -2,6 +2,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
+
 <!doctype html>
 <html>
 <head>
@@ -46,22 +47,26 @@
             <a class="button" href="/search.do?action=advancedSearch">Advanced Search</a>
         </section>
 </div>
+
 <br/>
 <br/>
 <br/>
 <div>
     <div class="row ">
+
         <section>
             <h4><span class="look">></span> Recommendations</h4>
             <c:if test="${not empty recommendationLst}">
                 <c:forEach var="recomendation" items="${recommendationLst}" varStatus="status">
+
                     <tr>
                         <td>${recomendation.name}</td>
                         <td>${fn:replace(recomendation.description, fn:substring(recomendation.description, 20, fn:length(recomendation.description)), '...')}</td>
                         <td>${recomendation.lowestBid}</td>
-                        <td><a class="button" href=auction.do?action=getAnAuction&aid=${recomendation.auctionId}>View auction</a></td>
+                        <td><a class="button" href=/auction.do?action=getAnAuction&aid=${recomendation.auctionId}>View auction</a></td>
                         <br/>
                     </tr>
+
                 </c:forEach>
             </c:if>
             <c:if test="${empty recommendationLst}">
@@ -70,6 +75,7 @@
         </section>
     </div>
 </div>
+
     <!-- end of search row -->
 </c:if>
 
