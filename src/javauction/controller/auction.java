@@ -236,9 +236,9 @@ public class auction extends HttpServlet {
                     AuctionEntity auction = auctionService.getAuction(aid);
                     UserEntity user = (UserEntity) session.getAttribute("user");
 
-                /* get seller id for the auction */
+                     /* get seller id for the auction */
                     long sid = auction.getSellerId();
-                /* Guest session */
+                    /* Guest session */
                     if (user == null) {
                         session.setAttribute("isSeller", false);
                     } else {
@@ -266,11 +266,7 @@ public class auction extends HttpServlet {
                         bidLst.add(b);
                         biddersLst.add(userService.getUser(b.getBidderId()));
                     }
-                    /* if auction has ended */
-                    Long buyerid = null;
-                    if (biddersLst.size() > 0) {
-                        buyerid = (Long) biddersLst.get(0).getUserId();
-                    }
+                    Long buyerid = auction.getIdOfHighestBidder();
                     auction = checkDateAndSetBuyer(request, auction, aid, buyerid, auctionService);
                     UserEntity seller = userService.getUser(sid);
                     RatingService ratingService = new RatingService();
@@ -384,7 +380,7 @@ public class auction extends HttpServlet {
                     AuctionService auctionservice = new AuctionService();
                     categoryService = new CategoryService();
 
-                    for (int index = 0 ; index < 40; index++ ) {
+                    for (int index = 0 ; index < 1; index++ ) {
 
                         InputStream input = getServletContext().getResourceAsStream("items-" + index + ".xml");
                         System.out.println("\nstart on items-" + index + ".xml");
@@ -402,16 +398,23 @@ public class auction extends HttpServlet {
                             bids.addAll(dummyBids);
                             dummyBids.clear();
 
-                            // set stuff for bidders
-                            int j = 0;
+                            // set the bidder id before adding them to db
+                            Long itemBuyerId = null;
+                            Double highestBid = 0.0;
                             for (BidEntity bid : bids ) {
                                 sid = userservice.addOrUpdate(bid.getBidder());
                                 bid.setBidderId(sid);
 
-                                // do stuff for auction
-                                if (hasEnded && j == bids.size() - 1)
-                                    item.setBuyerId(bid.getBidderId());
-                                j++;
+                                // check for buyer, if the auction is ended
+                                if (bid.getAmount() > highestBid && hasEnded){
+                                    itemBuyerId = bid.getBidderId();
+                                    highestBid = bid.getAmount();
+                                }
+                            }
+
+                            // set the buyeer to auction
+                            if (itemBuyerId != null){
+                                item.setBuyerId(itemBuyerId);
                             }
 
                             // try to save or get the user for the auction and each bid

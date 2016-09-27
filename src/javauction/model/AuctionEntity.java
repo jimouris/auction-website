@@ -314,4 +314,17 @@ public class AuctionEntity {
                 ", description='" + description + '\'' +
                 '}';
     }
+
+    @Transient
+    public Long getIdOfHighestBidder(){
+        Long BidderID = null;
+        Double highestBid = 0.0;
+        for (BidEntity bid : bids ) {
+            if (bid.getAmount() > highestBid){
+                BidderID = bid.getBidderId();
+                highestBid = bid.getAmount();
+            }
+        }
+        return BidderID;
+    }
 }
