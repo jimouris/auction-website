@@ -29,6 +29,17 @@
                 </tr>
             </c:forEach>
         </table>
+        <c:if test="${auctionsLst.size() != 0}">
+            <div class="row">
+                <c:if test="${empty previousPage}">
+                    <span class="u-unvailable">previous page</span> |
+                </c:if>
+                <c:if test="${not empty previousPage}">
+                    <a href="${previousPage}">previous page</a> |
+                </c:if>
+                <a href="${nextPage}">next page</a>
+            </div>
+        </c:if>
     </div>
 </c:if>
 <c:if test="${not isAdmin}">

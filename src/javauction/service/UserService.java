@@ -3,9 +3,10 @@ package javauction.service;
 import javauction.controller.PasswordAuthentication;
 import javauction.model.UserEntity;
 import javauction.util.HibernateUtil;
-import org.hibernate.HibernateException;
-import org.hibernate.Query;
-import org.hibernate.Session;
+import org.hibernate.*;
+import org.hibernate.criterion.CriteriaSpecification;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 
 import java.util.List;
 
@@ -82,18 +83,40 @@ public class UserService {
         return null;
     }
 
-    public List getAllUsers(){
+    private void setUserPagination(Criteria crit, Integer numOfItems, int page){
+        int start = numOfItems*page;
+
+        /* stuff for pagination */
+        crit.setFirstResult(start); // 0, pagesize*1 + 1, pagesize*2 + 1, ...
+        crit.setMaxResults(numOfItems);
+        crit.setFetchMode("notification", FetchMode.SELECT);  // disabling those "FetchMode.SELECT"
+        crit.setFetchMode("auctions", FetchMode.SELECT);        // will screw up everything.
+        crit.setFetchMode("rating", FetchMode.SELECT);
+        crit.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
+
+    }
+
+    public List getAllUsers(Integer page){
         Session session = HibernateUtil.getSession();
+        Transaction tx = null;
+        List users = null;
+        int pagesize = 20;
         try {
-            Query query = session.createQuery("from UserEntity where isAdmin = 0");
-            List results = query.list();
-            return results;
+            tx = session.beginTransaction();
+            Criteria criteria = session.createCriteria(UserEntity.class);
+            criteria.add(Restrictions.ne("isAdmin", (byte) 1));
+            criteria.addOrder(Order.asc("isApproved"));
+
+            setUserPagination(criteria, pagesize, page);
+
+            users = criteria.list();
+            tx.commit();
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
             session.close();
+            return users;
         }
-        return null;
     }
 
 

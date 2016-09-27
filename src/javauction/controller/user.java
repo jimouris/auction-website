@@ -15,6 +15,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by gpelelis on 19/4/2016.
@@ -130,8 +131,16 @@ public class user extends HttpServlet {
             } else if (request.getParameter("action").equals("getAllUsers")){
                 List userLst;
                 next_page = "/admin/listUsers.jsp";
+
+                Integer page = 0;
+                if (request.getParameterMap().containsKey("page")) {
+                    page = Integer.parseInt(request.getParameter("page"));
+                }
+
                 UserService userService = new UserService();
-                userLst = userService.getAllUsers();
+                userLst = userService.getAllUsers(page);
+
+                constructPrevNext(page, request);
 
                 request.setAttribute("userLst", userLst);
             } else if (request.getParameter("action").equals("unameExists")){
@@ -174,4 +183,37 @@ public class user extends HttpServlet {
         view.forward(request, response);
     }
 
+
+    // i want to return something like auction.do?action=simpleSearch&name=&page=
+    private String constructURL(HttpServletRequest request){
+        Map<String, String[]> params = request.getParameterMap();
+        String url = "user.do?";
+        for (Map.Entry<String, String[]> entry : params.entrySet())
+        {
+            // page param will be self assigned, so we have to skip it
+            if (!entry.getKey().equals("page")) {
+                String[] values = entry.getValue();
+                for (String value : values) {
+                    url = url + entry.getKey() + "=";
+                    url = url + value + "&";
+                }
+            }
+        }
+        // cut the last & that iteration adds
+        url = url.substring(0, url.length()-1);
+        return url;
+    }
+
+    // sets attributes thta will be passed to searchResults jsp
+    // in order to show previous and next page links on search result
+    private void constructPrevNext(int page, HttpServletRequest request) {
+        String next, previous;
+        next = constructURL(request) + "&page=";
+        if (page > 0){
+            previous = next + (page - 1);
+            request.setAttribute("previousPage", previous);
+        }
+        next = next + (page + 1); // don't change the order of this. previous will haave wrong initial string
+        request.setAttribute("nextPage", next);
+    }
 }
