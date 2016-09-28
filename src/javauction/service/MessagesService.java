@@ -94,6 +94,7 @@ public class MessagesService {
     public List getInboxOrSent(long rid, Message_t msg_t) {
         Session session = HibernateUtil.getSession();
         Query query = null;
+        List messages = null;
         try {
             switch (msg_t) {
                 case Inbox_t:
@@ -104,6 +105,7 @@ public class MessagesService {
                     query = session.createQuery("select m from MessagesEntity m where m.sendDate = (select max(b.sendDate) " +
                             "from MessagesEntity b where b.auctionId = m.auctionId and b.senderId = :rid)");
             }
+            messages = (query != null) ? query.setParameter("rid", rid).list() : null;
         } catch (HibernateException e) {
             e.printStackTrace();
         } finally {
@@ -111,7 +113,7 @@ public class MessagesService {
                 if (session != null) session.close();
             } catch (Exception ignored) {}
         }
-        return (query != null) ? query.setParameter("rid", rid).list() : null;
+        return messages;
     }
 
 }

@@ -53,6 +53,7 @@ public class RatingService extends Service {
     public List<RatingEntity> getFromOrToRatings(long uid, Rating_t rating_t) {
         Session session = HibernateUtil.getSession();
         Query query = null;
+        List<RatingEntity> ratingEntities = null;
         try {
             switch (rating_t) {
                 case From_t:
@@ -62,6 +63,7 @@ public class RatingService extends Service {
                     query = session.createQuery("from RatingEntity where toId = :uid");
                     break;
             }
+            ratingEntities = (query != null) ? query.setParameter("uid", uid).list() : null;
         } catch (HibernateException e) {
             e.printStackTrace();
         } finally {
@@ -69,7 +71,7 @@ public class RatingService extends Service {
                 if (session != null) session.close();
             } catch (Exception ignored) {}
         }
-        return (query != null) ? query.setParameter("uid", uid).list() : null;
+        return ratingEntities;
     }
 
     /**
