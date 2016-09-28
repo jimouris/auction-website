@@ -4,7 +4,6 @@ import javauction.model.AuctionEntity;
 import javauction.model.RecommendationEngine;
 import javauction.model.UserEntity;
 import javauction.service.UserService;
-
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -17,18 +16,19 @@ import java.io.PrintWriter;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by gpelelis on 19/4/2016.
- */
+
 @WebServlet(name = "user")
 public class user extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String next_page = "/user/homepage.jsp";
 
-        if (request.getParameter("action") != null) {
-            // the endpoint that admin can use to approve a user
-            if (request.getParameter("action").equals("approveUser")) {
+        if (request.getParameter("action") == null) {
+            RequestDispatcher view = request.getRequestDispatcher(next_page);
+            view.forward(request, response);
+        }
+        switch (request.getParameter("action")) {
+            case "approveUser":
                 response.setContentType("text/html");
 
                 UserEntity user;
@@ -44,11 +44,9 @@ public class user extends HttpServlet {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
-            } else if (request.getParameter("action").equals("register")) {
+                break;
+            case "register":
                 response.setContentType("text/html");
-
-                // prepare variables
                 next_page = "/public/register.jsp";
 
                 String password = request.getParameter("password");
@@ -71,7 +69,7 @@ public class user extends HttpServlet {
                     byte[] salt = PasswordAuthentication.genSalt();
                     byte[] hash = PasswordAuthentication.hash(password.toCharArray(), salt);
 
-                    UserEntity user = new UserEntity(username, hash, salt, name, lastname, email, phonenumber, vat, homeaddress, latitude, longitude, city, country);
+                    user = new UserEntity(username, hash, salt, name, lastname, email, phonenumber, vat, homeaddress, latitude, longitude, city, country);
 
                     // tell the customer to register a new user
                     try {
@@ -103,9 +101,8 @@ public class user extends HttpServlet {
                     errorMsg = "Passwords must match";
                     request.setAttribute("errorMsg", errorMsg);
                 }
-            }
         }
-        // then forward the request to welcome.jsp with the information of status
+        /* then forward the request to welcome.jsp with the information of status */
         RequestDispatcher view = request.getRequestDispatcher(next_page);
         view.forward(request, response);
 
@@ -114,71 +111,68 @@ public class user extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String next_page = "/user/homepage.jsp";
 
-        if (request.getParameter("action") != null) {
-            if (request.getParameter("action").equals("getAUser")) {
+        if (request.getParameter("action") == null) {
+            RequestDispatcher view = request.getRequestDispatcher(next_page);
+            view.forward(request, response);
+        }
+        UserService userService = new UserService();
+        switch (request.getParameter("action")) {
+            case "getAUser":
                 UserEntity user;
                 next_page = "/admin/userInfo.jsp";
                 long uid = Long.parseLong(request.getParameter("uid"));
 
                 // retrieve user's info
                 try {
-                    UserService userService = new UserService();
                     user = userService.getUser(uid);
                     request.setAttribute("user", user);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-            } else if (request.getParameter("action").equals("getAllUsers")){
+                break;
+            case "getAllUsers":
                 List userLst;
                 next_page = "/admin/listUsers.jsp";
-
                 Integer page = 0;
                 if (request.getParameterMap().containsKey("page")) {
                     page = Integer.parseInt(request.getParameter("page"));
                 }
 
-                UserService userService = new UserService();
                 userLst = userService.getAllUsers(page);
-
                 constructPrevNext(page, request);
-
                 request.setAttribute("userLst", userLst);
-            } else if (request.getParameter("action").equals("unameExists")){
+                break;
+            case "unameExists":
                 String uname = request.getParameter("uname");
                 response.setContentType("text/html");
 
-                UserService userService = new UserService();
                 PrintWriter out = response.getWriter();
-                if (userService.unameExist( uname))
+                if (userService.unameExist( uname)) {
                     out.println("exists");
+                }
                 return;
-            } else if (request.getParameter("action").equals("emailExists")) {
+            case "emailExists":
                 String email = request.getParameter("email");
                 response.setContentType("text/html");
 
-                UserService userService = new UserService();
-                PrintWriter out = response.getWriter();
-                if (userService.emailExist(email))
+                out = response.getWriter();
+                if (userService.emailExist(email)) {
                     out.println("exists");
+                }
                 return;
-            } else if (request.getParameter("action").equals("home")){
+            case "home":
                 HttpSession session = request.getSession();
-                long uid = ((UserEntity) session.getAttribute("user")).getUserId();
+                uid = ((UserEntity) session.getAttribute("user")).getUserId();
                 List<AuctionEntity> recommendationLst = (List<AuctionEntity>) session.getAttribute("recommendationLst");
                 if (recommendationLst == null) {
                     RecommendationEngine recommender = new RecommendationEngine();
                     recommendationLst = recommender.getRecommendations(uid);
-//                    for (AuctionEntity ae : recommendationLst) {
-//                        System.out.println(ae.getAuctionId() + " " + ae.getName());
-//                    }
                     session.setAttribute("recommendationLst", recommendationLst);
                 }
-
                 next_page = "/user/homepage.jsp";
-            }
+                break;
         }
-
-        // then forward the request to welcome.jsp with the information of status
+        /* then forward the request to welcome.jsp with the information of status */
         RequestDispatcher view = request.getRequestDispatcher(next_page);
         view.forward(request, response);
     }
@@ -216,4 +210,5 @@ public class user extends HttpServlet {
         next = next + (page + 1); // don't change the order of this. previous will haave wrong initial string
         request.setAttribute("nextPage", next);
     }
+
 }

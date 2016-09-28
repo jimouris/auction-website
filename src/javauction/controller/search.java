@@ -15,9 +15,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by jimouris on 7/11/16.
- */
+
 public class search extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -32,8 +30,7 @@ public class search extends HttpServlet {
                 return;
             }
         }
-
-        // if user has provided another action, then reroute him
+        /* if user has provided another action, then reroute him */
         RequestDispatcher view = request.getRequestDispatcher(next_page);
         view.forward(request, response);
     }
@@ -42,84 +39,100 @@ public class search extends HttpServlet {
         String next_page = "/user/homepage.jsp";
         HttpSession session = request.getSession();
 
-        if (request.getParameter("action") != null) {
-            SearchService searchService = new SearchService();
-            int page = 0;
+        if (request.getParameter("action") == null) {
+            RequestDispatcher view = request.getRequestDispatcher(next_page);
+            view.forward(request, response);
+        }
+        SearchService searchService = new SearchService();
+        int page = 0;
+        if (request.getParameterMap().containsKey("page")) {
+            page = Integer.parseInt(request.getParameter("page"));
+        }
 
-            if (request.getParameterMap().containsKey("page")) {
-                page = Integer.parseInt(request.getParameter("page"));
+        /* min and max values are assigned from here in order to use some old code
+        * this is used on searchAuctions with a Restrictions.between
+        * */
+        searchService.setMinPrice(0d);
+        if (request.getParameterMap().containsKey("minPrice")) {
+            if (!request.getParameter("minPrice").equals("")) {
+                searchService.setMinPrice(Double.parseDouble(request.getParameter("minPrice")));
             }
+        }
+        searchService.setMaxPrice(Double.MAX_VALUE);
+        if (request.getParameterMap().containsKey("maxPrice")) {
+            if (!request.getParameter("maxPrice").equals("")) {
+                searchService.setMaxPrice(Double.parseDouble(request.getParameter("maxPrice")));
+            }
+        }
 
-            // min and max values are assigned from here in order to use some old code
-            // this is used on searchAuctions with a Restrictions.between
-            searchService.setMinPrice(0d);
-            if (request.getParameterMap().containsKey("minPrice"))
-                if (!request.getParameter("minPrice").equals(""))
-                    searchService.setMinPrice(Double.parseDouble(request.getParameter("minPrice")));
-            searchService.setMaxPrice(Double.MAX_VALUE);
-            if (request.getParameterMap().containsKey("maxPrice"))
-                if (!request.getParameter("maxPrice").equals(""))
-                    searchService.setMaxPrice(Double.parseDouble(request.getParameter("maxPrice")));
-
-
-            if (request.getParameter("action").equals("advancedSearch")) {
+        switch (request.getParameter("action")) {
+            case "advancedSearch":
                 /* gather all categories to display on jsp */
                 CategoryService categoryService = new CategoryService();
                 List categoryLst = categoryService.getAllCategories();
                 request.setAttribute("categoriesLst", categoryLst);
-
                 next_page = "/public/customSearch.jsp";
-            }  else if (request.getParameter("action").equals("auctionsForExport")){
+                break;
+            case "auctionsForExport":
                 List<AuctionEntity> auctionsLst;
-
                 auctionsLst = searchService.searchAuctions(page);
-
                 constructPrevNext(page, request);
-
                 request.setAttribute("auctionsLst", auctionsLst);
                 next_page = "/admin/listAuctions.jsp";
-            } if (request.getParameter("action").equals("searchAuctions")){
-                List<AuctionEntity> auctionsLst;
-
-                // auctions that are activated by user and are on time frame
-                if (request.getParameterMap().containsKey("isActive"))
+                break;
+            case "searchAuctions":
+                /* auctions that are activated by user and are on time frame */
+                if (request.getParameterMap().containsKey("isActive")) {
                     searchService.setIsActive(Byte.parseByte(request.getParameter("isActive")));
-                // get your auctions
-                if (request.getParameterMap().containsKey("boughtBy"))
-                    if( request.getParameter("boughtBy").equals("you") )
+                }
+                /* get your auctions */
+                if (request.getParameterMap().containsKey("boughtBy")) {
+                    if (request.getParameter("boughtBy").equals("you")) {
                         searchService.setBuyerID( ((UserEntity) session.getAttribute("user")).getUserId());
-                // auctions that are outside of time frame
-                if (request.getParameterMap().containsKey("isEnded"))
-                    if( request.getParameter("isEnded").equals("true") )
+                    }
+                }
+                /* auctions that are outside of time frame */
+                if (request.getParameterMap().containsKey("isEnded")) {
+                    if (request.getParameter("isEnded").equals("true")) {
                         searchService.setIsEnded(true);
-                if (request.getParameterMap().containsKey("seller"))
-                    if( request.getParameter("seller").equals("you") )
+                    }
+                }
+                if (request.getParameterMap().containsKey("seller")) {
+                    if (request.getParameter("seller").equals("you")) {
                         searchService.setSellerID( ((UserEntity) session.getAttribute("user")).getUserId());
+                    }
+                }
 
                 /* simple or advanced search */
-                if (request.getParameterMap().containsKey("reallyActive"))
-                    if (request.getParameter("reallyActive").equals("true"))
+                if (request.getParameterMap().containsKey("reallyActive")) {
+                    if (request.getParameter("reallyActive").equals("true")) {
                         searchService.setReallyActive(true);
-                if (request.getParameterMap().containsKey("name"))
+                    }
+                }
+                if (request.getParameterMap().containsKey("name")) {
                     searchService.setAuctionName(request.getParameter("name"));
-                if (request.getParameterMap().containsKey("categories"))
+                }
+                if (request.getParameterMap().containsKey("categories")) {
                     searchService.setCategories(request.getParameterValues("categories"));
-                if (request.getParameterMap().containsKey("description"))
+                }
+                if (request.getParameterMap().containsKey("description")) {
                     searchService.setDescription(request.getParameter("description"));
-                if (request.getParameterMap().containsKey("location"))
+                }
+                if (request.getParameterMap().containsKey("location")) {
                     searchService.setLocation(request.getParameter("location"));
+                }
 
                 auctionsLst = searchService.searchAuctions(page);
-
                 constructPrevNext(page, request);
-
                 request.setAttribute("auctionsLst", auctionsLst);
                 next_page = "/public/searchResults.jsp";
-            }
+                break;
         }
+
         RequestDispatcher view = request.getRequestDispatcher(next_page);
         view.forward(request, response);
     }
+
 
     // sets attributes thta will be passed to searchResults jsp
     // in order to show previous and next page links on search result

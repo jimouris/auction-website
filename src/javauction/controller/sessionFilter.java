@@ -1,22 +1,17 @@
 package javauction.controller;
 
 import javauction.model.UserEntity;
-
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
-/**
- * Created by jimouris on 8/7/16.
- */
+
 public class sessionFilter implements Filter {
 
     @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
-
-    }
+    public void init(FilterConfig filterConfig) throws ServletException {}
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
@@ -26,15 +21,12 @@ public class sessionFilter implements Filter {
         boolean loggedIn = false;
         Boolean isAdmin = (Boolean) session.getAttribute("isAdmin");
         UserEntity user = (UserEntity) session.getAttribute("user");
-        if (session != null) {
-
-            loggedIn = user != null;
-            if (isAdmin == null) {
-                isAdmin = false;
-            }
-            if (isAdmin) {
-                loggedIn = true;
-            }
+        loggedIn = user != null;
+        if (isAdmin == null) {
+            isAdmin = false;
+        }
+        if (isAdmin) {
+            loggedIn = true;
         }
         String requestPath = request.getRequestURI();
         if (loggedIn) {
@@ -65,8 +57,6 @@ public class sessionFilter implements Filter {
     }
 
     @Override
-    public void destroy() {
-
-    }
+    public void destroy() {}
 
 }
