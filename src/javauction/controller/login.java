@@ -36,7 +36,7 @@ public class login extends HttpServlet {
 
             String errorMsg;
             if (usr_type.equals("admin")) {
-                result = userService.authenticateAdmin(username, password);
+                result = userService.authenticateUserOrAdmin(username, password, false);
                 next_page = "/public/backoffice.jsp";
                 if (result == UserService.LoginStatus.LOGIN_SUCCESS) {
                     session.setAttribute("isAdmin", true);
@@ -53,7 +53,7 @@ public class login extends HttpServlet {
                     request.setAttribute("errorMsg", errorMsg);
                 }
             } else if (usr_type.equals("user")){
-                result = userService.authenticateUser(username, password);
+                result = userService.authenticateUserOrAdmin(username, password, true);
                 if (result == UserService.LoginStatus.LOGIN_SUCCESS) {
                     UserEntity user = userService.getUser(username);
                     session.setAttribute("user", user);

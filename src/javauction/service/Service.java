@@ -5,7 +5,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 
 /**
- * Created by root on 8/12/16.
+ * Implements a simple add operation to database using the hibernate API.
  */
 abstract class Service {
 

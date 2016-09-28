@@ -13,7 +13,10 @@ import java.util.List;
 
 public class BidService {
 
-    /* returns a list of auction-ids that user with uid has bided */
+    /**
+     * @param uid userId
+     * @return a list of auction-ids that user with uid has bided
+     */
     public List getAllUserBids(long uid) {
         Session session = HibernateUtil.getSession();
         List bids = null;
@@ -30,7 +33,5 @@ public class BidService {
         }
         return bids;
     }
-
-
 
 }

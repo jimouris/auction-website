@@ -7,62 +7,45 @@ import org.hibernate.*;
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
-
 import java.util.List;
 
 /**
- * Created by jimouris on 7/3/16.
+ * Implements simple operations in order to add, update or remove entries from database using the hibernate API.
+ * Mostly used by user.do and auction.do servlets-controllers.
  */
-public class UserService {
+public class UserService extends Service {
 
+    /**
+     * if user exists update him, else add him.
+     * @param user UserEntity to add or update
+     * @return userId
+     */
     public long addOrUpdate(UserEntity user) {
         Session session = HibernateUtil.getSession();
-
         Query query = session.createQuery("from UserEntity where username = :username");
         List results = query.setParameter("username", user.getUsername()).list();
         if (results.size() > 0) {
             UserEntity persUser = (UserEntity) results.get(0);
             user.setUserId(persUser.getUserId());
-            if (session != null) session.close();
+            try {
+                session.close();
+            } catch (Exception ignored) {}
             return persUser.getUserId();
         } else {
-            try {
-                session.beginTransaction();
-                session.save(user);
-                session.getTransaction().commit();
-            } catch (HibernateException e) {
-                e.printStackTrace();
-            } finally {
-                try {
-                    if (session != null) session.close();
-                } catch (Exception e) {
-                    // ignore
-                } finally {
-                    return user.getUserId();
-                }
-            }
+            addEntity(user);
+            return user.getUserId();
         }
     }
 
-    public enum RegisterStatus {
-        REG_FAIL,
-        REG_SUCCESS,
-        REG_UNAME_EXISTS,
-        REG_EMAIL_EXISTS
-    }
-
-    public enum LoginStatus {
-        LOGIN_FAIL,
-        LOGIN_SUCCESS,
-        LOGIN_WRONG_UNAME_PASSWD,
-        LOGIN_NOT_APPROVED,
-        LOGIN_NOT_ADMIN
-    }
-
+    /**
+     * @param obj String (user username) or Long (user Id)
+     * @return if (obj instance of String) then returns user that username = (String) obj
+     *         else if (obj instanceof Long) then returns user that id = (Long) obj.
+     */
     public UserEntity getUser(Object obj) {
         Session session = HibernateUtil.getSession();
+        UserEntity user = null;
         try {
-            UserEntity user = null;
             if (obj instanceof String) {
                 String username = obj.toString();
                 Query query = session.createQuery("from UserEntity where username = :username and isAdmin = 0");
@@ -74,18 +57,23 @@ public class UserService {
                 long uid = (long) obj;
                 user = (UserEntity) session.get(UserEntity.class, uid);
             }
-            return user;
-        } catch (Exception e) {
+        } catch (HibernateException e) {
             e.printStackTrace();
         } finally {
-            session.close();
+            try {
+                session.close();
+            } catch (Exception ignored) {}
         }
-        return null;
+        return user;
     }
 
-    private void setUserPagination(Criteria crit, Integer numOfItems, int page){
+    /**
+     * @param crit criteria
+     * @param numOfItems number of items
+     * @param page current page
+     */
+    private void setUserPagination(Criteria crit, Integer numOfItems, int page) {
         int start = numOfItems*page;
-
         /* stuff for pagination */
         crit.setFirstResult(start); // 0, pagesize*1 + 1, pagesize*2 + 1, ...
         crit.setMaxResults(numOfItems);
@@ -93,12 +81,15 @@ public class UserService {
         crit.setFetchMode("auctions", FetchMode.SELECT);        // will screw up everything.
         crit.setFetchMode("rating", FetchMode.SELECT);
         crit.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
-
     }
 
+    /**
+     * @param page current page
+     * @return Users list for current page.
+     */
     public List getAllUsers(Integer page){
         Session session = HibernateUtil.getSession();
-        Transaction tx = null;
+        Transaction tx;
         List users = null;
         int pagesize = 20;
         try {
@@ -106,51 +97,66 @@ public class UserService {
             Criteria criteria = session.createCriteria(UserEntity.class);
             criteria.add(Restrictions.ne("isAdmin", (byte) 1));
             criteria.addOrder(Order.asc("isApproved"));
-
             setUserPagination(criteria, pagesize, page);
-
             users = criteria.list();
             tx.commit();
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            session.close();
-            return users;
+            try {
+                session.close();
+            } catch (Exception ignored) {}
         }
+        return users;
     }
 
-
+    /**
+     * @param uname username
+     * @return true if uname exists, otherwise false.
+     */
     public Boolean unameExist(String uname){
         Session session = HibernateUtil.getSession();
-        try{
+        List results = null;
+        try {
             Query query = session.createQuery("from UserEntity where username = :uname");
             query.setParameter("uname", uname);
-            List results = query.list();
-            return results.size() > 0;
+            results = query.list();
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            session.close();
+            try {
+                session.close();
+            } catch (Exception ignored) {}
         }
-        return true;
+        return (results != null) && results.size() > 0;
     }
 
+    /**
+     * @param email email
+     * @return true if email exists, otherwise false.
+     */
     public boolean emailExist(String email) {
         Session session = HibernateUtil.getSession();
-        try{
+        List results = null;
+        try {
             Query query = session.createQuery("from UserEntity where email = :email");
             query.setParameter("email", email);
-            List results = query.list();
-            return results.size() > 0;
+            results = query.list();
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            session.close();
+            try {
+                session.close();
+            } catch (Exception ignored) {}
         }
-        return true;
+        return (results != null) && results.size() > 0;
     }
 
-    public Boolean approveUser(long uid) {
+    /**
+     * Approve user with userId == uid
+     * @param uid userId
+     */
+    public void approveUser(long uid) {
         Session session = HibernateUtil.getSession();
         try {
             session.beginTransaction();
@@ -158,15 +164,20 @@ public class UserService {
             user.setIsApproved((byte) 1);
             session.update(user);
             session.getTransaction().commit();
-            return true;
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            session.close();
+            try {
+                session.close();
+            } catch (Exception ignored) {}
         }
-        return false;
     }
 
+    /**
+     * Registers a user
+     * @param user user
+     * @return RegisterStatus enumeration
+     */
     public RegisterStatus register(UserEntity user){
         Session session = HibernateUtil.getSession();
         /*  if username exists */
@@ -186,79 +197,74 @@ public class UserService {
             session.beginTransaction();
             session.save(user);
             session.getTransaction().commit();
-            return RegisterStatus.REG_SUCCESS;
         } catch (Exception e) {
             e.printStackTrace();
+            return RegisterStatus.REG_FAIL;
             // TODO: 7/3/16 add here a rollback
         } finally {
-            session.close();
+            try {
+                session.close();
+            } catch (Exception ignored) {}
         }
-
-        return RegisterStatus.REG_FAIL;
+        return RegisterStatus.REG_SUCCESS;
     }
 
-    // authenticate the admin
-    public LoginStatus authenticateAdmin(String username, String password) {
+    public enum RegisterStatus {
+        REG_FAIL,
+        REG_SUCCESS,
+        REG_UNAME_EXISTS,
+        REG_EMAIL_EXISTS
+    }
+
+    /**
+     * Login
+     * @param username username for login
+     * @param password password for login
+     * @param userAuth true for user, false for admin
+     * @return LoginStatus
+     */
+    public LoginStatus authenticateUserOrAdmin(String username, String password, boolean userAuth) {
         Session session = HibernateUtil.getSession();
+        boolean loginStat;
         try {
-            Query query = session.createQuery("from UserEntity where username = :username");
+            Query query;
+            if (!userAuth) {
+                query = session.createQuery("from UserEntity where username = :username");
+            } else {
+                query = session.createQuery("from UserEntity where username = :username and isAdmin = 0");
+            }
             List results = query.setParameter("username", username).list();
             if (results.size() == 0) {
                 /* Actually is wrong username but we dont want to give much information*/
                 return LoginStatus.LOGIN_WRONG_UNAME_PASSWD;
             }
             UserEntity user = (UserEntity) results.get(0);
-            if (user.getIsAdmin() == 0) {
-                return LoginStatus.LOGIN_NOT_ADMIN;
+            if (!userAuth) { /* if admin authentication */
+                if (user.getIsAdmin() == 0) {
+                    return LoginStatus.LOGIN_NOT_ADMIN;
+                }
             }
             if (user.getIsApproved() == 0) {
                 return LoginStatus.LOGIN_NOT_APPROVED;
             }
             byte[] hash = user.getHash();
             byte[] salt = user.getSalt();
-            boolean loginStat = PasswordAuthentication.isExpectedPassword(password.toCharArray(), salt, hash);
-            if (loginStat) {
-                return LoginStatus.LOGIN_SUCCESS;
-            } else {
-                return LoginStatus.LOGIN_WRONG_UNAME_PASSWD;
-            }
-        } catch (Exception e) {
+            loginStat = PasswordAuthentication.isExpectedPassword(password.toCharArray(), salt, hash);
+        } catch (HibernateException e) {
             e.printStackTrace();
+            return LoginStatus.LOGIN_FAIL;
         } finally {
-            session.close();
+            try { session.close(); } catch (Exception ignored) {}
         }
-        return LoginStatus.LOGIN_FAIL;
+        return (loginStat) ? LoginStatus.LOGIN_SUCCESS : LoginStatus.LOGIN_WRONG_UNAME_PASSWD;
     }
 
-    // authenticate a regular user
-    public LoginStatus authenticateUser(String username, String password) {
-        Session session = HibernateUtil.getSession();
-        try {
-            Query query = session.createQuery("from UserEntity where username = :username and isAdmin = 0");
-            List results = query.setParameter("username", username).list();
-            if (results.size() == 0) {
-                /* Actually is wrong username but we dont want to give much information*/
-                return LoginStatus.LOGIN_WRONG_UNAME_PASSWD;
-            }
-            UserEntity user = (UserEntity) results.get(0);
-            if (user.getIsApproved() == 0) {
-                return LoginStatus.LOGIN_NOT_APPROVED;
-            }
-            byte[] hash = user.getHash();
-            byte[] salt = user.getSalt();
-            boolean loginStat = PasswordAuthentication.isExpectedPassword(password.toCharArray(), salt, hash);
-            if (loginStat) {
-                return LoginStatus.LOGIN_SUCCESS;
-            } else {
-                return LoginStatus.LOGIN_WRONG_UNAME_PASSWD;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            session.close();
-        }
-        return LoginStatus.LOGIN_FAIL;
+    public enum LoginStatus {
+        LOGIN_FAIL,
+        LOGIN_SUCCESS,
+        LOGIN_WRONG_UNAME_PASSWD,
+        LOGIN_NOT_APPROVED,
+        LOGIN_NOT_ADMIN
     }
 
 }
-

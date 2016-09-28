@@ -38,7 +38,7 @@ public class user extends HttpServlet {
                 // retrieve user's info
                 try {
                     UserService userService = new UserService();
-                    Boolean status = userService.approveUser(uid);
+                    userService.approveUser(uid);
                     user = userService.getUser(uid);
                     request.setAttribute("user", user);
                 } catch (Exception e) {

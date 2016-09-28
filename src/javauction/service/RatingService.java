@@ -9,7 +9,7 @@ import org.hibernate.Session;
 import java.util.List;
 
 /**
- * Created by jimouris on 8/12/16.
+ * Implements simple operations in order to add, update or remove entries from database using the hibernate API.
  */
 public class RatingService extends Service {
 
@@ -18,30 +18,42 @@ public class RatingService extends Service {
         From_t;
     }
 
+    /**
+     * @param from_id from id
+     * @param to_id to id
+     * @param aid auction Id
+     * @return rating that has been placed from user with id from_id for user with id to_id
+     */
     public RatingEntity getRating(long from_id, long to_id, long aid) {
         Session session = HibernateUtil.getSession();
+        RatingEntity rating = null;
         try {
             Query query = session.createQuery("from RatingEntity where fromId = :fromId and toId = :toId and auctionId = :auctionId");
             query.setParameter("fromId", from_id);
             query.setParameter("toId", to_id);
             List results = query.setParameter("auctionId", aid).list();
-            RatingEntity rating = null;
             if (results.size() > 0) {
                 rating = (RatingEntity) results.get(0);
             }
-            return rating;
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            session.close();
+            try {
+                if (session != null) session.close();
+            } catch (Exception ignored) {}
         }
-        return null;
+        return rating;
     }
 
+    /**
+     * @param uid userId
+     * @param rating_t ratings From or To
+     * @return all ratings that a user has placed, or have been placed for him
+     */
     public List<RatingEntity> getFromOrToRatings(long uid, Rating_t rating_t) {
         Session session = HibernateUtil.getSession();
+        Query query = null;
         try {
-            Query query = null;
             switch (rating_t) {
                 case From_t:
                     query = session.createQuery("from RatingEntity where fromId = :uid");
@@ -50,19 +62,22 @@ public class RatingService extends Service {
                     query = session.createQuery("from RatingEntity where toId = :uid");
                     break;
             }
-            return query.setParameter("uid", uid).list();
         } catch (HibernateException e) {
             e.printStackTrace();
         } finally {
             try {
                 if (session != null) session.close();
-            } catch (Exception e) {
-                // ignore
-            }
+            } catch (Exception ignored) {}
         }
-        return null;
+        return (query != null) ? query.setParameter("uid", uid).list() : null;
     }
 
+    /**
+     * @param from_id from userId
+     * @param to_id to userId
+     * @param aid auctionId
+     * @param rating rating
+     */
     public void updateRating(long from_id, long to_id, long aid, int rating) {
         Session session = HibernateUtil.getSession();
         try {
@@ -76,12 +91,15 @@ public class RatingService extends Service {
         } finally {
             try {
                 if (session != null) session.close();
-            } catch (Exception e) {
-                // ignore
-            }
+            } catch (Exception ignored) {}
         }
     }
 
+    /**
+     * @param from_id from userId
+     * @param rating_t ratings From or To
+     * @return average rating
+     */
     public Double calcAvgRating(long from_id, Rating_t rating_t) {
         RatingService ratingService = new RatingService();
         List<RatingEntity> ratingsLst = ratingService.getFromOrToRatings(from_id, rating_t);

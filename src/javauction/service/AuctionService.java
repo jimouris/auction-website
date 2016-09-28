@@ -8,17 +8,24 @@ import javauction.util.HibernateUtil;
 import org.hibernate.*;
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Restrictions;
-
 import java.sql.Timestamp;
 import java.util.*;
 
-
+/**
+ * Implements simple operations in order to add, update or remove entries from database using the hibernate API.
+ * Mostly used by auction.do servlet-controller.
+ */
 public class AuctionService extends Service {
 
+    /**
+     * @param obj String (auction name) or Long (auction Id)
+     * @return if (obj instance of String) then returns Auction that name = (String) obj
+     *         else if (obj instanceof Long) then returns Auction that id = (Long) obj.
+     */
     public AuctionEntity getAuction(Object obj) {
         Session session = HibernateUtil.getSession();
+        AuctionEntity auction = null;
         try {
-            AuctionEntity auction = null;
             if (obj instanceof String) {
                 String auction_name = obj.toString();
                 Query query = session.createQuery("from AuctionEntity where name = :auction_name");
@@ -30,7 +37,6 @@ public class AuctionService extends Service {
                 long aid = (long) obj;
                 auction = (AuctionEntity) session.get(AuctionEntity.class, aid);
             }
-            return auction;
         } catch (HibernateException e) {
             e.printStackTrace();
         } finally {
@@ -38,7 +44,7 @@ public class AuctionService extends Service {
                 if (session != null) session.close();
             } catch (Exception ignored) {}
         }
-        return null;
+        return auction;
     }
 
     @Deprecated
@@ -66,9 +72,7 @@ public class AuctionService extends Service {
             auctions = criteria.list();
             tx.commit();
         } catch (HibernateException e) {
-            if (tx != null) {
-                tx.rollback();
-            }
+            if (tx != null) { tx.rollback(); }
             e.printStackTrace();
         } finally {
             try {
@@ -101,6 +105,13 @@ public class AuctionService extends Service {
         return results;
     }
 
+    /**
+     * If activate == true then activate auction with Id == aid and set its ending date to endingDate.
+     * else set isStarted = 0.
+     * @param aid AuctionId
+     * @param endingDate The new ending date
+     * @param activate To set active or inactive.
+     */
     public void activateAuction(long aid, Timestamp endingDate, boolean activate) {
         Session session = HibernateUtil.getSession();
         try {
@@ -108,14 +119,12 @@ public class AuctionService extends Service {
             AuctionEntity auction = (AuctionEntity) session.get(AuctionEntity.class, aid);
             if (activate) {
                 auction.setIsStarted((byte) 1);
-                /* when we activate the auction, we may pass the endingdate at this time */
-                if (endingDate != null) auction.setEndingDate(endingDate);
+                if (endingDate != null) { auction.setEndingDate(endingDate); }
             } else {
                 auction.setIsStarted((byte) 0);
             }
             Timestamp timeNow = new Timestamp(Calendar.getInstance().getTimeInMillis());
             auction.setStartingDate(timeNow);
-
             session.update(auction);
             session.getTransaction().commit();
         } catch (HibernateException e) {
@@ -127,8 +136,10 @@ public class AuctionService extends Service {
         }
     }
 
-    // deletes an auction and all associated records of auction_has_category from db
-    // todo: when we add the images, check if it also delete those
+    /**
+     * Deletes an auction with id == aid and all associated records of auction_has_category and also itemimage from db
+     * @param aid the auctionId to delete
+     */
     public void deleteAuction(long aid) {
         Session session = HibernateUtil.getSession();
         Transaction transaction = null;
@@ -148,9 +159,26 @@ public class AuctionService extends Service {
         }
     }
 
+    /**
+     * Updates only the fields that are not null of auction with id aid.
+     * @param categories set of categories
+     * @param aid auctionId
+     * @param name name
+     * @param desc description
+     * @param lowestBid lowest bid
+     * @param buyPrice buy price (instant buy)
+     * @param location location
+     * @param country country
+     * @param startingDate starting date
+     * @param endingDate ending date
+     * @param buyerid buyerId
+     * @param latitude latitude
+     * @param longitude longtitude
+     */
     public void updateAuction(Set<CategoryEntity> categories, Long aid, String name, String desc, Double lowestBid,
-                              Double buyPrice, String location, String country, Timestamp startingDate, Timestamp endingDate, Long buyerid, Double latitude, Double longitude) {
-
+                              Double buyPrice, String location, String country, Timestamp startingDate,
+                              Timestamp endingDate, Long buyerid, Double latitude, Double longitude)
+    {
         Session session = HibernateUtil.getSession();
         Transaction tx = null;
         AuctionEntity auction = getAuction(aid);
@@ -180,12 +208,14 @@ public class AuctionService extends Service {
         }
     }
 
+    /**
+     * @return A list of all auctions.
+     */
     public List getAuctions() {
         Session session = HibernateUtil.getSession();
         List results = null;
         try {
             Criteria criteria = session.createCriteria(AuctionEntity.class);
-
             results = criteria.list();
         } catch (HibernateException e) {
             e.printStackTrace();
@@ -197,18 +227,20 @@ public class AuctionService extends Service {
         return results;
     }
 
+    /**
+     * @param ids A list of auction IDs
+     * @return A list of auctions whose ids are in the ids list.
+     */
     public List<AuctionEntity> getAuctionsFromIds(List<Long> ids){
         Session session = HibernateUtil.getSession();
         List<AuctionEntity> auctions = null;
         try {
             Criteria criteria = session.createCriteria(AuctionEntity.class);
             criteria.add(Restrictions.in("auctionId", ids));
-
             criteria.setFetchMode("categories", FetchMode.SELECT);  // don't disable those fetch modes
             criteria.setFetchMode("bids", FetchMode.SELECT);
             criteria.setFetchMode("seller", FetchMode.SELECT);
             criteria.setFetchMode("images", FetchMode.SELECT);
-
             auctions = criteria.list();
         } catch (HibernateException e){
             e.printStackTrace();
@@ -218,6 +250,10 @@ public class AuctionService extends Service {
         return auctions;
     }
 
+    /**
+     * @param aid Auction ID
+     * @return A set of unique bidder ids for the auction with Id == aid.
+     */
     public HashSet<Long> getUniqueBidders(Long aid) {
         AuctionEntity auction = getAuction(aid);
         if (auction == null) {
@@ -225,41 +261,29 @@ public class AuctionService extends Service {
         }
         Set<BidEntity> bidEntities = auction.getBids();
         List<Long> bidders = new ArrayList<>();
-
         for (BidEntity b : bidEntities) {
             bidders.add(b.getBidderId());
         }
-        HashSet<Long> uniqueBidders = new HashSet<>(bidders);
-        return uniqueBidders;
+        return new HashSet<>(bidders);
     }
 
+    /**
+     * @param auction Auction Entity to add.
+     * @return Auction Id
+     */
     public long addAuction(AuctionEntity auction){
-        Session session = HibernateUtil.getSession();
-
-        try {
-            session.beginTransaction();
-            session.save(auction);
-            session.getTransaction().commit();
-        } catch (HibernateException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (session != null) session.close();
-            } catch (Exception e) {
-                // ignore
-            } finally {
-                return auction.getAuctionId();
-            }
-        }
+        addEntity(auction);
+        return auction.getAuctionId();
     }
 
+    /**
+     * @return the last image Id from database, in order to have unique image names. If there is no image yet, returns 0.
+     */
     public long getLastImageId() {
         Session session = HibernateUtil.getSession();
         ItemImageEntity result = null;
-        try{
-            result = (ItemImageEntity) session.createQuery("from ItemImageEntity ORDER BY itemImageId DESC")
-                    .setMaxResults(1).uniqueResult();
-
+        try {
+            result = (ItemImageEntity) session.createQuery("from ItemImageEntity ORDER BY itemImageId DESC").setMaxResults(1).uniqueResult();
         } catch (HibernateException e) {
             e.printStackTrace();
         } finally {

@@ -2,7 +2,6 @@ package javauction.service;
 
 import javauction.model.CategoryEntity;
 import javauction.util.HibernateUtil;
-import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
@@ -11,57 +10,64 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Created by gpelelis on 10/7/2016.
+ * Implements simple operations in order to add, update or remove entries from database using the hibernate API.
  */
-public class CategoryService  extends Service{
-    public List getAllCategories(){
+public class CategoryService  extends Service {
+
+    /**
+     * @return a list of all categories
+     */
+    public List getAllCategories() {
         Session session = HibernateUtil.getSession();
+        List results = null;
         try {
             Query query = session.createQuery("from CategoryEntity");
-            List results = query.list();
-            return results;
+            results = query.list();
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            session.close();
+            try {
+                if (session != null) session.close();
+            } catch (Exception ignored) {}
         }
-        return null;
+        return results;
     }
 
-    public CategoryEntity getCategory(int cid){
+    /**
+     * @param cid categoryId
+     * @return a category with Id == cid
+     */
+    public CategoryEntity getCategory(int cid) {
         Session session = HibernateUtil.getSession();
+        CategoryEntity category = null;
         try {
-            CategoryEntity category = null;
-                Query query = session.createQuery("from CategoryEntity where categoryId = :cid");
-                List results = query.setParameter("cid", cid).list();
-
-                if (results.size() > 0) {
-                    category = (CategoryEntity) results.get(0);
-                }
-            return category;
+            Query query = session.createQuery("from CategoryEntity where categoryId = :cid");
+            List results = query.setParameter("cid", cid).list();
+            if (results.size() > 0) {
+                category = (CategoryEntity) results.get(0);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            session.close();
+            try {
+                if (session != null) session.close();
+            } catch (Exception ignored) {}
         }
-        return null;
+        return category;
     }
 
+    /**
+     * @param categories a set of category entities
+     * @return the updated set of categories
+     */
     public HashSet<CategoryEntity> addOrUpdate(Set<CategoryEntity> categories) {
         Session session = HibernateUtil.getSession();
         try {
             for( CategoryEntity cat : categories ) {
                 Query query = session.createQuery("from CategoryEntity where categoryName = :cname");
                 List results = query.setParameter("cname", cat.getCategoryName()).list();
-
                 if (results.size() == 0) {
-                    try {
-                        session.beginTransaction();
-                        session.save(cat);
-                        session.getTransaction().commit();
-                    } catch (HibernateException e) {
-                        e.printStackTrace();
-                    }
+                    addEntity(cat);
                 } else {
                     CategoryEntity ac = (CategoryEntity) results.get(0);
                     cat.setCategoryId(ac.getCategoryId());
@@ -70,10 +76,11 @@ public class CategoryService  extends Service{
         } catch (Exception e) {
             e.printStackTrace();
         } finally{
-            session.close();
+            try {
+                if (session != null) session.close();
+            } catch (Exception ignored) {}
         }
         return (HashSet<CategoryEntity>) categories;
     }
-
 
 }
