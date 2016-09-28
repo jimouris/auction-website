@@ -43,11 +43,24 @@ public class search extends HttpServlet {
         HttpSession session = request.getSession();
 
         if (request.getParameter("action") != null) {
+            SearchService searchService = new SearchService();
             int page = 0;
 
             if (request.getParameterMap().containsKey("page")) {
                 page = Integer.parseInt(request.getParameter("page"));
             }
+
+            // min and max values are assigned from here in order to use some old code
+            // this is used on searchAuctions with a Restrictions.between
+            searchService.setMinPrice(0d);
+            if (request.getParameterMap().containsKey("minPrice"))
+                if (!request.getParameter("minPrice").equals(""))
+                    searchService.setMinPrice(Double.parseDouble(request.getParameter("minPrice")));
+            searchService.setMaxPrice(Double.MAX_VALUE);
+            if (request.getParameterMap().containsKey("maxPrice"))
+                if (!request.getParameter("maxPrice").equals(""))
+                    searchService.setMaxPrice(Double.parseDouble(request.getParameter("maxPrice")));
+
 
             if (request.getParameter("action").equals("advancedSearch")) {
                 /* gather all categories to display on jsp */
@@ -56,8 +69,16 @@ public class search extends HttpServlet {
                 request.setAttribute("categoriesLst", categoryLst);
 
                 next_page = "/public/customSearch.jsp";
-            }  else if (request.getParameter("action").equals("searchAuctions")){
-                SearchService searchService = new SearchService();
+            }  else if (request.getParameter("action").equals("auctionsForExport")){
+                List<AuctionEntity> auctionsLst;
+
+                auctionsLst = searchService.searchAuctions(page);
+
+                constructPrevNext(page, request);
+
+                request.setAttribute("auctionsLst", auctionsLst);
+                next_page = "/admin/listAuctions.jsp";
+            } if (request.getParameter("action").equals("searchAuctions")){
                 List<AuctionEntity> auctionsLst;
 
                 // auctions that are activated by user and are on time frame
@@ -87,14 +108,6 @@ public class search extends HttpServlet {
                     searchService.setDescription(request.getParameter("description"));
                 if (request.getParameterMap().containsKey("location"))
                     searchService.setLocation(request.getParameter("location"));
-                searchService.setMinPrice(0d);
-                if (request.getParameterMap().containsKey("minPrice"))
-                    if (!request.getParameter("minPrice").equals(""))
-                    searchService.setMinPrice(Double.parseDouble(request.getParameter("minPrice")));
-                searchService.setMaxPrice(Double.MAX_VALUE);
-                if (request.getParameterMap().containsKey("maxPrice"))
-                    if (!request.getParameter("maxPrice").equals(""))
-                    searchService.setMaxPrice(Double.parseDouble(request.getParameter("maxPrice")));
 
                 auctionsLst = searchService.searchAuctions(page);
 

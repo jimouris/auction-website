@@ -180,13 +180,11 @@ public class AuctionService extends Service {
         }
     }
 
-    public List getNAuctions(int N) {
+    public List getAuctions() {
         Session session = HibernateUtil.getSession();
         List results = null;
         try {
             Criteria criteria = session.createCriteria(AuctionEntity.class);
-
-            criteria.setMaxResults(N);
 
             results = criteria.list();
         } catch (HibernateException e) {
@@ -197,6 +195,27 @@ public class AuctionService extends Service {
             } catch (Exception ignored) {}
         }
         return results;
+    }
+
+    public List<AuctionEntity> getAuctionsFromIds(List<Long> ids){
+        Session session = HibernateUtil.getSession();
+        List<AuctionEntity> auctions = null;
+        try {
+            Criteria criteria = session.createCriteria(AuctionEntity.class);
+            criteria.add(Restrictions.in("auctionId", ids));
+
+            criteria.setFetchMode("categories", FetchMode.SELECT);  // don't disable those fetch modes
+            criteria.setFetchMode("bids", FetchMode.SELECT);
+            criteria.setFetchMode("seller", FetchMode.SELECT);
+            criteria.setFetchMode("images", FetchMode.SELECT);
+
+            auctions = criteria.list();
+        } catch (HibernateException e){
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+        return auctions;
     }
 
     public HashSet<Long> getUniqueBidders(Long aid) {

@@ -9,6 +9,12 @@
 
 
 
+.zebra-hover:hover{
+    background: #efefef;
+    cursor: pointer;
+}
+
+
 
 /*------------------------------------*\
   #MESSAGE

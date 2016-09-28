@@ -323,7 +323,20 @@ public class auction extends HttpServlet {
                     next_page = "homepage.jsp";
 
                     if ( isAdmin ) {
-                        List<AuctionEntity> auctions = auctionService.getNAuctions(10);
+                        List<AuctionEntity> auctions = null;
+
+                        // get the auctions to generate XML
+                        if (request.getParameterMap().containsKey("exportSelected")){
+                            List<Long> auctionIds = new ArrayList<>();
+                            String[] ids = request.getParameterValues("auctionIds");
+                            for (String id : ids){
+                                auctionIds.add(Long.valueOf(id));
+                            }
+                            auctions = auctionService.getAuctionsFromIds(auctionIds);
+                        } else {
+                            auctions = auctionService.getAuctions();
+                        }
+
                         for (AuctionEntity a : auctions)
                             a.setBidStuff();
 
