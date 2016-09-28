@@ -4,16 +4,30 @@ import javauction.service.AuctionService;
 import javauction.service.BidService;
 import java.util.*;
 
+/**
+ * Class that is responsible for the recommendation system.
+ * When a user loges-in this class provides him Items_to_recommend (5) items in his homepage.
+ */
 public class RecommendationEngine {
 
-    public static int K_Neighbours = 5;
+    private int K_Neighbours = 5;
     private int Items_to_recommend = 5;
 
+    /**
+     * returns the list of recommendations (AuctionEntities)
+     * @param uid the logged-in userId
+     * @return the list of recommendations
+     */
     public List<AuctionEntity> getRecommendations(long uid) {
         List<Long> knn = getKnn(uid);
         return getItems(uid, knn);
     }
 
+    /**
+     * returns the list of K-Nearest-Neighbours (UserIds)
+     * @param uid the logged-in userId
+     * @return the list of K-Nearest userIds.
+     */
     private List<Long> getKnn(long uid) {
         BidService bidService = new BidService();
         AuctionService auctionService = new AuctionService();
@@ -45,6 +59,12 @@ public class RecommendationEngine {
         return knn;
     }
 
+    /**
+     * Given the KNN and the UserId returns Items_to_recommend (5) auctions.
+     * @param uid the logged-in userId
+     * @param knn the list of K-Nearest-Neighbours (userIds).
+     * @return the list of recommendations
+     */
     private List<AuctionEntity> getItems(long uid, List<Long> knn) {
         HashSet<Long> recommendationSet = new HashSet<>();
         BidService bidService = new BidService();
@@ -71,6 +91,13 @@ public class RecommendationEngine {
         return recommendations;
     }
 
+    /**
+     * Sorts the SortedSet by value descending order
+     * @param map All neighbours
+     * @param <K> User Ids
+     * @param <V> Similarity with the logged-in user
+     * @return the sorted by value (descending order) set
+     */
     private static <K,V extends Comparable<? super V>>
     SortedSet<Map.Entry<K,V>> entriesSortedByValues(Map<K,V> map) {
         SortedSet<Map.Entry<K,V>> sortedEntries = new TreeSet<Map.Entry<K,V>>(

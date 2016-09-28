@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.util.Set;
 
 /**
- * Created by jimouris on 7/2/16.
+ * Class that describes a category entity. (A category of an item for sale).
  */
 @Entity
 @Table(name = "category", schema = "auctionwebsite")
@@ -24,7 +24,6 @@ public class CategoryEntity {
 
     public CategoryEntity() {
     }
-
 
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)

@@ -5,7 +5,9 @@ import java.sql.Timestamp;
 import java.util.Calendar;
 
 /**
- * Created by gpelelis on 24/8/2016.
+ * Class that describes a notification entity.
+ * (A user gets a notification if he has new messages or someone has rated him).
+ * Notifications are displayed in the homepage.
  */
 @Entity
 @Table(name = "notification", schema = "auctionwebsite")

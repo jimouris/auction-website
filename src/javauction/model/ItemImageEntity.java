@@ -3,7 +3,7 @@ package javauction.model;
 import javax.persistence.*;
 
 /**
- * Created by jimouris on 7/2/16.
+ * Class that describes an image of an item for sale.
  */
 @Entity
 @Table(name = "itemimage", schema = "auctionwebsite")

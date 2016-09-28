@@ -6,7 +6,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
- * Created by jimouris on 7/2/16.
+ * Auto-generated class
  */
 @Entity
 @Table(name = "auction_has_category", schema = "auctionwebsite")

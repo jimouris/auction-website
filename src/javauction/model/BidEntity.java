@@ -5,15 +5,13 @@ import com.thoughtworks.xstream.annotations.XStreamConverter;
 import com.thoughtworks.xstream.annotations.XStreamOmitField;
 import javauction.util.DateXmlUtil;
 import javauction.util.MoneyXmlUtil;
-
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.Calendar;
 
 /**
- * Created by jimouris on 7/2/16.
+ * Class that describes a bid entity. (A bid placed on an item for sale).
  */
-
 @Entity
 @Table(name = "bid", schema = "auctionwebsite")
 @XStreamAlias("Bid")
@@ -117,7 +115,6 @@ public class BidEntity implements Cloneable{
     public void setBidder(UserEntity seller) {
         this.bidder = seller;
     }
-
 
     @Override
     public boolean equals(Object o) {

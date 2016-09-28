@@ -5,14 +5,13 @@ import javauction.util.CategoryXmlUtil;
 import javauction.util.DateXmlUtil;
 import javauction.util.MoneyXmlUtil;
 import javauction.util.SellerXmlUtil;
-
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.Iterator;
 import java.util.Set;
 
 /**
- * Created by jimouris on 7/2/16.
+ * Class that describes an auction entity. (An item for sale).
  */
 @Entity
 @Table(name = "auction", schema = "auctionwebsite")
@@ -71,7 +70,6 @@ public class AuctionEntity {
     @XStreamAlias("Seller")
     @XStreamConverter(SellerXmlUtil.class)
     private UserEntity seller;
-
 
     public AuctionEntity() {}
 
@@ -155,7 +153,6 @@ public class AuctionEntity {
     public void setFinalPrice(double finalPrice) {
         this.finalPrice = finalPrice;
     }
-
 
     @Basic
     @Column(name = "StartingDate")
@@ -275,7 +272,6 @@ public class AuctionEntity {
     public void setSeller(UserEntity seller) {
         this.seller = seller;
     }
-
 
     public void setBidStuff(){
         if ( bids.size() > 0 ){

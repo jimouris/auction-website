@@ -5,7 +5,7 @@ import java.sql.Timestamp;
 import java.util.Calendar;
 
 /**
- * Created by jimouris on 7/2/16.
+ * Class that describes a message entity.
  */
 @Entity
 @Table(name = "messages", schema = "auctionwebsite")

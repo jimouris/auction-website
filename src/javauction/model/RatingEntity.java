@@ -4,7 +4,8 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 /**
- * Created by jimouris on 7/2/16.
+ * Class that describes a rate placed by a user for an auction.
+ * Rating is available after the end of the auction.
  */
 @Entity
 @Table(name = "rating", schema = "auctionwebsite")

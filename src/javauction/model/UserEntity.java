@@ -3,14 +3,13 @@ package javauction.model;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 import com.thoughtworks.xstream.annotations.XStreamOmitField;
-
 import javax.persistence.*;
 import java.sql.Date;
 import java.util.Arrays;
 import java.util.Set;
 
 /**
- * Created by jimouris on 7/2/16.
+ * Class that describes a user entity.
  */
 @Entity
 @Table(name = "user", schema = "auctionwebsite")
@@ -64,8 +63,9 @@ public class UserEntity {
     @XStreamOmitField
     private Integer ratingAsSeller = 0;
 
-    public UserEntity(String username, byte[] hash, byte[] salt, String firstname, String lastname, String email, String phoneNumber, String vat,
-                      String homeAddress, String latitude, String longitude, String city, String country) {
+    public UserEntity(String username, byte[] hash, byte[] salt, String firstname, String lastname, String email,
+                      String phoneNumber,String vat, String homeAddress, String latitude, String longitude, String city, String country)
+    {
         this.username = username;
         this.hash = hash;
         this.salt = salt;
@@ -264,7 +264,6 @@ public class UserEntity {
         this.isApproved = isApproved;
     }
 
-
     @OneToMany(targetEntity = NotificationEntity.class, mappedBy = "actor", fetch = FetchType.EAGER)
     @OrderBy("dateAdded DESC")
     public Set<NotificationEntity> getNotifications() {
@@ -311,8 +310,12 @@ public class UserEntity {
         this.ratingAsSeller = ratingAsSeller;
     }
 
+    /**
+     * If you are buyer, rate the seller. Otherwise rate the buyer.
+     * @param usr_type Buyer or Seller type
+     */
     public void setRatingAs(String usr_type){
-        if ( rating.size() > 0 ) {
+        if (rating.size() > 0) {
             if (usr_type.equals("seller")){
                 this.ratingAsSeller = 0; // do this because
                 for (RatingEntity r : rating)
@@ -323,9 +326,6 @@ public class UserEntity {
                 for (RatingEntity r : rating)
                     this.ratingAsBidder += r.getIsSeller() == 0 ? r.getRating() : 0;
             }
-
-
-
         }
     }
 
@@ -378,7 +378,6 @@ public class UserEntity {
         result = 31 * result + (int) isApproved;
         return result;
     }
-
 
     @Override
     public String toString() {
