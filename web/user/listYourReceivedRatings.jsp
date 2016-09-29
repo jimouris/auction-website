@@ -21,7 +21,7 @@
     <c:if test="${empty user}">
         <c:redirect url="/"/>
     </c:if>
-    <%@ include file="./header.jsp" %>
+    <%@ include file="../header.jsp" %>
     <div>
         <c:if test="${not empty ratingsLst}">
             <h2>Your received ratings</h2>

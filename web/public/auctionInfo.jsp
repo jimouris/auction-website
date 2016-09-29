@@ -20,13 +20,7 @@
 <body>
 <!-- HEADER STUFF -->
 <div class="container">
-    <c:if test="${not empty user.userId}">
-        <a href="/user/homepage.jsp">Homepage</a>
-        <a href="/auction.do?action=getAllAuctions">View All Auctions</a>
-    </c:if>
-    <c:if test="${empty user.userId}">
-        <a href="/public/">Guest, Homepage</a>
-    </c:if>
+    <%@ include file="../header.jsp" %>
 </div>
 
 <c:if test ="${not empty auction}">

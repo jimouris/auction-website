@@ -20,7 +20,7 @@
     <c:redirect url="/"/>
 </c:if>
 <c:if test="${not empty user.userId}">
-    <%@ include file="./header.jsp" %>
+    <%@ include file="../header.jsp" %>
 </c:if>
 
 <c:if test ="${not empty auction}">

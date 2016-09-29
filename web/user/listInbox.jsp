@@ -21,7 +21,7 @@
         <c:redirect url="/"/>
     </c:if>
 
-    <%@ include file="./header.jsp" %>
+    <%@ include file="../header.jsp" %>
     <h2>Inbox</h2>
     <div>
         <c:if test="${not empty messagesLst}">

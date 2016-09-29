@@ -21,7 +21,7 @@
     </c:if>
     <c:if test="${not empty param.rid}">
     <!-- HEADER STUFF -->
-    <%@ include file="./header.jsp" %>
+    <%@ include file="../header.jsp" %>
 
     <!-- MESSAGES -->
     <div class="row">

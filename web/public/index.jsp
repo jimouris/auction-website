@@ -39,14 +39,15 @@
 </head>
 <body>
 <div class="container">
-    <!-- HEADER STUFF -->
-    <a href="/public/">Homepage</a>
-    <!-- end of header row -->
-    <c:if test="${not empty successMsg}">
-        <p class="status--success">${successMsg}</p>
-    </c:if>
+    <%@ include file="../header.jsp" %>
+</div>
 
+<!-- end of header row -->
+<c:if test="${not empty successMsg}">
+    <p class="status--success">${successMsg}</p>
+</c:if>
 
+<div class="custom-container">
     <!-- REGISTER && SIGNUP ROW -->
     <div class="row">
         <%-- register --%>

@@ -20,7 +20,7 @@
     <c:if test="${empty user}">
         <c:redirect url="/"/>
     </c:if>
-    <%@ include file="./header.jsp" %>
+    <%@ include file="../header.jsp" %>
 
     <h2>Send messages</h2>
 

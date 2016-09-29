@@ -21,7 +21,7 @@
         <c:redirect url="/"/>
     </c:if>
     <!-- HEADER STUFF -->
-    <%@ include file="./header.jsp" %>
+    <%@ include file="../header.jsp" %>
 
 
     <!-- NEW AUCTION ROW -->

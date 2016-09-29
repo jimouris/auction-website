@@ -14,10 +14,12 @@
 </head>
 <body>
 <!-- HEADER STUFF -->
-<a href="/public/">Homepage</a>
+<div class="container">
+    <%@ include file="../header.jsp" %>
+</div>
 
 <!-- end of header row -->
-<div class="container">
+<div class="custom-container">
     <!-- REGISTER ROW -->
     <div class="row">
         <div class="">

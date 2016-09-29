@@ -22,7 +22,7 @@
 </c:if>
 <c:if test ="${not empty user.userId}">
 <div class="container">
-    <%@ include file="./header.jsp" %>
+    <%@ include file="../header.jsp" %>
     <!-- SEARCH ROW -->
     <div class="row ">
         <section class="five columns">
@@ -53,7 +53,6 @@
 <br/>
 <div>
     <div class="row ">
-
         <section>
             <h4><span class="look">></span> Recommendations</h4>
             <c:if test="${not empty recommendationLst}">
