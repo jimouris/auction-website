@@ -41,8 +41,8 @@
                         <form action="/rate.do" method="POST">
                             <input type="hidden" name="to_id" value=${to_id} />
                             <input type="hidden" name="aid" value=${aid} />
-                            <span data-rating="${rating}" class="c-rate-write">
-                            <input class="get-from-rateyo" type="hidden" min="0" max="5" value="${rating}" name="rating" required>
+                            <span data-rating="0" class="c-rate-write"></span>
+                            <input class="get-from-rateyo" type="hidden" min="0" max="5" value="0" name="rating" required>
                             <button class="button-primary" type="submit" name="action" value="addRating">Rate</button>
                         </form>
                     </c:if>
