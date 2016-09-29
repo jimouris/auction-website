@@ -43,14 +43,21 @@ var genStringArray = function(arr){
     return arr.join(',');
 };
 
+var print = function(msg){
+    console.log(msg);
+};
+
+
 // create a method that adds an element to array
 var addToArrayCookie = function(cookieName, ele, callback){
     // create the array from the cookie
     var arr = getArray(cookieName);
 
     // check if value exists in array
-    if (!arr.includes(ele))
+    if (!arr.includes(ele)){
         arr.push(ele);
+        print("added " + ele);
+    }
 
     // recreate the cookie and then save
     $.cookie(cookieName, genStringArray(arr));
@@ -64,9 +71,15 @@ var removeFromArrayCookie = function(cookieName, ele, callback){
     // create the array from the cookie
     var arr = getArray(cookieName);
 
-    // check if value exists in array
-    if (arr.includes(ele))
-        arr.pop(ele);
+    if (arr.includes(ele)){
+        // check if value exists in array
+        var found = arr.indexOf(ele);
+
+        while (found !== -1) {
+            arr.splice(found, 1);
+            found = arr.indexOf(ele);
+        }
+    }
 
     // recreate the cookie and then save
     $.cookie(cookieName, genStringArray(arr));
