@@ -25,10 +25,11 @@
         <section>
             Be patient and export every auction: <a href="/auction.do?action=getAuctionsAsXML"  target="_blank" class="button">export all</a>
             <hr />
-            <form action="/auction.do" method="GET">
+            <form action="/auction.do" method="GET" id="export">
                 <input type="hidden" name="action" value="getAuctionsAsXML">
                 <input type="hidden" name="exportSelected" value="">
-                Select auctions and export: <button type="submit" class="button button-primary" disabled>export selected</button>
+                Select auctions and export: <button type="submit" class="button button-primary" disabled>export selected</button><br />
+                <b><span data-bind="selectedAuctions"></span> selected auctions</b>
 
                 <div class="row">
                     <p class="three columns offset-by-one">Auction name</p>
@@ -63,28 +64,44 @@
 </c:if>
 <script src="../js/jquery.min.js"></script>
 <script src="../js/cookie.js"></script>
+<script src="../js/scripts.js"></script>
 <script>
-    var checkForSelected = function(){
-        // check if selected values
-        var hasSelected = false;
-        $('input[name="auctionIds"]').each(
-                function() {
-                    if ($(this)[0].checked) {
-                        hasSelected = true;
-                        return false;
-                    }
-                });
-        if (hasSelected)
-            $('.button-primary').prop('disabled', false);
+
+    // this hold the name of the cookie that we store the array of ids
+    var auctions = "auction_ids";
+
+    setSelectedFields(auctions);
+    checkForSelected(auctions);
+
+    $('[data-bind="selectedAuctions"]').text(getArray(auctions).length);
+
+    $('form').delegate('input', 'change', function(){
+        var self_input = $(this);
+        auctionId = $(self_input).val();
+
+        if ($(self_input)[0].checked)
+            addToArrayCookie(auctions, auctionId, checkForSelected);
         else
-            $('.button-primary').prop('disabled', true);
-    };
-
-    checkForSelected();
-
-    $('form').delegate('label', 'click', function(){
-      checkForSelected()
+            removeFromArrayCookie(auctions, auctionId, checkForSelected);
+        $('[data-bind="selectedAuctions"]').text(getArray(auctions).length);
     });
+
+    $('#export').submit(function() {
+        var arr = getArray(auctions);
+        arr.forEach(function(aid){
+            var ele = '[value="' + aid + '"]';
+           if ($(ele).length == 0){
+                $('form').append('<input type="hidden" name="auctionIds" value =' + aid +'>');
+           }
+        });
+        deleteAll(auctions);
+    });
+
+    $('.js-clearAll').on('click', function () {
+       deleteAll(auctions);
+    });
+
+
 </script>
 </body>
 </html>

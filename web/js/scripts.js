@@ -27,3 +27,87 @@ $(document).ready(function () {
         console.log(dateField.val());
     });
 });
+
+// get an array of elements from ck cookie
+// *1* calling split on an empty cookie will return [""],
+// so use this check in order to create an empty array
+var getArray = function(ck){
+    var arr;
+    var cookiz = $.cookie(ck) || "";
+    arr = cookiz.length > 0 ? cookiz.split(",") : []; /* 1* */
+    return arr;
+};
+
+// create a comma seperated string with values from array
+var genStringArray = function(arr){
+    return arr.join(',');
+};
+
+// create a method that adds an element to array
+var addToArrayCookie = function(cookieName, ele, callback){
+    // create the array from the cookie
+    var arr = getArray(cookieName);
+
+    // check if value exists in array
+    if (!arr.includes(ele))
+        arr.push(ele);
+
+    // recreate the cookie and then save
+    $.cookie(cookieName, genStringArray(arr));
+
+    callback(cookieName);
+    return;
+};
+
+// create a method that removes an to array
+var removeFromArrayCookie = function(cookieName, ele, callback){
+    // create the array from the cookie
+    var arr = getArray(cookieName);
+
+    // check if value exists in array
+    if (arr.includes(ele))
+        arr.pop(ele);
+
+    // recreate the cookie and then save
+    $.cookie(cookieName, genStringArray(arr));
+
+    callback(cookieName);
+    return;
+};
+
+var arrayCookieIsEmpty = function(cookieName){
+    var ckie;
+    ckie = $.cookie(cookieName) || ""; // use || if $.cookie returns undefined
+    return ckie.length == 0;
+}
+
+// checks if there are selected values even from previous pages and shows/hides the export button
+var checkForSelected = function(cookieName){
+    // check if selected values
+    var isEmpty = arrayCookieIsEmpty(cookieName);
+
+    if (isEmpty)
+        $('.button-primary').prop('disabled', true);
+    else
+        $('.button-primary').prop('disabled', false);
+};
+
+// will set the checkboxes that are previous selected
+var setSelectedFields = function (cookieName) {
+    var arr = getArray(cookieName);
+    $('input').each(function(){
+        $(this)[0].checked = false;
+    });
+    arr.forEach(function(id){
+        try {
+            $('#' + id)[0].checked = true;
+        } catch(e){
+            // nothing
+        }
+    });
+};
+
+
+var deleteAll = function (cookieName) {
+    $.removeCookie(cookieName);
+};
