@@ -201,6 +201,24 @@ public class auction extends HttpServlet {
                 }
                 response.sendRedirect("/auction.do?action=getAnAuction&aid=" + aid + "&from=bid&status=" + status);
                 return;
+            case "buyAuction":
+                aid = Long.parseLong(request.getParameter("aid"));
+                session = request.getSession();
+                uid = ((UserEntity) session.getAttribute("user")).getUserId();
+                auction = auctionService.getAuction(aid);
+                status = false;
+                try {
+                    BidEntity bid = new BidEntity(uid, aid, auction.getBuyPrice());
+                    auctionService.addEntity(bid);
+                    status = true;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                auctionService.activateAuction(aid, null, false);
+                auctionService.updateAuction(null, aid, null, null, null, null, null, null, null, auction.getStartingDate(), uid, null, null);
+                request.setAttribute("isEnded", true);
+                response.sendRedirect("/auction.do?action=getAnAuction&aid=" + aid + "&from=bid&status=" + status);
+                return;
         }
 
         RequestDispatcher view = request.getRequestDispatcher(next_page);

@@ -90,11 +90,22 @@
                 <%-- a registered user should be able to see buy now button --%>
                 <%-- also if the seller didn't provide a buyPrice, then its value is -1 --%>
                 <c:if test="${not isSeller and not empty user.userId and auction.buyPrice > 0}">
-                    <h5>Buy now for ${auction.buyPrice}</h5>
-                    <form action="auction.do" method="post">
-                        <input type="hidden" name="aid" value="${auction.auctionId}">
-                        <input type=submit value="buyAuction" name="action">
-                    </form>
+                    <c:if test="${not empty bidLst}">
+                        <c:if test="${bidLst[0].amount < auction.buyPrice}">
+                        <h5>Buy now for ${auction.buyPrice}</h5>
+                        <form action="auction.do" method="post">
+                            <input type="hidden" name="aid" value="${auction.auctionId}">
+                            <input type=submit name="action" value="buyAuction">
+                        </form>
+                        </c:if>
+                    </c:if>
+                    <c:if test="${empty bidLst}">
+                        <h5>Buy now for ${auction.buyPrice}</h5>
+                        <form action="auction.do" method="post">
+                            <input type="hidden" name="aid" value="${auction.auctionId}">
+                            <input type=submit name="action" value="buyAuction">
+                        </form>
+                    </c:if>
                 </c:if>
 
                 <%-- let selller see this info, because is something that is initialised by him --%>
