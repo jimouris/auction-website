@@ -1,4 +1,4 @@
-package javauction.controller;
+package javauction.controller.filters;
 
 import javauction.model.NotificationEntity;
 import javauction.model.UserEntity;

@@ -26,6 +26,37 @@ $(document).ready(function () {
         $(dateField).attr('type', 'text').val(endingDate);
         console.log(dateField.val());
     });
+
+    // for every c-rate
+    // get data-rating value and assign to X
+    // do a rateYo({ rating: X, ... }
+    $('.c-rate').each(function () {
+        var rating = $(this).data("rating");
+        $(this).rateYo({
+            rating: rating,
+            halfStar: true,
+            readOnly: true,
+            starWidth: "20px"
+        });
+    });
+
+    $('.c-rate-write').each(function () {
+        var rating = $(this).data("rating");
+        $(this).rateYo({
+            rating: rating,
+            fullStar: true,
+            starWidth: "20px"
+        });
+
+        $(this).rateYo()
+            .on("rateyo.change", function (e, data) {
+                var rating = data.rating;
+
+                $('.get-from-rateyo').val(rating);
+                // $(this).next().text(rating);
+            });
+    });
+
 });
 
 // get an array of elements from ck cookie

@@ -1,5 +1,6 @@
 package javauction.controller;
 
+import com.sun.tools.javac.util.Pair;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.hibernate.converter.HibernatePersistentCollectionConverter;
 import com.thoughtworks.xstream.hibernate.converter.HibernatePersistentMapConverter;
@@ -274,7 +275,13 @@ public class auction extends HttpServlet {
                 auction = checkDateAndSetBuyer(request, auction, aid, buyerid, auctionService);
                 UserEntity seller = userService.getUser(sid);
                 RatingService ratingService = new RatingService();
-                Double avg_rating = ratingService.calcAvgRating(sid, RatingService.Rating_t.To_t);
+                Pair<Double, Integer> ratingNreputation = ratingService.calcAvgRating(sid, RatingService.Rating_t.To_t);
+                Double avg_rating = null;
+                Integer total_reputation = null;
+                if (ratingNreputation != null) {
+                    avg_rating = ratingNreputation.fst;
+                    total_reputation = ratingNreputation.snd;
+                }
 
                 request.setAttribute("auction", auction);
                 request.setAttribute("usedCategories", usedCategories);
@@ -283,6 +290,7 @@ public class auction extends HttpServlet {
                 request.setAttribute("biddersLst", biddersLst);
                 request.setAttribute("bidLst", bidLst);
                 request.setAttribute("avg_rating", avg_rating);
+                request.setAttribute("total_reputation", total_reputation);
                 next_page = "/public/auctionInfo.jsp";
                 break;
             case "getAllYourEndedAuctions":

@@ -1,4 +1,4 @@
-package javauction.controller;
+package javauction.controller.filters;
 
 import javauction.model.UserEntity;
 import javax.servlet.*;

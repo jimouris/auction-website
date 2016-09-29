@@ -116,9 +116,8 @@ public class rate extends HttpServlet {
                 int total_reputation = 0;
                 for (RatingEntity r : ratingsLst) {
                     switch (r.getRating()) {
-                        case 0: total_reputation -= 20; break;
-                        case 1: total_reputation -= 15; break;
-                        case 2: total_reputation -= 10; break;
+                        case 1: total_reputation += 1; break;
+                        case 2: total_reputation += 3; break;
                         case 3: total_reputation += 5; break;
                         case 4: total_reputation += 10; break;
                         case 5: total_reputation += 20; break;

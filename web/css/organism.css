@@ -7,7 +7,9 @@
 }
 
 
-
+.c-rate {
+    display: inline-block;
+}
 
 .zebra-hover:hover{
     background: #efefef;
