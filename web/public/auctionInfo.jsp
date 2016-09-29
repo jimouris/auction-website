@@ -13,6 +13,7 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="/css/skeleton.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.2.0/jquery.rateyo.min.css">
     <link href="/css/custom.css" rel="stylesheet">
     <link href="/css/organism.css" rel="stylesheet">
 </head>
@@ -123,7 +124,7 @@
         <div class="custom-container">
             <h5>Seller Info</h5>
             <c:if test="${not empty avg_rating}">
-                <p>${seller.username} ${seller.firstname} ${seller.lastname} ${avg_rating}</p>
+                <p>${seller.username} ${seller.firstname} ${seller.lastname} <span data-rating="${avg_rating}" class="c-rate"></span> rep ${total_reputation}</p>
             </c:if>
             <c:if test="${empty avg_rating}">
                 <p>The user ${seller.username} ${seller.firstname} ${seller.lastname} has no ratings yet.</p>
@@ -267,12 +268,10 @@
         });
     }
     </c:if>
-
-
-
 </script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA7om9lzVVpATrE6I8ceaK9vMyE6Bi2KSw&callback=initMap&libraries=places" async defer></script>
 <script src="/js/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.2.0/jquery.rateyo.min.js"></script>
 <script src="/js/scripts.js"></script>
 
 

@@ -1,5 +1,6 @@
 package javauction.service;
 
+import com.sun.tools.javac.util.Pair;
 import javauction.model.RatingEntity;
 import javauction.util.HibernateUtil;
 import org.hibernate.HibernateException;
@@ -102,18 +103,31 @@ public class RatingService extends Service {
      * @param rating_t ratings From or To
      * @return average rating
      */
-    public Double calcAvgRating(long from_id, Rating_t rating_t) {
+    public Pair<Double, Integer> calcAvgRating(long from_id, Rating_t rating_t) {
         RatingService ratingService = new RatingService();
         List<RatingEntity> ratingsLst = ratingService.getFromOrToRatings(from_id, rating_t);
         double avg_rating = 0;
+        int total_reputation = 0;
         for (RatingEntity r : ratingsLst) {
+            total_reputation = updateReputation(total_reputation, r.getRating());
             avg_rating += r.getRating();
         }
         if (ratingsLst.size() <= 0) {
             return null;
         }
         avg_rating /= ratingsLst.size();
-        return avg_rating;
+        return new Pair<>(avg_rating, total_reputation);
+    }
+
+    private int updateReputation(int reputation, int rating) {
+        switch (rating) {
+            case 1: return reputation + 1;
+            case 2: return reputation + 3;
+            case 3: return reputation + 5;
+            case 4: return reputation + 10;
+            case 5: return reputation + 20;
+            default: return reputation;
+        }
     }
 
 }
