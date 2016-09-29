@@ -211,9 +211,9 @@ public class AuctionService extends Service {
     /**
      * @return A list of all auctions.
      */
-    public List getAuctions() {
+    public List<AuctionEntity> getAuctions() {
         Session session = HibernateUtil.getSession();
-        List results = null;
+        List<AuctionEntity> results = null;
         try {
             Criteria criteria = session.createCriteria(AuctionEntity.class);
             results = criteria.list();

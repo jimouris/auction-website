@@ -9,7 +9,7 @@ import java.util.Arrays;
 import java.util.Random;
 
 /**
- * Created by jimouris on 8/7/16.
+ * A class for secure salted password hashing
  */
 public class PasswordAuthentication {
 

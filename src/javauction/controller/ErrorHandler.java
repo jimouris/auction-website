@@ -8,13 +8,11 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-/**
- * Created by jimouris on 8/7/16.
- */
+
 public class ErrorHandler extends HttpServlet {
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Analyze the servlet exception
+        /* Analyze the servlet exception */
         Throwable throwable = (Throwable) request.getAttribute("javax.servlet.error.exception");
         Integer statusCode = (Integer) request.getAttribute("javax.servlet.error.status_code");
         String servletName = (String) request.getAttribute("javax.servlet.error.servlet_name");
@@ -26,9 +24,8 @@ public class ErrorHandler extends HttpServlet {
             requestUri = "Unknown";
         }
 
-        // Set response content type
+        /* Set response content type */
         response.setContentType("text/html");
-
         PrintWriter out = response.getWriter();
         String title = "Error/Exception Information";
         String docType = "<!doctype html public \"-//w3c//dtd html 4.0 " + "transitional//en\">\n";
@@ -46,15 +43,10 @@ public class ErrorHandler extends HttpServlet {
             }
         } else {
             out.println("<h2>Error information</h2>");
-            out.println("Servlet Name : " + servletName +
-                    "</br></br>");
-            out.println("Exception Type : " +
-                    throwable.getClass().getName() +
-                    "</br></br>");
-            out.println("The request URI: " + requestUri +
-                    "<br><br>");
-            out.println("The exception message: " +
-                    throwable.getMessage());
+            out.println("Servlet Name : " + servletName + "</br></br>");
+            out.println("Exception Type : " + throwable.getClass().getName() + "</br></br>");
+            out.println("The request URI: " + requestUri + "<br><br>");
+            out.println("The exception message: " + throwable.getMessage());
         }
         out.println("</body>");
         out.println("</html>");
