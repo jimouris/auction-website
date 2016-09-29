@@ -113,7 +113,16 @@ public class rate extends HttpServlet {
                 AuctionService auctionService = new AuctionService();
 
                 double avg_rating = 0;
+                int total_reputation = 0;
                 for (RatingEntity r : ratingsLst) {
+                    switch (r.getRating()) {
+                        case 0: total_reputation -= 20; break;
+                        case 1: total_reputation -= 15; break;
+                        case 2: total_reputation -= 10; break;
+                        case 3: total_reputation += 5; break;
+                        case 4: total_reputation += 10; break;
+                        case 5: total_reputation += 20; break;
+                    }
                     avg_rating += r.getRating();
                     if (param.equals("listFrom")) {
                         sendersOrReceiversLst.add(userService.getUser(r.getFromId()));
@@ -123,11 +132,13 @@ public class rate extends HttpServlet {
                     auctionsLst.add(auctionService.getAuction(r.getAuctionId()));
                 }
                 if (ratingsLst.size() > 0) {
-                    avg_rating /= ratingsLst.size();
+                    avg_rating = avg_rating / ratingsLst.size();
                     DecimalFormat df = new DecimalFormat("0.0");
                     request.setAttribute("avg_rating", Double.parseDouble(df.format(avg_rating)));
+                    request.setAttribute("total_reputation", total_reputation);
                 } else {
                     request.setAttribute("avg_rating", null);
+                    request.setAttribute("total_reputation", null);
                 }
                 request.setAttribute("ratingsLst", ratingsLst);
                 if (param.equals("listFrom")) {

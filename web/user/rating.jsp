@@ -31,7 +31,7 @@
                         <form action="/rate.do" method="POST">
                             <input type="hidden" name="to_id" value=${to_id} />
                             <input type="hidden" name="aid" value=${aid} />
-                            <input type="number" min="0" max="10" value=${rating} name="rating" required>
+                            <input type="number" min="0" max="5" value=${rating} name="rating" required>
                             <button class="button-primary" type="submit" name="action" value="updateRating">Update rating</button>
                         </form>
                     </c:if>
@@ -40,7 +40,7 @@
                         <form action="/rate.do" method="POST">
                             <input type="hidden" name="to_id" value=${to_id} />
                             <input type="hidden" name="aid" value=${aid} />
-                            <input type="number" min="0" max="10" name="rating" required>
+                            <input type="number" min="0" max="5" name="rating" required>
                             <button class="button-primary" type="submit" name="action" value="addRating">Rate</button>
                         </form>
                     </c:if>
