@@ -1,4 +1,4 @@
-package javauction.controller;
+package javauction.controller.filters;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
