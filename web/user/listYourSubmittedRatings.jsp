@@ -31,7 +31,6 @@
                     <span class="message__text">for</span>
                     <span class="message__composer">${auctionsLst[status.index].name}:</span>
                     <span class="message__text">${rating.rating}</span>
-                    <%--<input type="hidden" name="to_user" value=${receiversLst[status.index]} />--%>
                 </a>
             </c:forEach>
         </c:if>
