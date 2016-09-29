@@ -131,15 +131,19 @@ public class user extends HttpServlet {
                 }
                 break;
             case "getAllUsers":
-                List userLst;
-                next_page = "/admin/listUsers.jsp";
+                List userLst, nextPageUserLst;
+                    next_page = "/admin/listUsers.jsp";
                 Integer page = 0;
+                Boolean isLastPage;
                 if (request.getParameterMap().containsKey("page")) {
                     page = Integer.parseInt(request.getParameter("page"));
                 }
 
                 userLst = userService.getAllUsers(page);
-                constructPrevNext(page, request);
+                nextPageUserLst = userService.getAllUsers(page + 1) ;
+                isLastPage = nextPageUserLst.size() == 0;
+
+                constructPrevNext(page, isLastPage, request);
                 request.setAttribute("userLst", userLst);
                 break;
             case "unameExists":
@@ -178,6 +182,7 @@ public class user extends HttpServlet {
     }
 
 
+
     // i want to return something like auction.do?action=simpleSearch&name=&page=
     private String constructURL(HttpServletRequest request){
         Map<String, String[]> params = request.getParameterMap();
@@ -200,15 +205,18 @@ public class user extends HttpServlet {
 
     // sets attributes thta will be passed to searchResults jsp
     // in order to show previous and next page links on search result
-    private void constructPrevNext(int page, HttpServletRequest request) {
+    private void constructPrevNext(int page, boolean isLastPage, HttpServletRequest request) {
         String next, previous;
         next = constructURL(request) + "&page=";
+
         if (page > 0){
             previous = next + (page - 1);
             request.setAttribute("previousPage", previous);
         }
-        next = next + (page + 1); // don't change the order of this. previous will haave wrong initial string
-        request.setAttribute("nextPage", next);
+        if (!isLastPage){
+            next = next + (page + 1); // don't change the order of this. previous will haave wrong initial string
+            request.setAttribute("nextPage", next);
+        }
     }
 
 }

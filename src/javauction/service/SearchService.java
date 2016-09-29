@@ -26,16 +26,17 @@ public class SearchService {
     private String[] categories = null;
     private Boolean reallyActive = null;
 
+    private int pagesize = 12;
+
     /**
      * @param crit criteria
-     * @param numOfItems number of items per page
      * @param page current page
      */
-    private void setAuctionPagination(Criteria crit, Integer numOfItems, int page){
-        int start = numOfItems*page;
+    private void setAuctionPagination(Criteria crit,  int page){
+        int start = pagesize*page;
         /* stuff for pagination */
         crit.setFirstResult(start); // 0, pagesize*1 + 1, pagesize*2 + 1, ...
-        crit.setMaxResults(numOfItems);
+        crit.setMaxResults(pagesize);
         crit.setFetchMode("categories", FetchMode.SELECT);  // disabling those "FetchMode.SELECT"
         crit.setFetchMode("bids", FetchMode.SELECT);        // will screw up everything.
         crit.setFetchMode("seller", FetchMode.SELECT);
@@ -51,7 +52,6 @@ public class SearchService {
         Session session = HibernateUtil.getSession();
         Transaction tx = null;
         List<AuctionEntity> auctions = null;
-        int pagesize = 6;
         try {
             tx = session.beginTransaction();
             Criteria criteria = session.createCriteria(AuctionEntity.class);
@@ -84,8 +84,9 @@ public class SearchService {
             Criterion bid = Restrictions.between("lowestBid", minPrice, maxPrice);
             LogicalExpression bidOrBuy = Restrictions.or(buyNow, bid);
             criteria.add(bidOrBuy);
-            setAuctionPagination(criteria, pagesize, page);
+            setAuctionPagination(criteria, page);
             auctions = criteria.list();
+
             tx.commit();
         } catch (HibernateException e) {
             if (tx != null) { tx.rollback(); }
@@ -97,6 +98,9 @@ public class SearchService {
         }
         return auctions;
     }
+
+    /** finds how many pages exist as resutl
+     */
 
     public void setReallyActive(Boolean reallyActive) {
         this.reallyActive = reallyActive;

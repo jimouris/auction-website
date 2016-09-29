@@ -15,6 +15,8 @@ import java.util.List;
  */
 public class UserService extends Service {
 
+    private int pagesize = 20;
+
     /**
      * if user exists update him, else add him.
      * @param user UserEntity to add or update
@@ -69,14 +71,13 @@ public class UserService extends Service {
 
     /**
      * @param crit criteria
-     * @param numOfItems number of items
      * @param page current page
      */
-    private void setUserPagination(Criteria crit, Integer numOfItems, int page) {
-        int start = numOfItems*page;
+    private void setUserPagination(Criteria crit, int page) {
+        int start = pagesize*page;
         /* stuff for pagination */
         crit.setFirstResult(start); // 0, pagesize*1 + 1, pagesize*2 + 1, ...
-        crit.setMaxResults(numOfItems);
+        crit.setMaxResults(pagesize);
         crit.setFetchMode("notification", FetchMode.SELECT);  // disabling those "FetchMode.SELECT"
         crit.setFetchMode("auctions", FetchMode.SELECT);        // will screw up everything.
         crit.setFetchMode("rating", FetchMode.SELECT);
@@ -91,13 +92,12 @@ public class UserService extends Service {
         Session session = HibernateUtil.getSession();
         Transaction tx;
         List users = null;
-        int pagesize = 20;
         try {
             tx = session.beginTransaction();
             Criteria criteria = session.createCriteria(UserEntity.class);
             criteria.add(Restrictions.ne("isAdmin", (byte) 1));
             criteria.addOrder(Order.asc("isApproved"));
-            setUserPagination(criteria, pagesize, page);
+            setUserPagination(criteria, page);
             users = criteria.list();
             tx.commit();
         } catch (Exception e) {

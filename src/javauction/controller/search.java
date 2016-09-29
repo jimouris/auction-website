@@ -39,6 +39,7 @@ public class search extends HttpServlet {
         String next_page = "/user/homepage.jsp";
         HttpSession session = request.getSession();
 
+
         if (request.getParameter("action") == null) {
             RequestDispatcher view = request.getRequestDispatcher(next_page);
             view.forward(request, response);
@@ -74,9 +75,14 @@ public class search extends HttpServlet {
                 next_page = "/public/customSearch.jsp";
                 break;
             case "auctionsForExport":
-                List<AuctionEntity> auctionsLst;
+                List<AuctionEntity> auctionsLst, nextPageAuctionsLst;
+                Boolean isLastPage;
                 auctionsLst = searchService.searchAuctions(page);
-                constructPrevNext(page, request);
+                /* get how many pages has the resul set */
+                nextPageAuctionsLst = searchService.searchAuctions(page+1);
+                isLastPage = nextPageAuctionsLst.size() == 0;
+
+                constructPrevNext(page, isLastPage, request);
                 request.setAttribute("auctionsLst", auctionsLst);
                 next_page = "/admin/listAuctions.jsp";
                 break;
@@ -123,7 +129,10 @@ public class search extends HttpServlet {
                 }
 
                 auctionsLst = searchService.searchAuctions(page);
-                constructPrevNext(page, request);
+                // get how many pages has this shit
+                nextPageAuctionsLst = searchService.searchAuctions(page+1);
+                isLastPage = nextPageAuctionsLst.size() == 0;
+                constructPrevNext(page, isLastPage, request);
                 request.setAttribute("auctionsLst", auctionsLst);
                 next_page = "/public/searchResults.jsp";
                 break;
@@ -136,15 +145,17 @@ public class search extends HttpServlet {
 
     // sets attributes thta will be passed to searchResults jsp
     // in order to show previous and next page links on search result
-    private void constructPrevNext(int page, HttpServletRequest request) {
+    private void constructPrevNext(int page, boolean isLastPage, HttpServletRequest request) {
         String next, previous;
         next = constructURL(request) + "&page=";
         if (page > 0){
             previous = next + (page - 1);
             request.setAttribute("previousPage", previous);
         }
-        next = next + (page + 1); // don't change the order of this. previous will haave wrong initial string
-        request.setAttribute("nextPage", next);
+        if (!isLastPage){
+            next = next + (page + 1); // don't change the order of this. previous will haave wrong initial string
+            request.setAttribute("nextPage", next);
+        }
     }
 
     // i want to return something like auction.do?action=simpleSearch&name=&page=

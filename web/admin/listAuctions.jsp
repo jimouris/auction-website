@@ -58,6 +58,11 @@
                     <a href="${nextPage}">next page</a>
                 </div>
             </c:if>
+            <c:if test="${auctionsLst.size() == 0 and not empty previousPage}">
+                <div class="row">
+                    Last page. Please go to <a href="${previousPage}">previous page</a>
+                </div>
+            </c:if>
         </section>
 
     </div>

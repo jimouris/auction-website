@@ -29,7 +29,7 @@
                 </tr>
             </c:forEach>
         </table>
-        <c:if test="${auctionsLst.size() != 0}">
+        <c:if test="${userLst.size() != 0}">
             <div class="row">
                 <c:if test="${empty previousPage}">
                     <span class="u-unvailable">previous page</span> |
@@ -37,7 +37,17 @@
                 <c:if test="${not empty previousPage}">
                     <a href="${previousPage}">previous page</a> |
                 </c:if>
-                <a href="${nextPage}">next page</a>
+                <c:if test="${empty nextPage}">
+                    <span class="u-unvailable">next page</span>
+                </c:if>
+                <c:if test="${not empty nextPage}">
+                    <a href="${nextPage}">next page</a>
+                </c:if>
+            </div>
+        </c:if>
+        <c:if test="${userLst.size() == 0 and not empty previousPage}">
+            <div class="row">
+                Last page. Please go to <a href="${previousPage}">previous page</a>
             </div>
         </c:if>
     </div>
