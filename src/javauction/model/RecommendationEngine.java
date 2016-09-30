@@ -84,11 +84,24 @@ public class RecommendationEngine {
         }
 
         List<AuctionEntity> recommendations = new ArrayList<>();
+        /* exclude all the auctions you are the seller */
+        List<AuctionEntity> excludeAuctions = auctionService.getAllAuctions(uid, false);
         for (Long ae: recommendationSet) {
-            recommendations.add(auctionService.getAuction(ae));
+            if (!containsId(excludeAuctions, ae)) {
+                recommendations.add(auctionService.getAuction(ae));
+            }
         }
 
         return recommendations;
+    }
+
+    private boolean containsId(List<AuctionEntity> list, long id) {
+        for (AuctionEntity object : list) {
+            if (object.getAuctionId() == id) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
