@@ -296,7 +296,11 @@ p.c-dropdown__title {
 }
 
 
-
+.h-cf::after{
+    content: '';
+    display: table;
+    clear: both;
+}
 
 .h-show{
     display: block;
@@ -324,3 +328,90 @@ p.c-dropdown__title {
 .l-pad1{
     padding: 15px;
 }
+
+
+.l-full{
+    width: 100%;
+}
+
+
+
+
+
+
+/*------------------------------------*\
+  #HEADER
+\*------------------------------------*/
+
+
+
+
+
+
+
+
+
+/*------------------------------------*\
+  #CUSTOM
+\*------------------------------------*/
+.u-softhide{
+    display: none;
+}
+
+.u-hardhide{
+    display: none!important;
+}
+
+.a-select--multiple{
+    display: block;
+    height: 10em;
+    width: 15em;
+}
+
+html{
+    background: #fafafa;
+}
+
+.custom-container{
+    max-width: 760px;
+    margin: 20px auto;
+    background: white;
+    padding: 20px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+}
+
+
+input, select, button{
+    opacity: 1;
+    transition: all 0.2s ease-in;
+}
+
+[readonly], [disabled]{
+    border: 1px solid transparent!important;
+    cursor: not-allowed;
+    transition: all 0.2s ease-in;
+}
+
+button[disabled]{
+    opacity: 0;
+    transition: all 0.2s ease-in;
+}
+
+input[type="date"] {
+    height: 38px;
+    padding: 6px 10px; /* The 6px vertically centers text on FF, ignored by Webkit */
+    background-color: #fff;
+    border: 1px solid #D1D1D1;
+    border-radius: 4px;
+    box-shadow: none;
+    box-sizing: border-box; }
+/* Removes awkward default styles on some inputs for iOS */
+input[type="date"]{
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none; }
+input[type="date"]:focus{
+    border: 1px solid #33C3F0;
+    outline: 0; }
+

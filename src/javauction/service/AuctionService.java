@@ -239,8 +239,8 @@ public class AuctionService extends Service {
             criteria.add(Restrictions.in("auctionId", ids));
             criteria.setFetchMode("categories", FetchMode.SELECT);  // don't disable those fetch modes
             criteria.setFetchMode("bids", FetchMode.SELECT);
-            criteria.setFetchMode("seller", FetchMode.SELECT);
             criteria.setFetchMode("images", FetchMode.SELECT);
+            criteria.setFetchMode("seller", FetchMode.SELECT);
             auctions = criteria.list();
         } catch (HibernateException e){
             e.printStackTrace();

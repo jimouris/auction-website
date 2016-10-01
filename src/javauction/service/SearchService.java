@@ -39,8 +39,8 @@ public class SearchService {
         crit.setMaxResults(pagesize);
         crit.setFetchMode("categories", FetchMode.SELECT);  // disabling those "FetchMode.SELECT"
         crit.setFetchMode("bids", FetchMode.SELECT);        // will screw up everything.
-        crit.setFetchMode("seller", FetchMode.SELECT);
         crit.setFetchMode("images", FetchMode.SELECT);
+        crit.setFetchMode("seller", FetchMode.SELECT);
         crit.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
     }
 
