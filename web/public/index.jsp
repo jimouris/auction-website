@@ -38,28 +38,39 @@
     </style>
 </head>
 <body>
-<div class="container">
-    <%@ include file="../header.jsp" %>
-</div>
+
+<%@ include file="../header.jsp" %>
 
 <!-- end of header row -->
 <c:if test="${not empty successMsg}">
     <p class="status--success">${successMsg}</p>
 </c:if>
 
-<div class="custom-container">
+<div class="container">
+    <div class="row">
+        <h3><span class="icon-search"></span> Search for a product</h3>
+        <form class="row" action="/search.do" method="POST">
+            <input class="seven columns" type="text" name="name">
+            <button class="two columns button-primary" type="submit" name="action" value="searchAuctions">Search</button>
+            <a class="two columns advanced" href="/search.do?action=advancedSearch">Advanced</a>
+        </form>
+    </div>
     <!-- REGISTER && SIGNUP ROW -->
     <div class="row">
         <%-- register --%>
-        <div class="two-thirds column">
-            <h2><span class="look">> </span>Register at our eshop</h2>
-            <a class="button button-primary" href="/public/register.jsp">register</a>
+        <div class="seven columns">
+            <h3><span class="icon-user"></span>Register at our eshop</h3>
+            <p class="small-p">
+                In order to start buying or selling items on auction-website, you have to create an account.<br />
+                <a class="button button-primary" href="/public/register.jsp" style="margin-top: 5px;">register</a>
+            </p>
+
         </div>
         <!-- end of register column -->
         <%-- login --%>
-        <div class="one-third column">
+        <div class="three columns">
+            <h3><span class=""></span>Login</h3>
             <section class="login u-full-width">
-                <h2><span class="look">> </span>Login</h2>
                 <form action="/login.do" method="POST" id="loginForm">
                     <label> username </label>
                     <input class="u-full-width" type="text" id="username" name="username"  autofocus>
@@ -69,27 +80,15 @@
                     <c:if test="${not empty errorMsg}">
                         <p class="status--error">${errorMsg}</p>
                     </c:if>
-                    <input class="button-primary u-pull-right" type="submit" value="Login">
+                    <input class="button-primary u-pull-left" type="submit" value="Login">
                 </form>
             </section>
         </div>
         <!-- end of login column -->
     </div>
-
-    <!-- SEARCH ROW -->
-    <div class="row">
-        <section class="search seven columns">
-            <h4><span class="look">> </span>Search for a product</h4>
-            <form action="/search.do" method="POST">
-                <input class="u-full-width" type="text" name="name">
-                <button class="button-primary" type="submit" name="action" value="searchAuctions">Search</button>
-            </form>
-            <h5><span class="look">> </span>Or perform an advanced search</h5>
-            <a class="button" href="/search.do?action=advancedSearch">Advanced Search</a>
-        </section>
-    </div>
-    <!-- end of search row -->
-
 </div>
+
+<script src="../js/jquery.min.js"></script>
+<script src="../js/scripts.js"></script>
 </body>
 </html>

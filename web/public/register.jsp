@@ -14,50 +14,76 @@
 </head>
 <body>
 <!-- HEADER STUFF -->
-<div class="container">
-    <%@ include file="../header.jsp" %>
-</div>
+<%@ include file="../header.jsp" %>
 
 <!-- end of header row -->
-<div class="custom-container">
+<div class="container">
     <!-- REGISTER ROW -->
     <div class="row">
         <div class="">
             <section class="register u-full-width">
                 <h1>Register at our eshop</h1>
                 <c:if test="${not empty errorMsg}">
-                    <p class="status--error">${errorMsg}</p>
+                <p class="status--error">${errorMsg}</p>
                 </c:if>
                 <!-- Restriction for validation are inserted on the end of input -->
                 <form action="/user.do" method="POST" id="registerForm">
                     <input type="hidden" name="action" value="register">
-                    <label for="username">Username</label>
-                    <input class="u-full-width" type="text" id="username" name="username" required autofocus></input>
-                    <span class="js-input-error"></span>
+                    <div class="row">
+                        <div class="six columns">
+                            <label for="username">Username</label>
+                            <input class="u-full-width" type="text" id="username" name="username" required autofocus>
+                            <span class="js-input-error"></span>
+                        </div>
 
-                    <label for="email">Email:</label>
-                    <input class="u-full-width" type="email" id="email" name="email" required autofocus></input>
-                    <span class="js-input-error"></span>
-
-                    <label for="name">Name:</label>
-                    <input class="u-full-width" type="text" id="name" name="name" minlength="2" required autofocus>
-
-                    <label for="lastname">Lastname:</label>
-                    <input class="u-full-width" type="text" id="lastname" name="lastname" minlength="2" required autofocus>
-
-
-                    <label for="password">Password:</label>
-                    <input class="u-full-width" type="password" id="password" name="password" minlength="3" required autofocus>
-                    <label for="repeat_password">Verify Password:</label>
-                    <input class="u-full-width" type="password" id="repeat_password" name="repeat_password" equalTo="#regPassword" required autofocus>
-
-                    <label for="vat">VAT</label>
-                    <input class="u-full-width" type="number" id="vat" name="vat" minlength="2" required autofocus>
-
-                    <label for="phone">Phone number:</label>
-                    <input class="u-full-width" type="text" id="phone" name="phone" minlength="2" required autofocus>
+                        <div class="six columns">
+                            <label for="email">Email:</label>
+                            <input class="u-full-width" type="email" id="email" name="email" required autofocus>
+                            <span class="js-input-error"></span>
+                        </div>
+                    </div>
 
                     <div class="row">
+
+                        <div class="six columns">
+                            <label for="name">Name:</label>
+                            <input class="u-full-width" type="text" id="name" name="name" minlength="2" required autofocus>
+                        </div>
+
+                        <div class="six columns">
+                            <label for="lastname">Lastname:</label>
+                            <input class="u-full-width" type="text" id="lastname" name="lastname" minlength="2" required autofocus>
+                        </div>
+                    </div>
+                    <div class="row">
+
+                        <div class="six columns">
+                            <label for="password">Password:</label>
+                            <input class="u-full-width" type="password" id="password" name="password" minlength="3" required autofocus>
+                        </div>
+                        <div class="six columns">
+                            <label for="repeat_password">Verify Password:</label>
+                            <input class="u-full-width" type="password" id="repeat_password" name="repeat_password" equalTo="#regPassword" required autofocus>
+                        </div>
+                    </div>
+
+                    <hr />
+
+                    <div class="row">
+
+                        <div class="six columns">
+                            <label for="vat">VAT</label>
+                            <input class="u-full-width" type="number" id="vat" name="vat" minlength="2" required autofocus>
+                        </div>
+
+                        <div class="six columns">
+                            <label for="phone">Phone number:</label>
+                            <input class="u-full-width" type="text" id="phone" name="phone" minlength="2" required autofocus>
+                        </div>
+                    </div>
+
+                    <div class="row">
+
                         <div class="six columns">
                             <label for="address">Address</label>
                             <input class="u-full-width" type="text" id="address" name="address" minlength="2" required autofocus>
@@ -76,16 +102,16 @@
                         </div>
                     </div>
 
-
                     <input class="button-primary" type="submit" value="Register">
-                </form>
-            </section>
         </div>
-
+        </form>
+        </section>
     </div>
 
 </div>
-<script src="/js/jquery.min.js"></script>
+
+</div>
+<script src="../js/jquery.min.js"></script>
 <script>
     lat = 0;
     lng = 0;
@@ -234,6 +260,6 @@
 
 </script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA7om9lzVVpATrE6I8ceaK9vMyE6Bi2KSw&callback=initMap&libraries=places" async defer></script>
-
+<script src="../js/scripts.js"></script>
 </body>
 </html>

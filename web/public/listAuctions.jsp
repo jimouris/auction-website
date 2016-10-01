@@ -16,9 +16,8 @@
     <link href="/css/custom.css" rel="stylesheet">
 </head>
 <body>
-    <div class="container">
-        <%@ include file="../header.jsp" %>
-    </div>
+<%@ include file="../header.jsp" %>
+
 <div class="custom-container">
     <h1>List Auctions</h1>
     <jsp:useBean id="auctionLst" class="java.util.ArrayList" scope="request" />
@@ -47,5 +46,8 @@
         </c:if>
     </table>
 </div>
+
+<script src="../js/jquery.min.js"></script>
+<script src="../js/scripts.js"></script>
 </body>
 </html>

@@ -16,12 +16,12 @@
     <jsp:useBean id="auctionsLst" class="java.util.ArrayList" scope="request" />
 </head>
 <body>
+<c:if test="${empty user}">
+    <c:redirect url="/"/>
+</c:if>
+<%@ include file="../header.jsp" %>
 
 <div class="container">
-    <c:if test="${empty user}">
-        <c:redirect url="/"/>
-    </c:if>
-    <%@ include file="../header.jsp" %>
     <div>
         <c:if test="${not empty ratingsLst}">
             <h2>Your submitted ratings</h2>

@@ -16,14 +16,13 @@
     <jsp:useBean id="categoryLst" class="java.util.ArrayList" scope="request" />
 </head>
 <body>
+<c:if test="${empty user}">
+    <c:redirect url="/"/>
+</c:if>
+<!-- HEADER STUFF -->
+<%@ include file="../header.jsp" %>
+
 <div class="container">
-    <c:if test="${empty user}">
-        <c:redirect url="/"/>
-    </c:if>
-    <!-- HEADER STUFF -->
-    <%@ include file="../header.jsp" %>
-
-
     <!-- NEW AUCTION ROW -->
     <div class="row">
         <div class="column">
@@ -57,7 +56,7 @@
                     </label>
                     <div class="u-softhide u-full-width" id="buyPrice">
                         <label>Ok. Set the buy price:</label>
-                        <input class="u-full-width" type="number" min=0 max=10000 name="buyPrice">
+                        <input class="u-full-width" type="number" min=0 max=1000000 name="buyPrice">
                     </div>
 
                     <label for="lowestBid">Set the lowest bid</label>
@@ -104,7 +103,7 @@
 
 </div>
 
-<script src="/js/jquery.min.js"></script>
+<script src="../js/jquery.min.js"></script>
 <script>
     lat = 0;
     lng = 0;

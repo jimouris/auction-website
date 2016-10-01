@@ -15,13 +15,13 @@
     <jsp:useBean id="auctionsLst" class="java.util.ArrayList" scope="request" />
 </head>
 <body>
+<c:if test="${empty user}">
+    <c:redirect url="/"/>
+</c:if>
+<%@ include file="../header.jsp" %>
+
 
 <div class="container">
-    <c:if test="${empty user}">
-        <c:redirect url="/"/>
-    </c:if>
-    <%@ include file="../header.jsp" %>
-
     <h2>Send messages</h2>
 
     <div>

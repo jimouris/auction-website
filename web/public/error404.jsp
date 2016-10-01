@@ -5,15 +5,20 @@
     <title>404</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="/css/skeleton.css" rel="stylesheet">
+    <link href="/css/organism.css" rel="stylesheet">
 </head>
 <body>
-
-    <div style='display: block; margin: auto; width:50%; height:50%'>
-        <img src='/images/img404.jpg' style='width:100%; height:100%' alt='[]' />
+<%@ include file="../header.jsp" %>
+    <div class="white-box container">
+        <div style="text-align: center">
+            <img src='/images/img404.jpg' style="max-width:600px; height:auto" alt='[]' />
+        </div>
+        <div>
+            <a class="button" style="display: block; margin: auto; width:15%;" href="/public/">Go back to homepage</a>
+        </div>
     </div>
-    <div>
-        <a class="button" style="display: block; margin: auto; width:15%;" href="/public/">Go back to homepage</a>
-    </div>
 
+<script src="../js/jquery.min.js"></script>
+<script src="../js/scripts.js"></script>
 </body>
 </html>

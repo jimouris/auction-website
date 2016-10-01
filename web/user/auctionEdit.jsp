@@ -19,12 +19,10 @@
 <c:if test="${empty user}">
     <c:redirect url="/"/>
 </c:if>
-<c:if test="${not empty user.userId}">
-    <%@ include file="../header.jsp" %>
-</c:if>
+<%@ include file="../header.jsp" %>
 
 <c:if test ="${not empty auction}">
-    <div class="custom-container">
+    <div class="container">
         <div class="row">
             <a class="u-pull-left button" href="/auction.do?action=getAnAuction&aid=${auction.auctionId}">cancel edit</a>
             <form class="u-pull-right" action="/auction.do" method="POST">
@@ -94,7 +92,7 @@
     <h3>The auction with id ${param.aid} does not exist!</h3>
 </c:if>
 
-<script src="/js/jquery.min.js"></script>
+<script src="../js/jquery.min.js"></script>
 <script>
     lat = 0;
     lng = 0;

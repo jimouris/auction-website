@@ -12,42 +12,53 @@
 </head>
 <body>
 <!-- HEADER STUFF -->
-<div class="container">
-    <%@ include file="../header.jsp" %>
-</div>
+<%@ include file="../header.jsp" %>
+
 <!-- end of header row -->
-<div class="custom-container">
+<div class="container">
     <h1>Advanced Search</h1>
     <form action="/search.do" method="POST" id="advanced_search">
-        <label for="categories">Select at least one category:</label>
-        <jsp:useBean id="categoriesLst" class="java.util.ArrayList" scope="request" />
-        <select class="a-select--multiple" id="categories" name="categories" multiple size=${categoriesLst.size()}>
-            <c:forEach var="category" items="${categoriesLst}">
-                <option value=${category.categoryId}>${category.categoryName}</option>
-            </c:forEach>
-        </select>
-        <br>
+        <div class="row">
+            <div class="four columns">
+                <label for="categories">Multi select categories (use ctrl + click)</label>
+                <jsp:useBean id="categoriesLst" class="java.util.ArrayList" scope="request" />
+                <select class="a-select--multiple" id="categories" name="categories" multiple size=${categoriesLst.size()}>
+                    <c:forEach var="category" items="${categoriesLst}">
+                        <option value=${category.categoryId}>${category.categoryName}</option>
+                    </c:forEach>
+                </select>
+            </div>
 
-        <label>Description</label>
-        <textarea class="u-full-width" placeholder="e.g. a high quality sa..." name="description"></textarea>
-        <br>
+            <div class="eight columns">
+                <label>Description</label>
+                <textarea class="u-full-width" placeholder="e.g. a high quality sa..." name="description"></textarea>
+            </div>
+        </div>
 
-        <label>Minimum Price</label>
-        <input class="u-full-width" type="number" min=0 name="minPrice" placeholder="0">
-        <br>
+        <div class="row">
+            <div class="eight columns">
+                <label>Location</label>
+                <input class="u-full-width" type="search" name="location" placeholder="e.g. Athens">
+            </div>
 
-        <label>Maximum Price</label>
-        <input class="u-full-width" type="number" min=1 name="maxPrice" placeholder="100000">
-        <br>
+            <div class="two columns">
+                <label>Minimum Price</label>
+                <input class="u-full-width" type="number" min=0 name="minPrice" placeholder="0">
+            </div>
 
-        <label>Location</label>
-        <input class="u-full-width" type="search" name="location" placeholder="e.g. Athens">
-        <br>
+            <div class="two columns">
+                <label>Maximum Price</label>
+                <input class="u-full-width" type="number" min=1 name="maxPrice" placeholder="100000">
+            </div>
+
+        </div>
 
         <button class="button-primary" type="submit" name="action" value="searchAuctions">Search</button>
     </form>
 </div>
 
 
+<script src="../js/jquery.min.js"></script>
+<script src="../js/scripts.js"></script>
 </body>
 </html>

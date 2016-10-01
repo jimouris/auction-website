@@ -15,14 +15,14 @@
     <jsp:useBean id="sendersLst" class="java.util.ArrayList" scope="request" />
 </head>
 <body>
-<div class="container">
-    <c:if test="${empty user}">
-        <c:redirect url="/"/>
-    </c:if>
-    <c:if test="${not empty param.rid}">
-    <!-- HEADER STUFF -->
-    <%@ include file="../header.jsp" %>
+<c:if test="${empty user}">
+    <c:redirect url="/"/>
+</c:if>
+<c:if test="${not empty param.rid}">
+<!-- HEADER STUFF -->
+<%@ include file="../header.jsp" %>
 
+<div class="container">
     <!-- MESSAGES -->
     <div class="row">
         <main class="u-full-width ">

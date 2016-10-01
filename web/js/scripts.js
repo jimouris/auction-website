@@ -3,8 +3,21 @@
  */
 $(document).ready(function () {
    $('.c-dropdown').delegate('.c-dropdown__trigger', 'click', function () {
-     var dropd = $(this).closest('.c-dropdown');
-       $(dropd).find('.c-dropdown__content').toggleClass('h-forceShow');
+       // get the current dropdown component
+       // an einai anoixto kleisto: hasClass(h-forceShow)
+       // alliws anoixe to
+       var clicked_dropdown = $(this).closest('.c-dropdown').find('.c-dropdown__content');
+
+       $('.c-dropdown__content').each(function(){
+           var other_dropdown = $(this).closest('.c-dropdown').find('.c-dropdown__content');
+
+           if ($(clicked_dropdown).is($(other_dropdown)) ){
+                $(clicked_dropdown).toggleClass('h-forceShow');
+           } else {
+               $(other_dropdown).removeClass('h-forceShow');
+           }
+       });
+
    });
 
     $('.c-delete').delegate('.c-delete__icon, .c-delete__cancel', 'click', function(){

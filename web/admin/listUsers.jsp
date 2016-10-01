@@ -32,18 +32,7 @@
         </table>
         <c:if test="${userLst.size() != 0}">
             <div class="row">
-                <c:if test="${empty previousPage}">
-                    <span class="u-unvailable">previous page</span> |
-                </c:if>
-                <c:if test="${not empty previousPage}">
-                    <a href="${previousPage}">previous page</a> |
-                </c:if>
-                <c:if test="${empty nextPage}">
-                    <span class="u-unvailable">next page</span>
-                </c:if>
-                <c:if test="${not empty nextPage}">
-                    <a href="${nextPage}">next page</a>
-                </c:if>
+                <%@ include file="../paginationLinks.jsp" %>
             </div>
         </c:if>
         <c:if test="${userLst.size() == 0 and not empty previousPage}">
@@ -57,5 +46,7 @@
     <c:redirect url="/"/>
 </c:if>
 
+<script src="../js/jquery.min.js"></script>
+<script src="../js/scripts.js"></script>
 </body>
 </html>

@@ -1,21 +1,22 @@
 <!-- HEADER STUFF -->
-<div class="row">
-    <div class="three columns">
-        <a href="/">
-            <img class="u-max-full-width" style="max-width: 20px" src="/images/logo.png">
-        </a>
-        <c:if test="${not empty user.userId}">
-            Hello ${sessionScope.user.getUsername()},
-        </c:if>
-        <c:if test="${empty user.userId}">
-            Hello guest,
-        </c:if>
-    </div>
-    <c:if test="${not empty user.userId}">
-        <div class="offset-by-two three columns">
-            <div class="c-dropdown">
-                <span class="c-dropdown__trigger">notifications</span>
-                <div class="c-dropdown__content l-pad1">
+<header class="l-full">
+    <div class="c-header h-cf">
+        <div class="three columns">
+            <a href="/" class="icon-home home"></a>
+            <span class="greetings">
+            <c:if test="${not empty user}">
+                Hello ${sessionScope.user.getUsername()},
+            </c:if>
+            <c:if test="${empty user}">
+                Hello guest,
+            </c:if>
+            </span>
+        </div>
+    <c:if test="${not empty user}">
+        <div class="offset-by-one two columns">
+            <div class="c-dropdown c-notification" unselectable="on">
+                <span class="c-dropdown__trigger"><span class="c-btn--round c-btn icon-bell"></span>notifications</span>
+                <div class="c-dropdown__content notifications">
                     <p class="c-dropdown__title">Latest notifications</p>
                     <c:if test="${not empty notifLst}">
                         <c:forEach var="notification" items="${notifLst}">
@@ -34,25 +35,28 @@
                 </div>
             </div>
         </div>
-        <div class=" four columns">
-            <div class="nav u-full-width row">
-                <div class="one-third column newMessage tooltip"><span class="tooltipFire">Messages</span>
-                    <div class="tooltipText"><div class="tooltipMargin"></div>
-                        <a class="" href="/message.do?action=listInbox">Inbox</a>
-                        <a class="" href="/message.do?action=listSent">Sent</a>
-                    </div>
-                </div>
-                <div class="one-third column newRating tooltip"><span class="tooltipFire">Ratings</span>
-                    <div class="tooltipText"><div class="tooltipMargin"></div>
-                        <a class="" href="/rate.do?action=listFrom">From</a>
-                        <a class="" href="/rate.do?action=listTo">To</a>
-                    </div>
-                </div>
-                <div class="one-third column">
-                    <a href="/logout.do"><span class="delete">Logout</span></a>
+        <div class="two columns">
+            <div class="c-dropdown" unselectable="on">
+                <span class="c-dropdown__trigger"><span class="c-btn--round c-btn icon-chat-alt"></span>messages</span>
+                <div class="c-dropdown__content l-pad1">
+                    <a class="icon-download c-dropdown__item" href="/message.do?action=listInbox">Inbox</a><br />
+                    <a class="icon-upload c-dropdown__item" href="/message.do?action=listSent">Sent</a>
                 </div>
             </div>
         </div>
+        <div class="two columns">
+            <div class="c-dropdown" unselectable="on">
+                <span class="c-dropdown__trigger"><span class="c-btn--round c-btn icon-star-filled"></span>ratings</span>
+                <div class="c-dropdown__content l-pad1">
+                    <a class="icon-download c-dropdown__item" href="/rate.do?action=listFrom">Received</a><br/>
+                    <a class="icon-upload c-dropdown__item" href="/rate.do?action=listTo">Submitted</a>
+                </div>
+            </div>
+        </div>
+        <div class="two columns logout">
+            <a href="/logout.do"><span class="delete icon-power">Logout</span></a>
+        </div>
     </c:if>
-</div>
+    </div>
+</header>
 <!-- end of header row -->

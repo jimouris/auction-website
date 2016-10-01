@@ -12,8 +12,10 @@
     <link href="/css/organism.css" rel="stylesheet">
 </head>
 <body>
-<div class="container">
+<%@ include file="../header.jsp" %>
 
+
+<div class="container">
     <h1 class="u-text-center">Administrator's Login</h1>
     <div class="four columns offset-by-four">
         <section class="login u-full-width row">
@@ -33,5 +35,6 @@
         <a href="/public/" class="u-text-center u-full-width">Back to startpage</a>
     </div>
 </div>
+
 </body>
 </html>

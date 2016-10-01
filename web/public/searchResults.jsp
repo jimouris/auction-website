@@ -12,56 +12,59 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="/css/skeleton.css" rel="stylesheet">
     <link href="/css/organism.css" rel="stylesheet">
-    <link href="/css/custom.css" rel="stylesheet">
 
     <jsp:useBean id="auctionsLst" class="java.util.ArrayList" scope="request" />
 </head>
 <body>
+<%@ include file="../header.jsp" %>
+
 <div class="container">
-    <%@ include file="../header.jsp" %>
-</div>
+    <h3>Auctions</h3>
+    <c:forEach var="auction" items="${auctionsLst}">
+        <div class="row c-result">
+            <div class="two columns">
+                <c:if test="${not empty auction.images}">
+                    <img class="img-resp" src="image_auction/${auction.images.iterator().next().imageFileName}">
+                </c:if>
+                <c:if test="${empty auction.images}">
+                    <span class="icon-picture c-result__no-img">
+                        no image set
+                    </span>
+                </c:if>
+            </div>
+            <div class="six columns">
+                <h6>${fn:replace(auction.name, fn:substring(auction.name, 80, fn:length(auction.name)), '...')}</h6>
+                <c:if test="${empty auction.description}">
+                    <p class="c-result--empty">No description provided</p>
+                </c:if>
+                <c:if test="${not empty auction.description}">
+                    <p>${fn:replace(auction.description, fn:substring(auction.description, 120, fn:length(auction.description)), '...')}</p>
+                </c:if>
+            </div>
+            <div class="two columns">
+                <c:if test="${not empty auction.categories}">
+                    <c:forEach var="category" items="${auction.categories}">
+                        <a href="https://localhost:8443/search.do?action=searchAuctions&categories=${category.categoryId}&reallyActive=true"
+                           class="c-result__categories">${fn:replace(category.categoryName, fn:substring(category.categoryName, 15, fn:length(category.categoryName)), '...')}</a>
+                    </c:forEach>
+                </c:if>
+                <c:if test="${empty auction.categories}">
+                    <p class="c-result--empty">No categories provided</p>
+                </c:if>
+            </div>
+            <div class="two columns"><a class="button button-primary" href=auction.do?action=getAnAuction&aid=${auction.auctionId}>View auction</a></div>
+        </div>
 
-<div class="custom-container">
-    <!-- HEADER STUFF -->
+    </c:forEach>
 
-
-    <!-- end of header row -->
-
-    <table>
-        <thead>
-        <th>Auction name</th>
-        <th>Description</th>
-        <th>Lowest bid</th>
-        <th></th>
-        </thead>
-        <c:forEach var="auction" items="${auctionsLst}">
-            <tr>
-                <td>${auction.name}</td>
-                <td>${fn:replace(auction.description, fn:substring(auction.description, 40, fn:length(auction.description)), '...')}</td>
-                <td>${auction.lowestBid}</td>
-                <td><a class="button button-primary" href=auction.do?action=getAnAuction&aid=${auction.auctionId}>View auction</a></td>
-            </tr>
-        </c:forEach>
-        <c:if test="${auctionsLst.size() == 0}">
-            <tr>
-                <td>No auctions found.</td>
-            </tr>
-        </c:if>
-    </table>
+    <c:if test="${auctionsLst.size() == 0}">
+        <p>
+            No auctions found.
+        </p>
+    </c:if>
     <c:if test="${auctionsLst.size() != 0}">
         <div class="row">
-            <c:if test="${empty previousPage}">
-                <span class="u-unvailable">previous page</span> |
-            </c:if>
-            <c:if test="${not empty previousPage}">
-                <a href="${previousPage}">previous page</a> |
-            </c:if>
-            <c:if test="${empty nextPage}">
-                <span class="u-unvailable">next page</span>
-            </c:if>
-            <c:if test="${not empty nextPage}">
-                <a href="${nextPage}">next page</a>
-            </c:if>
+            <%@ include file="../paginationLinks.jsp" %>
         </div>
     </c:if>
     <c:if test="${auctionsLst.size() == 0 and not empty previousPage}">
@@ -70,5 +73,8 @@
         </div>
     </c:if>
 </div>
+
+<script src="../js/jquery.min.js"></script>
+<script src="../js/scripts.js"></script>
 </body>
 </html>

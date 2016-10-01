@@ -19,9 +19,7 @@
 </head>
 <body>
 <!-- HEADER STUFF -->
-<div class="container">
-    <%@ include file="../header.jsp" %>
-</div>
+<%@ include file="../header.jsp" %>
 
 <c:if test ="${not empty auction}">
 
@@ -32,7 +30,7 @@
         <p class="container status--success">${successMsg}</p>
     </c:if>
 
-    <div class="custom-container">
+    <div class="container">
         <%-- if the auction is not yet started, then ask for an ending date and then activate the auction --%>
         <c:if test="${auction.isStarted == 0 and not isEnded and isSeller}" >
             <p class="status--error eight columns u-no-bottom">The auction is inactive. to start the auction click activate.</p>
@@ -126,7 +124,7 @@
 
     <!-- show the rating of seller -->
     <c:if test="${not empty seller}">
-        <div class="custom-container">
+        <div class="container">
             <h5>Seller Info</h5>
             <c:if test="${not empty avg_rating}">
                 <p>${seller.username} ${seller.firstname} ${seller.lastname} <span data-rating="${avg_rating}" class="c-rate"></span> rep ${total_reputation}</p>
@@ -139,7 +137,7 @@
 
     <%-- showing appropriate messages if the auction has ended --%>
     <c:if test="${isEnded}">
-        <div class="custom-container">
+        <div class="container">
             <h5>The auction has ended. (Ending date ${auction.endingDate})</h5>
             <c:if test="${not empty bidLst}">
                 <%-- if the final bidder is the current user show him a "message the seller" button --%>
@@ -169,7 +167,7 @@
     </c:if>
     <%-- while the auction is running show data about bids --%>
     <c:if test="${not isEnded and auction.isStarted == 1}">
-        <div class="custom-container">
+        <div class="container">
             <c:if test="${not empty bidLst}">
                 <%-- first show the latest bid --%>
                 <c:if test="${user.userId == biddersLst[0].userId}">
@@ -218,7 +216,7 @@
     <h3>The auction with id ${param.aid} does not exist!</h3>
 </c:if>
 
-<script src="/js/jquery.min.js" type="text/javascript"></script>
+<script src="../js/jquery.min.js" type="text/javascript"></script>
 <script>
     $(document).ready(function() {
         window.inputActive = false;
@@ -275,10 +273,8 @@
     </c:if>
 </script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA7om9lzVVpATrE6I8ceaK9vMyE6Bi2KSw&callback=initMap&libraries=places" async defer></script>
-<script src="/js/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.2.0/jquery.rateyo.min.js"></script>
-<script src="/js/scripts.js"></script>
-
+<script src="../js/scripts.js"></script>
 
 </body>
 </html>
