@@ -7,6 +7,7 @@ import org.hibernate.*;
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
+
 import java.util.List;
 
 /**
@@ -78,7 +79,7 @@ public class UserService extends Service {
         /* stuff for pagination */
         crit.setFirstResult(start); // 0, pagesize*1 + 1, pagesize*2 + 1, ...
         crit.setMaxResults(pagesize);
-        crit.setFetchMode("notification", FetchMode.SELECT);  // disabling those "FetchMode.SELECT"
+        crit.setFetchMode("notifications", FetchMode.SELECT);  // disabling those "FetchMode.SELECT"
         crit.setFetchMode("auctions", FetchMode.SELECT);        // will screw up everything.
         crit.setFetchMode("rating", FetchMode.SELECT);
         crit.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);

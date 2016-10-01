@@ -24,6 +24,7 @@ public class NotificationService extends Service {
             tx = session.beginTransaction();
             Criteria criteria = session.createCriteria(NotificationEntity.class);
             criteria.add(Restrictions.eq("receiverId", rid));
+            criteria.setFetchMode("actor", FetchMode.SELECT); /* dont load duplicates
             /* stuff for pagination */
             criteria.addOrder(Order.desc("dateAdded"));
             notifications = criteria.list();
