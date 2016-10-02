@@ -90,7 +90,7 @@ public class RecommendationEngine {
             if (!containsId(excludeAuctions, ae)) {
                 AuctionEntity auction = auctionService.getAuction(ae);
                 /* Add it only if is still active */
-                if (auction.getIsStarted() == 1) {
+                if (auction.getIsActive() == 1) {
                     recommendations.add(auction);
                 }
             }

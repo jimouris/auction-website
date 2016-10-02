@@ -60,7 +60,7 @@ public class AuctionService extends Service {
             tx = session.beginTransaction();
             Criteria criteria = session.createCriteria(AuctionEntity.class);
             /* get all inactive */
-            criteria.add(Restrictions.eq("isStarted", (byte) 0));
+            criteria.add(Restrictions.eq("isActive", (byte) 0));
             /* get all those that are really ended */
             Timestamp currentDate = new Timestamp(Calendar.getInstance().getTimeInMillis());
             criteria.add(Restrictions.lt("endingDate", currentDate));
@@ -98,9 +98,9 @@ public class AuctionService extends Service {
             Query query;
             if (getAllActive) {
                 if (sid < 0) {
-                    query = session.createQuery("from AuctionEntity where isStarted = 1");
+                    query = session.createQuery("from AuctionEntity where isActive = 1");
                 } else {
-                    query = session.createQuery("from AuctionEntity where sellerId = :sid and isStarted = 1");
+                    query = session.createQuery("from AuctionEntity where sellerId = :sid and isActive = 1");
                     query.setParameter("sid", sid);
                 }
             } else {
@@ -120,7 +120,7 @@ public class AuctionService extends Service {
 
     /**
      * If activate == true then activate auction with Id == aid and set its ending date to endingDate.
-     * else set isStarted = 0.
+     * else set isActive = 0.
      * @param aid AuctionId
      * @param endingDate The new ending date
      * @param activate To set active or inactive.
@@ -131,10 +131,10 @@ public class AuctionService extends Service {
             session.beginTransaction();
             AuctionEntity auction = (AuctionEntity) session.get(AuctionEntity.class, aid);
             if (activate) {
-                auction.setIsStarted((byte) 1);
+                auction.setIsActive((byte) 1);
                 if (endingDate != null) { auction.setEndingDate(endingDate); }
             } else {
-                auction.setIsStarted((byte) 0);
+                auction.setIsActive((byte) 0);
             }
             Timestamp timeNow = new Timestamp(Calendar.getInstance().getTimeInMillis());
             auction.setStartingDate(timeNow);

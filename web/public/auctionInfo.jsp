@@ -32,7 +32,7 @@
 
     <div class="container">
         <%-- if the auction is not yet started, then ask for an ending date and then activate the auction --%>
-        <c:if test="${auction.isStarted == 0 and not isEnded and isSeller}" >
+        <c:if test="${auction.isActive == 0 and not isEnded and isSeller}" >
             <p class="status--error eight columns u-no-bottom">The auction is inactive. to start the auction click activate.</p>
             <span class="button button-primary js-toggle-date">activate</span>
             <div class="js-date row">
@@ -48,7 +48,7 @@
         <c:if test="${isSeller and not isEnded and empty bidLst}">
             <a class="js-make-writable button" href="auction.do?action=editAuction&aid=${auction.auctionId}">edit auction</a>
         </c:if>
-        <c:if test="${auction.isStarted == 1 and not isEnded}">
+        <c:if test="${auction.isActive == 1 and not isEnded}">
             <p>The auction is active</p>
         </c:if>
         <c:if test="${isEnded}">
@@ -166,7 +166,7 @@
         </div>
     </c:if>
     <%-- while the auction is running show data about bids --%>
-    <c:if test="${not isEnded and auction.isStarted == 1}">
+    <c:if test="${not isEnded and auction.isActive == 1}">
         <div class="container">
             <c:if test="${not empty bidLst}">
                 <%-- first show the latest bid --%>

@@ -57,7 +57,7 @@ public class SearchService {
             Criteria criteria = session.createCriteria(AuctionEntity.class);
             Timestamp currentDate = new Timestamp(Calendar.getInstance().getTimeInMillis());
 
-            if (isActive != null) { criteria.add(Restrictions.eq("isStarted", isActive)); }
+            if (isActive != null) { criteria.add(Restrictions.eq("isActive", isActive)); }
             if (buyerID != null) { criteria.add(Restrictions.eq("buyerId", buyerID)); }
             if (sellerID != null) { criteria.add(Restrictions.eq("sellerId", sellerID)); }
             if (isEnded != null) { criteria.add(Restrictions.lt("endingDate", currentDate)); }
@@ -75,7 +75,7 @@ public class SearchService {
             if (location != null) { criteria.add(Restrictions.like("location", location, MatchMode.ANYWHERE)); }
             /* return only activated and in time auctions */
             if (reallyActive != null) {
-                criteria.add(Restrictions.eq("isStarted", (byte) 1));
+                criteria.add(Restrictions.eq("isActive", (byte) 1));
                 criteria.add(Restrictions.gt("endingDate", currentDate));
             }
 

@@ -64,18 +64,18 @@ public class auction extends HttpServlet {
                 /* the auction will start now, so we have to find the current date */
                 Timestamp startDate = null;
                 Timestamp endDate = null;
-                byte isStarted = 0;
+                byte isActive = 0;
                 if (startToday.equals("true")) {
                     startDate = new Timestamp(System.currentTimeMillis());
                     Calendar cal = Calendar.getInstance();
                     cal.setTime(startDate);
                     cal.add(Calendar.DAY_OF_WEEK, activeDays);
                     endDate = new Timestamp(cal.getTime().getTime());
-                    isStarted = 1;
+                    isActive = 1;
                 }
 
                 /* create auction entity with the required value */
-                AuctionEntity auction = new AuctionEntity(name, sellerId, description, lowestBid, location, country, startDate, isStarted, endDate);
+                AuctionEntity auction = new AuctionEntity(name, sellerId, description, lowestBid, location, country, startDate, isActive, endDate);
 
                 /* find out if we can sell this auction instantly */
                 if (instantBuy.equals("true")) {
@@ -425,7 +425,7 @@ public class auction extends HttpServlet {
                     System.out.println("\nstart on items-" + index + ".xml");
                     List<AuctionEntity> items = (List<AuctionEntity>) xstream.fromXML(input);
                     for (AuctionEntity item : items) {
-                        item.setIsStarted((byte) 0);
+                        item.setIsActive((byte) 0);
                         /* copy bids to save after auction creation */
                         Set<BidEntity> dummyBids = item.getBids();
                         Timestamp currentDate = new Timestamp(System.currentTimeMillis());
@@ -565,7 +565,7 @@ public class auction extends HttpServlet {
             if (auction.getEndingDate().before(currentDate)) {
                 request.setAttribute("isEnded", true);
                 auctionService.activateAuction(aid, null, false);
-                auction.setIsStarted((byte) 0);
+                auction.setIsActive((byte) 0);
                 if (buyerId != null) {
                     auctionService.updateAuction(null, aid, null, null, null, null, null, null, null, null, buyerId, null, null);
                     auction.setBuyerId(buyerId);

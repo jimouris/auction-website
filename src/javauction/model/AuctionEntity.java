@@ -55,7 +55,7 @@ public class AuctionEntity {
     @XStreamOmitField
     private double latitude;
     @XStreamOmitField
-    private Byte isStarted;
+    private Byte isActive;
     @XStreamAlias("Buy_Price")
     @XStreamConverter(MoneyXmlUtil.class)
    private Double buyPrice;
@@ -73,7 +73,7 @@ public class AuctionEntity {
 
     public AuctionEntity() {}
 
-    public AuctionEntity(String name, long sellerId, String description, double lowestBid, String location, String country, Timestamp startingDate, Byte isStarted, Timestamp endDate) {
+    public AuctionEntity(String name, long sellerId, String description, double lowestBid, String location, String country, Timestamp startingDate, Byte isActive, Timestamp endDate) {
         this.name = name;
         this.sellerId = sellerId;
         this.description = description;
@@ -82,7 +82,7 @@ public class AuctionEntity {
         this.country = country;
         this.startingDate = startingDate;
         this.endingDate = endDate;
-        this.isStarted = isStarted;
+        this.isActive = isActive;
     }
 
     @Id
@@ -215,13 +215,13 @@ public class AuctionEntity {
     }
 
     @Basic
-    @Column(name = "IsStarted")
-    public Byte getIsStarted() {
-        return isStarted;
+    @Column(name = "isActive")
+    public Byte getIsActive() {
+        return isActive;
     }
 
-    public void setIsStarted(Byte isStarted) {
-        this.isStarted = isStarted;
+    public void setIsActive(Byte isActive) {
+        this.isActive = isActive;
     }
 
     @Basic
@@ -303,7 +303,7 @@ public class AuctionEntity {
                 ", country='" + country + '\'' +
                 ", longitude=" + longitude +
                 ", latitude=" + latitude +
-                ", isStarted=" + isStarted +
+                ", isActive=" + isActive +
                 ", buyPrice=" + buyPrice +
                 ", startingDate=" + startingDate +
                 ", endingDate=" + endingDate +
