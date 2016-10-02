@@ -36,6 +36,9 @@ public class UserService extends Service {
             return persUser.getUserId();
         } else {
             addEntity(user);
+            try {
+                session.close();
+            } catch (Exception ignored) {}
             return user.getUserId();
         }
     }
@@ -185,12 +188,14 @@ public class UserService extends Service {
         Query query = session.createQuery("from UserEntity where username = :username");
         List results = query.setParameter("username", user.getUsername()).list();
         if (results.size() > 0) {
+            try { session.close(); } catch (Exception ignored) {}
             return RegisterStatus.REG_UNAME_EXISTS;
         }
         /*  if email exists */
         query = session.createQuery("from UserEntity where email = :email");
         results =query.setParameter("email", user.getEmail()).list();
         if (results.size() > 0) {
+            try { session.close(); } catch (Exception ignored) {}
             return RegisterStatus.REG_EMAIL_EXISTS;
         }
         /* register the new user*/
@@ -200,6 +205,7 @@ public class UserService extends Service {
             session.getTransaction().commit();
         } catch (Exception e) {
             e.printStackTrace();
+            try { session.close(); } catch (Exception ignored) {}
             return RegisterStatus.REG_FAIL;
             // TODO: 7/3/16 add here a rollback
         } finally {
@@ -236,16 +242,19 @@ public class UserService extends Service {
             }
             List results = query.setParameter("username", username).list();
             if (results.size() == 0) {
+                try { session.close(); } catch (Exception ignored) {}
                 /* Actually is wrong username but we dont want to give much information*/
                 return LoginStatus.LOGIN_WRONG_UNAME_PASSWD;
             }
             UserEntity user = (UserEntity) results.get(0);
             if (!userAuth) { /* if admin authentication */
                 if (user.getIsAdmin() == 0) {
+                    try { session.close(); } catch (Exception ignored) {}
                     return LoginStatus.LOGIN_NOT_ADMIN;
                 }
             }
             if (user.getIsApproved() == 0) {
+                try { session.close(); } catch (Exception ignored) {}
                 return LoginStatus.LOGIN_NOT_APPROVED;
             }
             byte[] hash = user.getHash();
@@ -253,6 +262,7 @@ public class UserService extends Service {
             loginStat = PasswordAuthentication.isExpectedPassword(password.toCharArray(), salt, hash);
         } catch (HibernateException e) {
             e.printStackTrace();
+            try { session.close(); } catch (Exception ignored) {}
             return LoginStatus.LOGIN_FAIL;
         } finally {
             try { session.close(); } catch (Exception ignored) {}
