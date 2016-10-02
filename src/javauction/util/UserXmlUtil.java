@@ -9,9 +9,10 @@ import javauction.controller.PasswordAuthentication;
 import javauction.model.UserEntity;
 
 /**
- * Created by gpelelis on 4/9/2016.
+ * User format for XML imports and exports used by xstream hibernate library
  */
-public class SellerXmlUtil implements Converter {
+public class UserXmlUtil implements Converter {
+
     @Override
     public void marshal(Object o, HierarchicalStreamWriter writer, MarshallingContext marshallingContext) {
         UserEntity seller = (UserEntity) o;
@@ -19,33 +20,30 @@ public class SellerXmlUtil implements Converter {
         // this will compute the sum of ratings of a user as seller
         seller.setRatingAs("seller");
         writer.addAttribute("Rating", String.valueOf(seller.getRatingAsSeller()));
-
     }
 
     @Override
     public Object unmarshal(HierarchicalStreamReader reader, UnmarshallingContext unmarshallingContext) {
         // create a user
         String username, country;
-        country = "Greece";
+        country = "Ελλάδα";
 
         username = reader.getAttribute("UserID");
-        String city = "Athens";
+        String city = "Αθήνα";
         String password = "123456";
-        String name = "demo";
-        String lastname = "user";
+        String name = username;
+        String lastname = username;
         String email = username + "@email.com";
         String phonenumber = "12312341234";
-        String vat = " ";
-        String homeaddress = " ";
-        String lat = "";
-        String longi = "";
+        String vat = "12345";
+        String homeaddress = "Αθήνα";
+        String lat = "37.968196";
+        String longi = "23.77868710000007";
         byte[] salt = PasswordAuthentication.genSalt();
         byte[] hash = PasswordAuthentication.hash(password.toCharArray(), salt);
 
         UserEntity user = new UserEntity(username, hash, salt, name, lastname, email, phonenumber, vat, homeaddress, lat, longi, city, country);
         user.setIsApproved((byte) 1);
-
-        // return that
         return user;
     }
 
@@ -53,4 +51,5 @@ public class SellerXmlUtil implements Converter {
     public boolean canConvert(Class aClass) {
         return aClass.equals(UserEntity.class);
     }
+
 }

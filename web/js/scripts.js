@@ -1,6 +1,3 @@
-/**
- * Created by gpelelis on 27/8/2016.
- */
 $(document).ready(function () {
    $('.c-dropdown').delegate('.c-dropdown__trigger', 'click', function () {
        // get the current dropdown component

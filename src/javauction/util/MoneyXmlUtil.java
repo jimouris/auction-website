@@ -4,6 +4,10 @@ import com.thoughtworks.xstream.converters.basic.AbstractSingleValueConverter;
 
 import java.util.Objects;
 
+/**
+ * Money format for XML imports and exports used by xstream hibernate library
+ * Convert amount to USD and vise versa
+ */
 public class MoneyXmlUtil extends AbstractSingleValueConverter {
 
     public boolean canConvert(Class type) {
@@ -18,9 +22,6 @@ public class MoneyXmlUtil extends AbstractSingleValueConverter {
         } catch( Exception e){
             System.out.println(e);
         }
-        if (money == -1.0){
-            System.out.println("shit happened");
-        }
         return money;
     }
     
@@ -29,8 +30,7 @@ public class MoneyXmlUtil extends AbstractSingleValueConverter {
         if (obj == null) {
             return null;
         }
-
-        String money = new String("$" + Objects.toString(obj));
-        return money;
+        return "$" + Objects.toString(obj);
     }
+
 }

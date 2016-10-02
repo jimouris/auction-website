@@ -8,9 +8,10 @@ import org.hibernate.service.ServiceRegistry;
 import org.hibernate.service.ServiceRegistryBuilder;
 
 /**
- * Created by jimouris on 7/2/16.
+ * Set up Hibernate by using hibernate.cfg.xml
  */
 public class HibernateUtil {
+
     private static final SessionFactory ourSessionFactory;
     private static final ServiceRegistry serviceRegistry;
 
@@ -18,8 +19,7 @@ public class HibernateUtil {
         try {
             Configuration configuration = new Configuration();
             configuration.configure();
-            serviceRegistry = new ServiceRegistryBuilder().applySettings(
-                    configuration.getProperties()).buildServiceRegistry();
+            serviceRegistry = new ServiceRegistryBuilder().applySettings(configuration.getProperties()).buildServiceRegistry();
             ourSessionFactory = configuration.buildSessionFactory(serviceRegistry);
         } catch (Throwable ex) {
             throw new ExceptionInInitializerError(ex);

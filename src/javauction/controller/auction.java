@@ -14,7 +14,7 @@ import javauction.service.CategoryService;
 import javauction.service.RatingService;
 import javauction.service.UserService;
 import javauction.util.CategoryXmlUtil;
-import javauction.util.SellerXmlUtil;
+import javauction.util.UserXmlUtil;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -420,7 +420,7 @@ public class auction extends HttpServlet {
                 XStream xstream = new XStream(new DomDriver());
 
                 xstream.processAnnotations(AuctionEntity.class);
-                xstream.registerConverter(new SellerXmlUtil());
+                xstream.registerConverter(new UserXmlUtil());
                 xstream.registerConverter(new CategoryXmlUtil());
                 xstream.alias("Items", List.class);
 

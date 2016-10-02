@@ -4,7 +4,7 @@ import com.thoughtworks.xstream.annotations.*;
 import javauction.util.CategoryXmlUtil;
 import javauction.util.DateXmlUtil;
 import javauction.util.MoneyXmlUtil;
-import javauction.util.SellerXmlUtil;
+import javauction.util.UserXmlUtil;
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.Iterator;
@@ -68,7 +68,7 @@ public class AuctionEntity {
     @XStreamAlias("Description")
     private String description;
     @XStreamAlias("Seller")
-    @XStreamConverter(SellerXmlUtil.class)
+    @XStreamConverter(UserXmlUtil.class)
     private UserEntity seller;
 
     public AuctionEntity() {}

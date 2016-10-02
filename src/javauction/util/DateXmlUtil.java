@@ -8,10 +8,12 @@ import java.util.Date;
 import java.util.Locale;
 
 
+/**
+ * Time format for XML imports and exports used by xstream hibernate library
+ */
 public class DateXmlUtil extends AbstractSingleValueConverter {
 
     private final static String FORMAT = "MMM-dd-yy HH:mm:ss";
-
 
     public boolean canConvert(Class type) {
         return type.equals(Timestamp.class);     // Converter works only with Timestamps
@@ -22,8 +24,7 @@ public class DateXmlUtil extends AbstractSingleValueConverter {
         SimpleDateFormat format = new SimpleDateFormat(FORMAT,  Locale.ENGLISH);
         try {
             Date date =  format.parse(str);
-            Timestamp time = new Timestamp(date.getTime());
-            return time;  // we simply calculate days between using JodaTime
+            return new Timestamp(date.getTime());  // we simply calculate days between using JodaTime
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -36,23 +37,7 @@ public class DateXmlUtil extends AbstractSingleValueConverter {
             return null;
         }
 
-        String s = new SimpleDateFormat(FORMAT).format(source);
-        return s;
+        return new SimpleDateFormat(FORMAT).format(source);
     }
-//    public void marshal(Object source, HierarchicalStreamWriter writer,
-//                        MarshallingContext context) {
-//        String S = new SimpleDateFormat("MMM-dd-yyyy HH:mm:ss").format(source);
-//        writer.setValue(S   );
-//    }
-//
-//    public Object unmarshal(HierarchicalStreamReader reader,
-//                            UnmarshallingContext context) {
-////        String money = new String(reader.getValue());
-////        money = money.replace("$", "");
-//        return "";
-//    }
-//
-//    public boolean canConvert(Class type) {
-//        return type.equals(Timestamp.class);
-//    }
+
 }
