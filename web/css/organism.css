@@ -15,6 +15,34 @@ body{
 }
 
 
+
+
+.c-header, .container, .container-custom {
+    max-width: 1180px;
+    margin: 0 auto;
+}
+
+.container, .container-custom{
+    background: white;
+    box-shadow: 0 1px 5px rgba(0,0,0,0.2);
+    padding: 20px;
+    border-radius: 6px;
+}
+
+.users dl {
+    font-weight: bold;
+    display: inline-block;
+}
+
+.users dd {
+    display: inline-block;
+    margin-left: 5px;
+}
+
+.users form{
+    margin: 0;
+}
+
 .c-rate {
     display: inline-block;
 }
@@ -610,20 +638,6 @@ input[type="date"]:focus{
 
 .button-primary{
     padding: 10px 20px;
-}
-
-
-
-.c-header, .container, .container-custom {
-    max-width: 1180px;
-    margin: 0 auto;
-}
-
-.container, .container-custom{
-    background: white;
-    box-shadow: 0 1px 5px rgba(0,0,0,0.2);
-    padding: 20px;
-    border-radius: 6px;
 }
 
 

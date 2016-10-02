@@ -43,7 +43,7 @@
 
 <!-- end of header row -->
 <c:if test="${not empty successMsg}">
-    <p class="status--success">${successMsg}</p>
+    <p class="container status--success">${successMsg}</p>
 </c:if>
 
 <div class="container">
@@ -64,7 +64,6 @@
                 In order to start buying or selling items on auction-website, you have to create an account.<br />
                 <a class="button button-primary" href="/public/register.jsp" style="margin-top: 5px;">register</a>
             </p>
-
         </div>
         <!-- end of register column -->
         <%-- login --%>

@@ -7,19 +7,17 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Administrator login page</title>
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="../css/skeleton.css" rel="stylesheet">
-    <link href="../css/organism.css" rel="stylesheet">
+    <link href="/css/skeleton.css" rel="stylesheet">
+    <link href="/css/organism.css" rel="stylesheet">
 </head>
 <body>
+<%@ include file="../header.jsp" %>
+
 <c:if test="${isAdmin}">
     <div class="container">
-        <a href="/admin/homepage.jsp">home</a>
-
-        <h1>List users</h1>
+        <h3>List users</h3>
         <jsp:useBean id="userLst" class="java.util.ArrayList" scope="request" />
-
         <table>
             <c:forEach var="user" items="${userLst}">
                 <tr>

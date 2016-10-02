@@ -15,6 +15,7 @@ import javauction.service.RatingService;
 import javauction.service.UserService;
 import javauction.util.CategoryXmlUtil;
 import javauction.util.SellerXmlUtil;
+
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -42,6 +43,8 @@ public class auction extends HttpServlet {
         AuctionService auctionService = new AuctionService();
         CategoryService categoryService = new CategoryService();
         String next_page = "/user/homepage.jsp";
+        HttpSession session = request.getSession();
+
 
         if (request.getParameter("action") == null) {
             RequestDispatcher view = request.getRequestDispatcher(next_page);
@@ -58,7 +61,7 @@ public class auction extends HttpServlet {
                 String country = request.getParameter("country");  /* required */
                 String instantBuy = request.getParameter("instantBuy"); /* always sent by default */
                 /* get userid from session. userid will be sellerid for this specific auction! */
-                HttpSession session = request.getSession();
+                session = request.getSession();
                 long sellerId = ((UserEntity) session.getAttribute("user")).getUserId();
 
                 /* the auction will start now, so we have to find the current date */
@@ -219,6 +222,67 @@ public class auction extends HttpServlet {
                 request.setAttribute("isEnded", true);
                 response.sendRedirect("/auction.do?action=getAnAuction&aid=" + aid + "&from=bid&status=" + status);
                 return;
+            case "getAuctionsAsXML":
+                Boolean isAdmin = (Boolean) session.getAttribute("isAdmin");
+                next_page = "homepage.jsp";
+
+                if (!isAdmin) { break; }
+                List<AuctionEntity> auctions;
+                /* get the auctions to generate XML */
+                if (request.getParameterMap().containsKey("exportSelected")){
+                    List<Long> auctionIds = new ArrayList<>();
+                    String[] ids = request.getParameterValues("auctionIds");
+                    for (String id : ids){
+                        auctionIds.add(Long.valueOf(id));
+                    }
+                    auctions = auctionService.getAuctionsFromIds(auctionIds);
+                } else {
+                    auctions = auctionService.getAuctions();
+                }
+
+                for (AuctionEntity a : auctions) {
+                    a.setBidStuff();
+                }
+                /* use xstream to convert entities to xml */
+                XStream stream = new XStream((new StaxDriver(new NoNameCoder())));
+                stream.setMode(XStream.NO_REFERENCES);
+
+                /* http://constc.blogspot.gr/2008/03/xstream-with-hibernate.html */
+                stream.addDefaultImplementation(org.hibernate.collection.internal.PersistentList.class, java.util.List.class);
+                stream.addDefaultImplementation(org.hibernate.collection.internal.PersistentMap.class, java.util.Map.class);
+                stream.addDefaultImplementation(org.hibernate.collection.internal.PersistentSet.class, java.util.Set.class);
+
+                Mapper mapper = stream.getMapper();
+                stream.registerConverter(new HibernatePersistentCollectionConverter(mapper));
+                stream.registerConverter(new HibernatePersistentMapConverter(mapper));
+
+                /* use annotaations instead of stream calls */
+                stream.processAnnotations(AuctionEntity.class);
+                stream.alias("Items", List.class);
+
+                /* create the file to export */
+                String applicationPath = request.getServletContext().getRealPath("");
+                String uploadFilePath = applicationPath + File.separator + DIR_FOR_XML;
+                String fileName = uploadFilePath + "/auctions.xml";
+                File fileSaveDir = new File(uploadFilePath);
+                if (!fileSaveDir.exists()) {
+                    fileSaveDir.mkdirs();
+                }
+
+                /* generate the xml and write it */
+                Writer out;
+                out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileName), "UTF-8"));
+                try {
+                    String xml = stream.toXML(auctions);
+                    out.write(xml);
+                    out.write(" ");
+                    out.close();
+                    next_page = "/admin/downloadAuctions.jsp";
+                    request.setAttribute("xmlLink", DIR_FOR_XML + "/auctions.xml");
+                } catch (FileNotFoundException e) {
+                    out.close();
+                }
+                break;
         }
 
         RequestDispatcher view = request.getRequestDispatcher(next_page);
@@ -346,66 +410,6 @@ public class auction extends HttpServlet {
                     request.setAttribute("categoryLst", categoryLst);
                     request.setAttribute("auction", auction);
                     next_page = "/user/auctionEdit.jsp";
-                }
-                break;
-            case "getAuctionsAsXML":
-                Boolean isAdmin = (Boolean) session.getAttribute("isAdmin");
-                next_page = "homepage.jsp";
-
-                if (!isAdmin) { break; }
-                List<AuctionEntity> auctions;
-                /* get the auctions to generate XML */
-                if (request.getParameterMap().containsKey("exportSelected")){
-                    List<Long> auctionIds = new ArrayList<>();
-                    String[] ids = request.getParameterValues("auctionIds");
-                    for (String id : ids){
-                        auctionIds.add(Long.valueOf(id));
-                    }
-                    auctions = auctionService.getAuctionsFromIds(auctionIds);
-                } else {
-                    auctions = auctionService.getAuctions();
-                }
-
-                for (AuctionEntity a : auctions) {
-                    a.setBidStuff();
-                }
-                /* use xstream to convert entities to xml */
-                XStream stream = new XStream((new StaxDriver(new NoNameCoder())));
-                stream.setMode(XStream.NO_REFERENCES);
-
-                /* http://constc.blogspot.gr/2008/03/xstream-with-hibernate.html */
-                stream.addDefaultImplementation(org.hibernate.collection.internal.PersistentList.class, java.util.List.class);
-                stream.addDefaultImplementation(org.hibernate.collection.internal.PersistentMap.class, java.util.Map.class);
-                stream.addDefaultImplementation(org.hibernate.collection.internal.PersistentSet.class, java.util.Set.class);
-
-                Mapper mapper = stream.getMapper();
-                stream.registerConverter(new HibernatePersistentCollectionConverter(mapper));
-                stream.registerConverter(new HibernatePersistentMapConverter(mapper));
-
-                /* use annotaations instead of stream calls */
-                stream.processAnnotations(AuctionEntity.class);
-                stream.alias("Items", List.class);
-
-                /* create the file to export */
-                String applicationPath = request.getServletContext().getRealPath("");
-                String uploadFilePath = applicationPath + File.separator + DIR_FOR_XML;
-                String fileName = uploadFilePath + "/auctions.xml";
-                File fileSaveDir = new File(uploadFilePath);
-                if (!fileSaveDir.exists()) {
-                    fileSaveDir.mkdirs();
-                }
-
-                /* generate the xml and write it */
-                Writer out;
-                out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileName), "UTF-8"));
-                try {
-                    String xml = stream.toXML(auctions);
-                    out.write(xml);
-                    out.write(" ");
-                    out.close();
-                    next_page = DIR_FOR_XML + "/auctions.xml";
-                } catch (FileNotFoundException e) {
-                    out.close();
                 }
                 break;
             case "setFromXML":

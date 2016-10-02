@@ -17,7 +17,6 @@
 <%@ include file="../header.jsp" %>
 
 <div class="container">
-    <%@ include file="../header.jsp" %>
     <h1>Your auction submitted successfully.</h1>
     <p>Thanks for your auction!</p>
 

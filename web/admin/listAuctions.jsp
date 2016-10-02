@@ -20,49 +20,53 @@
 <c:if test="${not isAdmin}">
     <c:redirect url="/"/>
 </c:if>
+<%@ include file="../header.jsp" %>
+
 <c:if test="${isAdmin}">
     <div class="container">
-        <section>
-            Be patient and export every auction: <a href="/auction.do?action=getAuctionsAsXML"  target="_blank" class="button">export all</a>
-            <hr />
-            <form action="/auction.do" method="GET" id="export">
-                <input type="hidden" name="action" value="getAuctionsAsXML">
-                <input type="hidden" name="exportSelected" value="">
-                Select auctions and export: <button type="submit" class="button button-primary" disabled>export selected</button><br />
-                <b><span data-bind="selectedAuctions"></span> selected auctions</b>
+        <form action="/auction.do" method="POST">
+            <input type="hidden" name="action" value="getAuctionAsXML">
+            Be patient and export every auction: <button class="button">export all</button>
+        </form>
+        <hr />
+        <form action="/auction.do" method="POST" id="export">
+            <input type="hidden" name="action" value="getAuctionsAsXML">
+            <input type="hidden" name="exportSelected" value="">
+            Select auctions and export: <button type="submit" class="button button-primary" disabled>export selected</button><br />
+            <b><span data-bind="selectedAuctions"></span> selected auctions</b>
 
-                <div class="row">
-                    <p class="three columns offset-by-one">Auction name</p>
-                    <p class="eight columns">Description</p>
-                </div>
-                <c:forEach var="auction" items="${auctionsLst}">
-                    <label class="row light zebra-hover" for="${auction.auctionId}">
-                        <div class="one column u-text-center"><input type="checkbox" name="auctionIds" value="${auction.auctionId}" id="${auction.auctionId}"></div>
-                        <div class="three columns">${auction.name}</div>
-                        <div class="eight columns">${fn:replace(auction.description, fn:substring(auction.description, 40, fn:length(auction.description)), '...')}</div>
-                    </label>
-                </c:forEach>
-                <c:if test="${auctionsLst.size() == 0}">
-                    <span>No auctions found.</span>
+            <div class="row">
+                <p class="three columns offset-by-one">Auction name</p>
+                <p class="eight columns">Description</p>
+            </div>
+            <c:forEach var="auction" items="${auctionsLst}">
+                <label class="row light zebra-hover" for="${auction.auctionId}">
+                    <div class="one column u-text-center"><input type="checkbox" name="auctionIds" value="${auction.auctionId}" id="${auction.auctionId}"></div>
+                    <div class="three columns">${auction.name}</div>
+                    <div class="eight columns">${fn:replace(auction.description, fn:substring(auction.description, 40, fn:length(auction.description)), '...')}</div>
+                </label>
+            </c:forEach>
+            <c:if test="${auctionsLst.size() == 0}">
+                <span>No auctions found.</span>
+            </c:if>
+        </form>
+        <c:if test="${auctionsLst.size() != 0}">
+
+            <div class="row">
+                <c:if test="${empty previousPage}">
+                    <span class="u-unvailable">previous page</span> |
                 </c:if>
-            </form>
-            <c:if test="${auctionsLst.size() != 0}">
-
-                <div class="row">
-                    <c:if test="${empty previousPage}">
-                        <span class="u-unvailable">previous page</span> |
-                    </c:if>
-                    <c:if test="${not empty previousPage}">
-                        <a href="${previousPage}">previous page</a> |
-                    </c:if>
-                    <a href="${nextPage}">next page</a>
-                </div>
-            </c:if>
-            <c:if test="${auctionsLst.size() == 0 and not empty previousPage}">
-                <div class="row">
-                    Last page. Please go to <a href="${previousPage}">previous page</a>
-                </div>
-            </c:if>
+                <c:if test="${not empty previousPage}">
+                    <a href="${previousPage}">previous page</a> |
+                </c:if>
+                <a href="${nextPage}">next page</a>
+            </div>
+        </c:if>
+        <c:if test="${auctionsLst.size() == 0 and not empty previousPage}">
+            <div class="row">
+                Last page. Please go to <a href="${previousPage}">previous page</a>
+            </div>
+        </c:if>
         </section>
 
     </div>
@@ -95,15 +99,15 @@
         var arr = getArray(auctions);
         arr.forEach(function(aid){
             var ele = '[value="' + aid + '"]';
-           if ($(ele).length == 0){
+            if ($(ele).length == 0){
                 $('form').append('<input type="hidden" name="auctionIds" value =' + aid +'>');
-           }
+            }
         });
         deleteAll(auctions);
     });
 
     $('.js-clearAll').on('click', function () {
-       deleteAll(auctions);
+        deleteAll(auctions);
     });
 
 
