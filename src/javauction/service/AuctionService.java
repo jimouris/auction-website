@@ -47,7 +47,11 @@ public class AuctionService extends Service {
         return auction;
     }
 
-    @Deprecated
+    /**
+     * @param uid userId
+     * @param isSeller is seller?
+     * @return all ended auctions for user uid (as seller or buyer)
+     */
     public List getAllEndedAuctions(Long uid, boolean isSeller) {
         Session session = HibernateUtil.getSession();
         Transaction tx = null;
@@ -82,14 +86,23 @@ public class AuctionService extends Service {
         return auctions;
     }
 
-    @Deprecated
+    /**
+     * @param sid sellerId
+     * @param getAllActive get active or all?
+     * @return A list of auctions
+     */
     public List getAllAuctions(long sid, boolean getAllActive) {
         Session session = HibernateUtil.getSession();
         List results = null;
         try {
             Query query;
             if (getAllActive) {
-                query = session.createQuery("from AuctionEntity where isStarted = 1");
+                if (sid < 0) {
+                    query = session.createQuery("from AuctionEntity where isStarted = 1");
+                } else {
+                    query = session.createQuery("from AuctionEntity where sellerId = :sid and isStarted = 1");
+                    query.setParameter("sid", sid);
+                }
             } else {
                 query = session.createQuery("from AuctionEntity where sellerId = :sid");
                 query.setParameter("sid", sid);

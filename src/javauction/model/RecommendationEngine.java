@@ -88,7 +88,11 @@ public class RecommendationEngine {
         List<AuctionEntity> excludeAuctions = auctionService.getAllAuctions(uid, false);
         for (Long ae: recommendationSet) {
             if (!containsId(excludeAuctions, ae)) {
-                recommendations.add(auctionService.getAuction(ae));
+                AuctionEntity auction = auctionService.getAuction(ae);
+                /* Add it only if is still active */
+                if (auction.getIsStarted() == 1) {
+                    recommendations.add(auction);
+                }
             }
         }
 
