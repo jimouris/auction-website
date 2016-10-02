@@ -27,21 +27,19 @@ public class AuctionEntity {
     private Long buyerId;
     @XStreamAlias("Name")
     private String name;
-    @XStreamOmitField
-    private double finalPrice;
     @XStreamImplicit(itemFieldName = "Category")
     @XStreamConverter(CategoryXmlUtil.class)
     private Set<CategoryEntity> categories;
     @Transient
     @XStreamAlias("Currently")
     @XStreamConverter(MoneyXmlUtil.class)
-    Double currently;
+    private Double currently;
     @XStreamAlias("First_Bid")
     @XStreamConverter(MoneyXmlUtil.class)
     private double lowestBid;
     @Transient
     @XStreamAlias("Number_of_Bids")
-    int numOfBids;
+    private int numOfBids;
     @XStreamAlias("Bids")
     private Set<BidEntity> bids;
     @XStreamOmitField
@@ -58,7 +56,7 @@ public class AuctionEntity {
     private Byte isActive;
     @XStreamAlias("Buy_Price")
     @XStreamConverter(MoneyXmlUtil.class)
-   private Double buyPrice;
+    private Double buyPrice;
     @XStreamAlias("Started")
     @XStreamConverter(DateXmlUtil.class)
     private Timestamp startingDate;
@@ -142,16 +140,6 @@ public class AuctionEntity {
 
     public void setLowestBid(double lowestBid) {
         this.lowestBid = lowestBid;
-    }
-
-    @Basic
-    @Column(name = "FinalPrice")
-    public double getFinalPrice() {
-        return finalPrice;
-    }
-
-    public void setFinalPrice(double finalPrice) {
-        this.finalPrice = finalPrice;
     }
 
     @Basic
@@ -294,7 +282,6 @@ public class AuctionEntity {
                 ", sellerId=" + sellerId +
                 ", buyerId=" + buyerId +
                 ", name='" + name + '\'' +
-                ", finalPrice=" + finalPrice +
                 ", categories=" + categories +
                 ", lowestBid=" + lowestBid +
                 ", bids=" + bids +

@@ -22,7 +22,7 @@
 
     <h4>Please, navigate to one of the following pages.</h4>
     <p>
-        <a class="button button-primary" href=auction.do?action=getAnAuction&aid=${aid}>View/Edit Submitted Auction</a>
+        <a class="button button-primary" href=/auction.do?action=getAnAuction&aid=${aid}>View/Edit Submitted Auction</a>
         <a class="button" href="/user/homepage.jsp">Homepage</a>
     </p>
 </div>

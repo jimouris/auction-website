@@ -24,7 +24,7 @@
                     <td>${user.username}</td>
                     <td>${user.firstname}</td>
                     <td>${user.isApproved}</td>
-                    <td><a href=user.do?action=getAUser&uid=${user.userId}>more info</a></td>
+                    <td><a href=/user.do?action=getAUser&uid=${user.userId}>more info</a></td>
                 </tr>
             </c:forEach>
         </table>

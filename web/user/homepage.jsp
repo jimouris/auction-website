@@ -39,7 +39,7 @@
             <h3>Auctions</h3>
             <a class="button button-primary" href="/auction.do?action=newAuction">Create an auction</a>
 
-            <a class="button button" href="/search.do?action=searchAuctions&boughtBy=you">View all auctions you have bought</a>
+            <a class="button button" href="/search.do?action=searchAuctions&bidBy=you">View all auctions you have bid</a>
 
             <a class="button button" href="/search.do?action=searchAuctions&seller=you">View all your auctions</a>
             <a class="button button" href="/search.do?action=searchAuctions&seller=you&isActive=0">View all your ended auctions</a>
@@ -72,7 +72,7 @@
                                 <p>${fn:replace(auction.description, fn:substring(auction.description, 80, fn:length(auction.description)), '...')}</p>
                             </c:if>
                         </div>
-                        <div class="three columns"><a class="button button-primary" href=auction.do?action=getAnAuction&aid=${auction.auctionId}>View auction</a></div>
+                        <div class="three columns"><a class="button button-primary" href=/auction.do?action=getAnAuction&aid=${auction.auctionId}>View auction</a></div>
                     </div>
 
                 </c:forEach>

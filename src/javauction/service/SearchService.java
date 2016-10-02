@@ -15,7 +15,7 @@ import java.util.List;
 public class SearchService {
 
     private Byte isActive = null;
-    private Long buyerID = null;
+    private Long bidderID = null;
     private Long sellerID = null;
     private Boolean isEnded = null;
     private String auctionName = null;
@@ -58,10 +58,17 @@ public class SearchService {
             Timestamp currentDate = new Timestamp(Calendar.getInstance().getTimeInMillis());
 
             if (isActive != null) { criteria.add(Restrictions.eq("isActive", isActive)); }
-            if (buyerID != null) { criteria.add(Restrictions.eq("buyerId", buyerID)); }
             if (sellerID != null) { criteria.add(Restrictions.eq("sellerId", sellerID)); }
             if (isEnded != null) { criteria.add(Restrictions.lt("endingDate", currentDate)); }
             if (auctionName != null) { criteria.add(Restrictions.like("name", auctionName, MatchMode.ANYWHERE)); }
+
+            if (bidderID != null) {
+                List <Long> biddersID = new ArrayList<>();
+                biddersID.add(bidderID);
+                criteria.createAlias("bids", "auctionBids");
+                criteria.add(Restrictions.in("auctionBids.bidderId", biddersID));
+            }
+
             if (categories != null) {
                 /* convert list of strings to list of integers */
                 List <Integer> intCategories = new ArrayList<>();
@@ -138,8 +145,8 @@ public class SearchService {
         this.isActive = isActive;
     }
 
-    public void setBuyerID(Long buyerID) {
-        this.buyerID = buyerID;
+    public void setBidderID(Long bidderID) {
+        this.bidderID = bidderID;
     }
 
     public void setIsEnded(Boolean ended) {

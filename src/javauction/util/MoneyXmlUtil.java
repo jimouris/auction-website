@@ -17,10 +17,10 @@ public class MoneyXmlUtil extends AbstractSingleValueConverter {
     @Override
     public Object fromString(String str) {
         Double money = -1.0;
-        try{
+        try {
             money = Double.valueOf(str.replace("$", "").replace(",", "."));
-        } catch( Exception e){
-            System.out.println(e);
+        } catch (Exception e){
+            e.printStackTrace();
         }
         return money;
     }

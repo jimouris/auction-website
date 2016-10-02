@@ -10,7 +10,9 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 
-
+/**
+ * A filter to find new notifications
+ */
 public class notificationFilter implements Filter {
 
     public void destroy() {
@@ -26,19 +28,6 @@ public class notificationFilter implements Filter {
         if (user != null) {
             long rid = user.getUserId();
             List<NotificationEntity> notifList = notificationService.getNotificationsOf(rid);
-
-// TODO: to xreiazesai to sxoliasmeno? an oxi svhse to.
-            //        generate the appropriate list with notifications
-            //        List<Notification> notifLst = null;
-            //        for (NotificationEntity notif : notifList){
-            //            switch (notif.getType()){
-            //                case "message":
-            //                    notifLst.add("")
-            //                break;
-            //            }
-            //        }
-
-            /* append them to request object */
             request.setAttribute("notifLst", notifList);
         }
         chain.doFilter(request, response);

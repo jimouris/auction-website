@@ -46,7 +46,7 @@
             </div>
         </c:if>
         <c:if test="${isSeller and not isEnded and empty bidLst}">
-            <a class="js-make-writable button" href="auction.do?action=editAuction&aid=${auction.auctionId}">edit auction</a>
+            <a class="js-make-writable button" href="/auction.do?action=editAuction&aid=${auction.auctionId}">edit auction</a>
         </c:if>
         <c:if test="${auction.isActive == 1 and not isEnded}">
             <p>The auction is active</p>
@@ -85,7 +85,7 @@
                     <c:if test="${not empty bidLst}">
                         <c:if test="${bidLst[0].amount < auction.buyPrice}">
                         <h5>Buy now for ${auction.buyPrice}</h5>
-                        <form action="auction.do" method="post">
+                        <form action="/auction.do" method="post">
                             <input type="hidden" name="aid" value="${auction.auctionId}">
                             <input type=submit name="action" value="buyAuction">
                         </form>
@@ -93,7 +93,7 @@
                     </c:if>
                     <c:if test="${empty bidLst}">
                         <h5>Buy now for ${auction.buyPrice}</h5>
-                        <form action="auction.do" method="post">
+                        <form action="/auction.do" method="post">
                             <input type="hidden" name="aid" value="${auction.auctionId}">
                             <input type=submit name="action" value="buyAuction">
                         </form>
@@ -180,7 +180,7 @@
                 <%-- let registered users to bid --%>
                 <c:if test="${not isSeller and not empty user.userId}">
                     <form action="/auction.do" method="post" class="js-confirm-bid">
-                        <input type="number" min="${bidLst[0].amount +1}" value="${bidLst[0].amount +1}" name="bid">
+                        <input type="number" step="any" min="${bidLst[0].amount +1}" value="${bidLst[0].amount +1}" name="bid">
                         <input type="hidden" name="aid" value="${auction.auctionId}">
                         <button class="button-primary" type="submit" name="action" id="bidAuction" value="bidAuction">Bid for this item</button>
                     </form>
@@ -199,7 +199,7 @@
                 <c:if test="${not isSeller and not empty user.userId}">
                     <h5>No bids placed yet.</h5>
                     <form action="/auction.do" method="post" class="js-confirm-bid">
-                        <input type="number" min="${auction.lowestBid}" value="${auction.lowestBid}" name="bid">
+                        <input type="number" step="any" min="${auction.lowestBid}" value="${auction.lowestBid}" name="bid">
                         <input type="hidden" name="aid" value="${auction.auctionId}">
                         <button class="button-primary" type="submit" name="action" value="bidAuction">Make the first bid</button>
                     </form>

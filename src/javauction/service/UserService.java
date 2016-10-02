@@ -207,7 +207,6 @@ public class UserService extends Service {
             e.printStackTrace();
             try { session.close(); } catch (Exception ignored) {}
             return RegisterStatus.REG_FAIL;
-            // TODO: 7/3/16 add here a rollback
         } finally {
             try {
                 session.close();

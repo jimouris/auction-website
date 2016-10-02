@@ -17,6 +17,9 @@
     <c:redirect url="/"/>
 </c:if>
 <%@ include file="../header.jsp"%>
+<c:if test="${not empty successMsg}">
+    <p class="container status--success">${successMsg}</p>
+</c:if>
 <c:if test="${isAdmin}">
     <div class="container">
         <div class="row">
@@ -39,12 +42,28 @@
     <br/>
     <div class="container">
         <div class="row">
-            <div class="six columns">
+            <div class="eleven columns">
                 <h3><span class="icon-upload"></span>Import auctions from XML</h3>
-                <p class="small-p">
+                <div style="margin-left: 55px">
                     From here you can import auctions from XML file.<br />
-                    <a href="/auction.do?action=setFromXML" class="button button-primary" style="margin-top: 5px;" onclick="return confirmImport()">import auctions</a>
-                </p>
+                    <form action="/auction.do" method="get">
+                        <input type="hidden" name="action" value="setFromXML">
+                        <div class="row">
+                            <div class="two columns">
+                                <label>Select first file:</label>
+                                <input type="number" name="firstFile" value="0" min="0" max="39">
+                            </div>
+                            <div class="two columns">
+                                <label>Select last file:</label>
+                                <input type="number" name="lastFile" value="1" min="1" max="40">
+                            </div>
+                            <div class="three columns">
+                                <label>&nbsp;</label>
+                                <button type="submit" class="button button-primary" style="margin-top: 5px;" onclick="return confirmImport()">import auctions</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>

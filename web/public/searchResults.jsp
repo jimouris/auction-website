@@ -52,7 +52,7 @@
                     <p class="c-result--empty">No categories provided</p>
                 </c:if>
             </div>
-            <div class="two columns"><a class="button button-primary" href=auction.do?action=getAnAuction&aid=${auction.auctionId}>View auction</a></div>
+            <div class="two columns"><a class="button button-primary" href=/auction.do?action=getAnAuction&aid=${auction.auctionId}>View auction</a></div>
         </div>
 
     </c:forEach>

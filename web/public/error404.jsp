@@ -13,8 +13,8 @@
         <div style="text-align: center">
             <img src='/images/img404.jpg' style="max-width:600px; height:auto" alt='[]' />
         </div>
-        <div>
-            <a class="button" style="display: block; margin: auto; width:15%;" href="/public/">Go back to homepage</a>
+        <div style="text-align: center">
+            <a class="button" style="display: inline-block; margin: auto;" href="/public/">Go back to homepage</a>
         </div>
     </div>
 

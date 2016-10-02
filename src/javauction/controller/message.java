@@ -56,10 +56,9 @@ public class message extends HttpServlet {
             long aid = Long.parseLong(request.getParameter("aid"));
 
                 /* check if someone else tries to delete a message that he/she does not own */
-            if (sender_id == uid){
+            if (sender_id == uid) {
                 messagesService.deleteMessage(mid);
-//                    TODO: delete notification!!!!
-//                notificationService.deleteNotificaton(mid);
+                notificationService.deleteNotificaton(mid);
             }
 
             String url = "/message.do?action=getConversation&rid=" + rid + "&aid=" + aid;

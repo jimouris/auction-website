@@ -22,9 +22,8 @@
 
 
 <div class="container">
-    <h2>Send messages</h2>
+    <h5>Send messages</h5>
 
-    <div>
         <c:if test="${not empty messagesLst}">
             <c:forEach var="message" items="${messagesLst}" varStatus="status">
                 <a href="/message.do?action=getConversation&rid=${message.senderId}&aid=${message.auctionId}" class="message message--inbox">
@@ -33,7 +32,6 @@
                 </a>
             </c:forEach>
         </c:if>
-    </div>
 </div>
 <script src="../js/jquery.min.js"></script>
 <script src="../js/scripts.js"></script>

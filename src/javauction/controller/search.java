@@ -92,9 +92,9 @@ public class search extends HttpServlet {
                     searchService.setIsActive(Byte.parseByte(request.getParameter("isActive")));
                 }
                 /* get your auctions */
-                if (request.getParameterMap().containsKey("boughtBy")) {
-                    if (request.getParameter("boughtBy").equals("you")) {
-                        searchService.setBuyerID( ((UserEntity) session.getAttribute("user")).getUserId());
+                if (request.getParameterMap().containsKey("bidBy")) {
+                    if (request.getParameter("bidBy").equals("you")) {
+                        searchService.setBidderID( ((UserEntity) session.getAttribute("user")).getUserId());
                     }
                 }
                 /* auctions that are outside of time frame */
@@ -161,7 +161,7 @@ public class search extends HttpServlet {
     // i want to return something like auction.do?action=simpleSearch&name=&page=
     private String constructURL(HttpServletRequest request){
         Map<String, String[]> params = request.getParameterMap();
-        String url = "search.do?";
+        String url = "/search.do?";
         for (Map.Entry<String, String[]> entry : params.entrySet())
         {
             // page param will be self assigned, so we have to skip it

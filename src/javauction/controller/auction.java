@@ -224,7 +224,7 @@ public class auction extends HttpServlet {
                 return;
             case "getAuctionsAsXML":
                 Boolean isAdmin = (Boolean) session.getAttribute("isAdmin");
-                next_page = "homepage.jsp";
+                next_page = "/admin/homepage.jsp";
 
                 if (!isAdmin) { break; }
                 List<AuctionEntity> auctions;
@@ -386,7 +386,7 @@ public class auction extends HttpServlet {
                 request.setAttribute("auctionLst", auctionLst);
                 next_page = "/public/listAuctions.jsp";
                 break;
-            case "getAuctionsYouHaveBought":
+            case "getAuctionsYouHaveBid":
                 uid = (Long) ((UserEntity) session.getAttribute("user")).getUserId();
                 auctionLst = auctionService.getAllEndedAuctions(uid, false);
                 request.setAttribute("auctionLst", auctionLst);
@@ -414,11 +414,14 @@ public class auction extends HttpServlet {
                 break;
             case "setFromXML":
                 Boolean isAdmin = (Boolean) session.getAttribute("isAdmin");
-                next_page = "homepage.jsp";
+                int firstFile = Integer.parseInt(request.getParameter("firstFile"));
+                int lastFile = Integer.parseInt(request.getParameter("lastFile"));
+                next_page = "/admin/homepage.jsp";
 
+                System.out.println("Dsadas1");
                 if (!isAdmin) { break; }
                 XStream xstream = new XStream(new DomDriver());
-
+                System.out.println("Dsadas2");
                 xstream.processAnnotations(AuctionEntity.class);
                 xstream.registerConverter(new UserXmlUtil());
                 xstream.registerConverter(new CategoryXmlUtil());
@@ -427,8 +430,7 @@ public class auction extends HttpServlet {
                 UserService userservice = new UserService();
                 AuctionService auctionservice = new AuctionService();
                 categoryService = new CategoryService();
-
-                for (int index = 0 ; index < 1; index++) {
+                for (int index = firstFile ; index < lastFile; index++) {
                     InputStream input = getServletContext().getResourceAsStream("items-" + index + ".xml");
                     System.out.println("\nstart on items-" + index + ".xml");
                     List<AuctionEntity> items = (List<AuctionEntity>) xstream.fromXML(input);
@@ -465,6 +467,13 @@ public class auction extends HttpServlet {
                         /* try to save or get the user for the auction and each bid */
                         sid = userservice.addOrUpdate(item.getSeller());
                         item.setSellerId(sid);
+
+                        /* if no location provided, use UoA's location */
+                        if (item.getLatitude() == 0 && item.getLongitude() == 0){
+                            item.setLatitude(37.968196);
+                            item.setLongitude(23.7764984);
+                        }
+
                         /* try to save or get the current categories */
                         categoryService.addOrUpdate(item.getCategories());
                         /* add the auction and commit every bid */
@@ -475,6 +484,7 @@ public class auction extends HttpServlet {
                         }
                     }
                 }
+                request.setAttribute("successMsg", "Finished importing auctions");
                 break;
         }
 

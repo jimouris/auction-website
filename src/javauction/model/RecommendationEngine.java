@@ -2,6 +2,7 @@ package javauction.model;
 
 import javauction.service.AuctionService;
 import javauction.service.BidService;
+
 import java.util.*;
 
 /**
@@ -10,7 +11,7 @@ import java.util.*;
  */
 public class RecommendationEngine {
 
-    private int K_Neighbours = 5;
+    private int K_Neighbours = 10;
     private int Items_to_recommend = 5;
 
     /**

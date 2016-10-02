@@ -138,8 +138,8 @@ public class BidEntity implements Cloneable{
         int result = (int) (bidid ^ (bidid >>> 32));
         result = 31 * result + (int) (bidderId ^ (bidderId >>> 32));
         result = 31 * result + (bidder != null ? bidder.hashCode() : 0);
-        result = 31 * result + bidTime.hashCode();
-        result = 31 * result + amount.hashCode();
+        result = 31 * result + (bidTime != null ? bidTime.hashCode() : 0);
+        result = 31 * result + (amount != null ? amount.hashCode() : 0);
         result = 31 * result + (int) (auctionId ^ (auctionId >>> 32));
         result = 31 * result + (auction != null ? auction.hashCode() : 0);
         return result;

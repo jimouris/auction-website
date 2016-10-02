@@ -67,7 +67,6 @@ public class rate extends HttpServlet {
         view.forward(request, response);
     }
 
-    // TODO: 08/09/16 compute different rating for seller and buyers
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String next_page = "/user/homepage.jsp";
 

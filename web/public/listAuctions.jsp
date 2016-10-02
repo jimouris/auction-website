@@ -34,7 +34,7 @@
                 <td>${auction.name}</td>
                 <td>${fn:replace(auction.description, fn:substring(auction.description, 40, fn:length(auction.description)), '...')}</td>
                 <td>${auction.lowestBid}</td>
-                <td><a class="button button-primary" href=auction.do?action=getAnAuction&aid=${auction.auctionId}>View auction</a></td>
+                <td><a class="button button-primary" href=/auction.do?action=getAnAuction&aid=${auction.auctionId}>View auction</a></td>
             </tr>
         </c:forEach>
 

@@ -186,7 +186,7 @@ public class user extends HttpServlet {
     // i want to return something like auction.do?action=simpleSearch&name=&page=
     private String constructURL(HttpServletRequest request){
         Map<String, String[]> params = request.getParameterMap();
-        String url = "user.do?";
+        String url = "/user.do?";
         for (Map.Entry<String, String[]> entry : params.entrySet())
         {
             // page param will be self assigned, so we have to skip it

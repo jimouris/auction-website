@@ -22,8 +22,7 @@
 <%@ include file="../header.jsp" %>
 
 <div class="container">
-    <h2>Inbox</h2>
-    <div>
+    <h5>Inbox</h5>
         <c:if test="${not empty messagesLst}">
             <c:forEach var="message" items="${messagesLst}" varStatus="status">
                 <a href="/message.do?action=getConversation&rid=${message.senderId}&aid=${message.auctionId}" class="message message--inbox">
@@ -32,7 +31,6 @@
                 </a>
             </c:forEach>
         </c:if>
-    </div>
 </div>
 <script src="../js/jquery.min.js"></script>
 <script src="../js/scripts.js"></script>

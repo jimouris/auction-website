@@ -4,10 +4,10 @@
         <div class="three columns">
             <a href="/" class="icon-home home"></a>
             <span class="greetings">
-            <c:if test="${not empty user}">
+            <c:if test="${not empty sessionScope.user}">
                 Hello ${sessionScope.user.getUsername()},
             </c:if>
-            <c:if test="${empty user}">
+            <c:if test="${empty sessionScope.user}">
                 <c:if test="${empty isAdmin}">
                     Hello guest,
                 </c:if>

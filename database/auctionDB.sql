@@ -31,11 +31,10 @@ CREATE TABLE `auction` (
   `Name` varchar(150) NOT NULL,
   `Description` varchar(10000) DEFAULT NULL,
   `LowestBid` double NOT NULL,
-  `FinalPrice` double NOT NULL,
   `StartingDate` datetime DEFAULT NULL,
   `EndingDate` datetime DEFAULT NULL,
-  `Country` varchar(45) NOT NULL,
-  `Location` varchar(45) NOT NULL,
+  `Country` varchar(150) NOT NULL,
+  `Location` varchar(150) NOT NULL,
   `Longitude` float DEFAULT NULL,
   `Latitude` float DEFAULT NULL,
   `IsActive` tinyint(1) DEFAULT '0',
@@ -124,7 +123,7 @@ DROP TABLE IF EXISTS `category`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `category` (
   `CategoryID` int(11) NOT NULL AUTO_INCREMENT,
-  `CategoryName` varchar(100) DEFAULT NULL,
+  `CategoryName` varchar(150) DEFAULT NULL,
   PRIMARY KEY (`CategoryID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -287,11 +286,11 @@ CREATE TABLE `user` (
   `Email` varchar(45) NOT NULL,
   `PhoneNumber` varchar(45) NOT NULL,
   `Vat` varchar(45) NOT NULL,
-  `HomeAddress` varchar(60) NOT NULL,
+  `HomeAddress` varchar(200) NOT NULL,
   `Latitude` varchar(45) NOT NULL,
   `longitude` varchar(45) NOT NULL,
-  `City` varchar(60) NOT NULL,
-  `Country` varchar(45) NOT NULL,
+  `City` varchar(100) NOT NULL,
+  `Country` varchar(150) NOT NULL,
   `SignUpDate` date NOT NULL,
   `IsAdmin` tinyint(1) NOT NULL DEFAULT '0',
   `isApproved` tinyint(1) NOT NULL DEFAULT '0',
