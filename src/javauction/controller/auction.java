@@ -413,6 +413,10 @@ public class auction extends HttpServlet {
                 }
                 break;
             case "setFromXML":
+                Boolean isAdmin = (Boolean) session.getAttribute("isAdmin");
+                next_page = "homepage.jsp";
+
+                if (!isAdmin) { break; }
                 XStream xstream = new XStream(new DomDriver());
 
                 xstream.processAnnotations(AuctionEntity.class);
