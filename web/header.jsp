@@ -31,7 +31,7 @@
                                 </p>
                             </c:if>
                             <c:if test="${notification.isSeen == 0}">
-                                <p class="c-notification--unseen">
+                                <p class="c-notification--unseen" data-type="${notification.type}">
                                     You have a new ${notification.type} from user ${notification.actor.username}. <a href="/notification.do?action=viewNotification&nid=${notification.notificationId}">${notification.type} back</a>
                                 </p>
                             </c:if>
@@ -41,7 +41,7 @@
             </div>
         </div>
         <div class="two columns">
-            <div class="c-dropdown" unselectable="on">
+            <div class="c-dropdown c-messages" unselectable="on">
                 <span class="c-dropdown__trigger"><span class="c-btn--round c-btn icon-chat-alt"></span>messages</span>
                 <div class="c-dropdown__content l-pad1">
                     <a class="icon-download c-dropdown__item" href="/message.do?action=listInbox">Inbox</a><br />
@@ -50,7 +50,7 @@
             </div>
         </div>
         <div class="two columns">
-            <div class="c-dropdown" unselectable="on">
+            <div class="c-dropdown c-ratings" unselectable="on">
                 <span class="c-dropdown__trigger"><span class="c-btn--round c-btn icon-star-filled"></span>ratings</span>
                 <div class="c-dropdown__content l-pad1">
                     <a class="icon-download c-dropdown__item" href="/rate.do?action=listFrom">Received</a><br/>

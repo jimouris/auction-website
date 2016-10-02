@@ -5,6 +5,7 @@ import javauction.util.HibernateUtil;
 import org.hibernate.*;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
+
 import java.util.List;
 
 /**
@@ -67,34 +68,24 @@ public class NotificationService extends Service {
         Session session = HibernateUtil.getSession();
         try {
             session.beginTransaction();
-            NotificationEntity auction = (NotificationEntity) session.get(NotificationEntity.class, nid);
-            auction.setIsSeen((byte) 1);
-            session.update(auction);
+            NotificationEntity notification = (NotificationEntity) session.get(NotificationEntity.class, nid);
+
+            /* get all notifications for the same auctionid, type and actor
+             * then setIsSeen for all of those */
+            long actorId = notification.getActorId();
+            long auctionId = notification.getAuctionId();
+            String type = notification.getType();
+            Criteria criteria = session.createCriteria(NotificationEntity.class);
+            criteria.add(Restrictions.eq("actorId", actorId));
+            criteria.add(Restrictions.eq("auctionId", auctionId));
+            criteria.add(Restrictions.eq("type", type));
+            List<NotificationEntity> notifications = criteria.list();
+            for (NotificationEntity n : notifications){
+                n.setIsSeen((byte) 1);
+                session.update(n);
+            }
             session.getTransaction().commit();
         } catch (HibernateException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (session != null) session.close();
-            } catch (Exception ignored) {}
-        }
-    }
-
-    /**
-     * Deletes notification if message with id mid is being deleted
-     * @param mid messageId
-     */
-    public void deleteNotificaton(long mid) {
-        Session session = HibernateUtil.getSession();
-        Transaction tx = null;
-        try {
-            tx = session.beginTransaction();
-            Criteria criteria = session.createCriteria(NotificationEntity.class);
-            NotificationEntity notif = (NotificationEntity) criteria.add(Restrictions.eq("messageId", mid)).uniqueResult();
-            session.delete(notif);
-            tx.commit();
-        } catch (HibernateException e) {
-            if (tx != null) { tx.rollback(); }
             e.printStackTrace();
         } finally {
             try {

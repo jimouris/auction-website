@@ -418,10 +418,9 @@ public class auction extends HttpServlet {
                 int lastFile = Integer.parseInt(request.getParameter("lastFile"));
                 next_page = "/admin/homepage.jsp";
 
-                System.out.println("Dsadas1");
                 if (!isAdmin) { break; }
                 XStream xstream = new XStream(new DomDriver());
-                System.out.println("Dsadas2");
+
                 xstream.processAnnotations(AuctionEntity.class);
                 xstream.registerConverter(new UserXmlUtil());
                 xstream.registerConverter(new CategoryXmlUtil());

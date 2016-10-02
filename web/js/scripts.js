@@ -1,23 +1,23 @@
 $(document).ready(function () {
-   $('.c-dropdown').delegate('.c-dropdown__trigger', 'click', function () {
-       // get the current dropdown component
-       // an einai anoixto kleisto: hasClass(h-forceShow)
-       // alliws anoixe to
-       var clicked_dropdown = $(this).closest('.c-dropdown').find('.c-dropdown__content');
+    $('.c-dropdown').delegate('.c-dropdown__trigger', 'click', function () {
+        // get the current dropdown component
+        // an einai anoixto kleisto: hasClass(h-forceShow)
+        // alliws anoixe to
+        var clicked_dropdown = $(this).closest('.c-dropdown').find('.c-dropdown__content');
 
-       $('.c-dropdown__content').each(function(){
-           var other_dropdown = $(this).closest('.c-dropdown').find('.c-dropdown__content');
+        $('.c-dropdown__content').each(function () {
+            var other_dropdown = $(this).closest('.c-dropdown').find('.c-dropdown__content');
 
-           if ($(clicked_dropdown).is($(other_dropdown)) ){
+            if ($(clicked_dropdown).is($(other_dropdown))) {
                 $(clicked_dropdown).toggleClass('h-forceShow');
-           } else {
-               $(other_dropdown).removeClass('h-forceShow');
-           }
-       });
+            } else {
+                $(other_dropdown).removeClass('h-forceShow');
+            }
+        });
 
-   });
+    });
 
-    $('.c-delete').delegate('.c-delete__icon, .c-delete__cancel', 'click', function(){
+    $('.c-delete').delegate('.c-delete__icon, .c-delete__cancel', 'click', function () {
         var daddy = $(this).closest('.c-delete');
         $(daddy).find('.c-delete__icon').toggleClass('h-forceHide');
         $(daddy).find('.c-delete__confirm').toggleClass('h-show');
@@ -67,7 +67,23 @@ $(document).ready(function () {
             });
     });
 
+    // use to check if notification exist
+    if ($('.c-notification--unseen').length > 0) {
+        // set unseen notification
+        $('.c-notification').addClass('c-notification--unseen');
+    }
+
+    if ($('[data-type="message"].c-notification--unseen').length > 0) {
+        $('.c-messages').addClass('c-notification--unseen');
+    }
+
+    if ($('[data-type="rate"].c-notification--unseen').length > 0) {
+        $('.c-messages').addClass('c-notification--unseen');
+    }
+
+
 });
+
 
 // get an array of elements from ck cookie
 // *1* calling split on an empty cookie will return [""],
