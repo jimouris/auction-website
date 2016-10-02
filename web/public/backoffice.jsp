@@ -16,8 +16,8 @@
 
 
 <div class="container">
-    <h1 class="u-text-center">Administrator's Login</h1>
-    <div class="four columns offset-by-four">
+    <h3 class="u-text-center">Administrator's Login</h3>
+    <div class="three columns" style="margin: 0 auto; float: none">
         <section class="login u-full-width row">
             <form action="/login.do" method="POST" id="loginForm">
                 <label for="username">Admin's username</label>

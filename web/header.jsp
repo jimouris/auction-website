@@ -8,11 +8,16 @@
                 Hello ${sessionScope.user.getUsername()},
             </c:if>
             <c:if test="${empty user}">
-                Hello guest,
+                <c:if test="${empty isAdmin}">
+                    Hello guest,
+                </c:if>
+                <c:if test="${not empty isAdmin}">
+                    Hello admin,
+                </c:if>
             </c:if>
             </span>
         </div>
-    <c:if test="${not empty user}">
+    <c:if test="${not empty sessionScope.user}">
         <div class="offset-by-one two columns">
             <div class="c-dropdown c-notification" unselectable="on">
                 <span class="c-dropdown__trigger"><span class="c-btn--round c-btn icon-bell"></span>notifications</span>
@@ -54,6 +59,11 @@
             </div>
         </div>
         <div class="two columns logout">
+            <a href="/logout.do"><span class="delete icon-power">Logout</span></a>
+        </div>
+    </c:if>
+    <c:if test="${not empty isAdmin and isAdmin == true}">
+        <div class="eight columns logout">
             <a href="/logout.do"><span class="delete icon-power">Logout</span></a>
         </div>
     </c:if>
