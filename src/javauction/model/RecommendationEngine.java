@@ -11,7 +11,7 @@ import java.util.*;
  */
 public class RecommendationEngine {
 
-    private int K_Neighbours = 10;
+    private int K_Neighbours = 20;
     private int Items_to_recommend = 5;
 
     /**
@@ -67,37 +67,34 @@ public class RecommendationEngine {
      * @return the list of recommendations
      */
     private List<AuctionEntity> getItems(long uid, List<Long> knn) {
-        HashSet<Long> recommendationSet = new HashSet<>();
+        List<AuctionEntity> recommendationsLst = new ArrayList<>();
         BidService bidService = new BidService();
         AuctionService auctionService = new AuctionService();
         /* get all bids that user-uid has placed */
         List<Long> excludeBids = bidService.getAllUserBids(uid);
+        /* exclude all the auctions you are the seller */
+        List<AuctionEntity> excludeAuctions = auctionService.getAllAuctions(uid, false);
+        System.out.println("knn: "+ knn);
         int items = 0;
         for (Long n : knn) {
+            if (items > Items_to_recommend) {
+                break;
+            }
             List<Long> biddedItems = bidService.getAllUserBids(n);
             biddedItems.removeAll(excludeBids);
             for (Long it : biddedItems) {
-                if (++items > Items_to_recommend) {
+                if (items > Items_to_recommend) {
                     break;
                 }
-                recommendationSet.add(it);
-            }
-        }
-
-        List<AuctionEntity> recommendations = new ArrayList<>();
-        /* exclude all the auctions you are the seller */
-        List<AuctionEntity> excludeAuctions = auctionService.getAllAuctions(uid, false);
-        for (Long ae: recommendationSet) {
-            if (!containsId(excludeAuctions, ae)) {
-                AuctionEntity auction = auctionService.getAuction(ae);
-                /* Add it only if is still active */
-                if (auction.getIsActive() == 1) {
-                    recommendations.add(auction);
+                AuctionEntity auction = auctionService.getAuction(it);
+                if (auction.getIsActive() == (byte) 0 || containsId(excludeAuctions, it)) {
+                    continue;
                 }
+                recommendationsLst.add(auction);
+                items++;
             }
         }
-
-        return recommendations;
+        return recommendationsLst;
     }
 
     private boolean containsId(List<AuctionEntity> list, long id) {
