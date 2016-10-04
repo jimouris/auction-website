@@ -11,7 +11,7 @@ import java.util.*;
  */
 public class RecommendationEngine {
 
-    private int K_Neighbours = 20;
+    private int K_Neighbours = 15;
     private int Items_to_recommend = 5;
 
     /**
@@ -74,7 +74,6 @@ public class RecommendationEngine {
         List<Long> excludeBids = bidService.getAllUserBids(uid);
         /* exclude all the auctions you are the seller */
         List<AuctionEntity> excludeAuctions = auctionService.getAllAuctions(uid, false);
-        System.out.println("knn: "+ knn);
         int items = 0;
         for (Long n : knn) {
             if (items > Items_to_recommend) {
