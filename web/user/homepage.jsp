@@ -55,7 +55,7 @@
                     <div class="row c-result">
                         <div class="two columns">
                             <c:if test="${not empty auction.images}">
-                                <img class="img-resp" src="image_auction/${auction.images.iterator().next().imageFileName}">
+                                <img class="img-resp" src="/image_auction/${auction.images.iterator().next().imageFileName}">
                             </c:if>
                             <c:if test="${empty auction.images}">
                     <span class="icon-picture c-result__no-img">
