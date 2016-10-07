@@ -1,22 +1,16 @@
 [![License MIT][badge-license]](LICENSE)
 
 ## auction-webite
-An awesome auction website template. 
+An auction-website template developed for the undergraduate course "Technologies for Web Applications" of [Dept. Informatics & Telecommunications](http://www.di.uoa.gr/eng) of [University of Athens](http://en.uoa.gr/).
 
-#### Dependencies:
-+ Java 7+
-+ Apache Tomcat 8 
-    - Download: https://tomcat.apache.org/download-80.cgi
-    - Setup: https://tomcat.apache.org/tomcat-7.0-doc/setup.html
-+ ...
+![alt tag](https://github.com/gpelelis/auction-website/blob/master/screenshots/index.png)
 
-#### Setup & Running:
-+ From an IDE:
-    - Eclipse: http://crunchify.com/step-by-step-guide-to-setup-and-install-apache-tomcat-server-in-eclipse-development-environment-ide/
-    - Intellij: https://www.jetbrains.com/help/idea/2016.1/enabling-application-server-integration-plugins.html?origin=old_help
-+ Command Line:
-    - To create the war file: ```jar -cvf mywebapp.war *``` (not sure yet)
-    - ```java .....```
+![alt tag](https://github.com/gpelelis/auction-website/blob/master/screenshots/homepage.png)
+
+![alt tag](https://github.com/gpelelis/auction-website/blob/master/screenshots/chat.png)
+
+You can find more screenshots [here](https://github.com/gpelelis/auction-website/blob/master/screenshots/)
+
 
 ##### Authors:
 + [Giannis Pellelis](https://github.com/gpelelis)
