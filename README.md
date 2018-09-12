@@ -1,6 +1,4 @@
-[![License MIT][badge-license]](LICENSE)
-
-## auction-webite
+## auction-webite [![License MIT][badge-license]](LICENSE)
 An auction-website template developed for the undergraduate course "Technologies for Web Applications" of [Dept. Informatics & Telecommunications](http://www.di.uoa.gr/eng) of [University of Athens](http://en.uoa.gr/).
 
 ![alt tag](https://github.com/gpelelis/auction-website/blob/master/screenshots/index.png)
@@ -17,4 +15,4 @@ You can find more screenshots [here](https://github.com/gpelelis/auction-website
 + [Dimitris Mouris](https://github.com/jimouris)
 
 April 2016
-[badge-license]: https://img.shields.io/badge/license-MIT-green.svg
+[badge-license]: https://img.shields.io/badge/license-MIT-green.svg?style=flat-square
