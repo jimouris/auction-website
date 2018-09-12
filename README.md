@@ -15,4 +15,6 @@ You can find more screenshots [here](https://github.com/gpelelis/auction-website
 + [Dimitris Mouris](https://github.com/jimouris)
 
 April 2016
+
+
 [badge-license]: https://img.shields.io/badge/license-MIT-green.svg?style=flat-square
