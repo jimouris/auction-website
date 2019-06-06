@@ -1,26 +1,26 @@
 ## Auction Webite [![License MIT][badge-license]](LICENSE)
 An auction website template developed for the undergraduate course "Technologies for Web Applications" of [Dept. Informatics & Telecommunications](http://www.di.uoa.gr/eng) of [University of Athens](http://en.uoa.gr/).
 
-![alt tag](https://github.com/gpelelis/auction-website/blob/master/screenshots/index.png)
+![alt tag](screenshots/index.png)
 
-![alt tag](https://github.com/gpelelis/auction-website/blob/master/screenshots/register.png)
+![alt tag](screenshots/register.png)
 
-![alt tag](https://github.com/gpelelis/auction-website/blob/master/screenshots/homepage.png)
+![alt tag](screenshots/homepage.png)
 
-![alt tag](https://github.com/gpelelis/auction-website/blob/master/screenshots/anAuction.png)
+![alt tag](screenshots/anAuction.png)
 
-![alt tag](https://github.com/gpelelis/auction-website/blob/master/screenshots/chat.png)
+![alt tag](screenshots/chat.png)
 
-![alt tag](https://github.com/gpelelis/auction-website/blob/master/screenshots/notifications.png)
+![alt tag](screenshots/notifications.png)
 
-![alt tag](https://github.com/gpelelis/auction-website/blob/master/screenshots/ratings.png)
+![alt tag](screenshots/ratings.png)
 
-![alt tag](https://github.com/gpelelis/auction-website/blob/master/screenshots/advancedSearch.png)
+![alt tag](screenshots/advancedSearch.png)
 
-![alt tag](https://github.com/gpelelis/auction-website/blob/master/screenshots/adminsHomepage.png)
+![alt tag](screenshots/adminsHomepage.png)
 
 
-You can find more screenshots [here](https://github.com/gpelelis/auction-website/blob/master/screenshots/)
+You can find more screenshots [here](screenshots/)
 
 
 ##### Authors:
